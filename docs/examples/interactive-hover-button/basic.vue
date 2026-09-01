@@ -4,5 +4,6 @@ import { IuInteractiveHoverButton } from 'inspira-ui-components'
 
 <template>
   <IuInteractiveHoverButton text="了解更多" />
-  <IuInteractiveHoverButton text="自定义样式" style="border-radius: 0; font-size: 14px" />
+  <IuInteractiveHoverButton text="小号按钮" size="small" />
+  <IuInteractiveHoverButton text="大号按钮" size="large" />
 </template>

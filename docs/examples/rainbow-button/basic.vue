@@ -4,5 +4,5 @@ import { IuRainbowButton } from 'inspira-ui-components'
 
 <template>
   <IuRainbowButton>Get Unlimited Access</IuRainbowButton>
-  <IuRainbowButton :speed="5" style="height: 40px">慢速彩虹（speed=5s）</IuRainbowButton>
+  <IuRainbowButton :speed="5" size="small">慢速彩虹（5s）</IuRainbowButton>
 </template>

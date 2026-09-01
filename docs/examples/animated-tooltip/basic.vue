@@ -17,7 +17,13 @@ const items: AnimatedTooltipItem[] = [
 </script>
 
 <template>
-  <div style="display: flex">
+  <div class="demo-row">
     <IuAnimatedTooltip :items="items" />
   </div>
 </template>
+
+<style scoped>
+.demo-row {
+  display: flex;
+}
+</style>

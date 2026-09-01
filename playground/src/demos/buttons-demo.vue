@@ -28,7 +28,7 @@ function fakeSubmit() {
     <div class="pg-demo">
       <p class="pg-demo-title">统一尺寸体系</p>
       <p class="pg-demo-props">size="small | default | large | xl"</p>
-      <div class="pg-demo-stage" style="align-items: flex-end">
+      <div class="pg-demo-stage pg-align-end">
         <IuShimmerButton size="small">Small</IuShimmerButton>
         <IuShimmerButton>Default</IuShimmerButton>
         <IuShimmerButton size="large">Large</IuShimmerButton>

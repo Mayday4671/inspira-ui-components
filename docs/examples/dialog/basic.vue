@@ -20,8 +20,17 @@ async function submitOrder() {
     description="提交后 30 分钟内可撤销，确认继续吗？"
     :confirm="submitOrder"
   >
-    <div style="border-radius: 8px; background: #f5f5f5; padding: 14px 16px; font-size: 14px">
+    <div class="demo-summary">
       订单金额：<b>¥328.50</b>　·　支付方式：余额支付
     </div>
   </IuDialog>
 </template>
+
+<style scoped>
+.demo-summary {
+  border-radius: 8px;
+  background: var(--iu-muted, #f5f5f5);
+  padding: 14px 16px;
+  font-size: 14px;
+}
+</style>

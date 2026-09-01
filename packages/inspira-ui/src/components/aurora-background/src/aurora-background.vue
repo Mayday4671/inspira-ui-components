@@ -59,7 +59,10 @@ const styles = computed(() => {
           "
         />
       </div>
-      <slot />
+      <!-- 前景内容由组件自动垫高层级，使用方无需再写 z-index -->
+      <div class="relative z-10 flex flex-col items-center justify-center">
+        <slot />
+      </div>
     </div>
   </main>
 </template>

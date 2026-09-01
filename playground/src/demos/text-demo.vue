@@ -20,7 +20,7 @@ const revenue = ref(328.5)
     <div class="pg-demo">
       <p class="pg-demo-title">IuNumberTicker 数字滚动</p>
       <p class="pg-demo-props">value · decimalPlaces · prefix · suffix · duration</p>
-      <div class="pg-demo-stage" style="gap: 40px">
+      <div class="pg-demo-stage pg-gap-lg">
         <span class="text-4xl font-bold">
           <IuNumberTicker :value="ticker" :decimal-places="0" />
         </span>

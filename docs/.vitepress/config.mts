@@ -6,10 +6,21 @@ export default defineConfig({
   description:
     'Inspira UI 风格的 Vue 3 动效组件库 —— Element Plus 式 npm 包，自带编译后 CSS，零 Tailwind 依赖',
   head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }]],
+  search: {
+    provider: 'local',
+    options: {
+      translations: {
+        button: { buttonText: '搜索组件…', buttonAriaLabel: '搜索' },
+        modal: { noResultsText: '没有找到结果' },
+      },
+    },
+  },
+  vite: {},
   themeConfig: {
+    logo: '/logo.svg',
     nav: [
       { text: '指南', link: '/guide/installation', activeMatch: '/guide/' },
-      { text: '组件', link: '/components/interactive-hover-button', activeMatch: '/components/' },
+      { text: '组件', link: '/components/dialog', activeMatch: '/components/' },
     ],
     sidebar: {
       '/guide/': [

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
+import { computed } from 'vue'
 import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
 import { GRADIENT_PRESETS, type GradientButtonProps } from './gradient-button'
 
@@ -22,6 +23,22 @@ const durationInMilliseconds = `${props.duration}ms`
 const borderWidthInPx = `${props.borderWidth}px`
 const borderRadiusInPx = `${props.borderRadius}px`
 const blurPx = `${props.blur}px`
+
+/** 按背景色亮度自动选择黑/白文字，用户无需再写文字颜色 */
+const contentColor = computed(() => textColorFor(bgColor))
+</script>
+
+<script lang="ts">
+function textColorFor(bg: string): string {
+  const hex = bg.trim().replace('#', '')
+  if (!/^[0-9a-f]{3,8}$/i.test(hex)) return '#ffffff'
+  const full = hex.length === 3 ? hex.split('').map((c) => c + c).join('') : hex.slice(0, 6)
+  const r = parseInt(full.slice(0, 2), 16)
+  const g = parseInt(full.slice(2, 4), 16)
+  const b = parseInt(full.slice(4, 6), 16)
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+  return luminance > 0.6 ? '#0f172a' : '#ffffff'
+}
 </script>
 
 <template>
@@ -59,6 +76,7 @@ const blurPx = `${props.blur}px`
 }
 
 .btn-content {
+  color: v-bind(contentColor);
   border-radius: v-bind(borderRadiusInPx);
   background-color: v-bind(bgColor);
   z-index: 0;

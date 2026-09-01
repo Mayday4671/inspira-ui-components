@@ -235,3 +235,15 @@ body {
     border-bottom: 1px solid var(--iu-border, #e4e4e7);
   }
 }
+
+.pg-gap-lg {
+  gap: 40px;
+}
+
+.pg-gap-xl {
+  gap: 56px;
+}
+
+.pg-align-end {
+  align-items: flex-end;
+}

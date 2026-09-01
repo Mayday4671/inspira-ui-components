@@ -1,6 +1,8 @@
 <script setup>
 import Demo from '../examples/number-ticker/basic.vue'
 import DemoSource from '../examples/number-ticker/basic.vue?raw'
+import Interactive from '../examples/number-ticker/interactive.vue'
+import InteractiveSource from '../examples/number-ticker/interactive.vue?raw'
 </script>
 
 # NumberTicker 数字滚动
@@ -9,7 +11,11 @@ import DemoSource from '../examples/number-ticker/basic.vue?raw'
 
 ## 基础用法
 
-<DemoBlock :demo="Demo" :code="DemoSource" title="数字滚动示例" />
+<DemoBlock :demo="Demo" :code="DemoSource" title="prefix / suffix 前后缀" />
+
+## 响应式更新
+
+<DemoBlock :demo="Interactive" :code="InteractiveSource" title="value 变化时自动重新滚动" />
 
 ## 属性
 
