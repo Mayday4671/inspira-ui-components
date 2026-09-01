@@ -11,12 +11,32 @@
     'Microsoft YaHei',
     system-ui,
     sans-serif;
+
+  /* 放开整页宽度上限（默认 1440px），宽屏下内容区基本铺满。
+     :root:root 双伪类提高优先级，压过主题 vars.css 的同名列 */
+  --vp-layout-max-width: 1760px;
 }
 
 .dark {
   --vp-c-brand-1: #60a5fa;
   --vp-c-brand-2: #3b82f6;
   --vp-c-brand-3: #93c5fd;
+}
+
+/* 放开文档内容窄栏（默认 688px）。
+   VPDoc 的 688px 是 SFC scoped 样式、注入晚于 theme CSS，同优先级压不住，
+   因此用 .VPDoc.VPDoc 双类提高优先级 */
+.VPDoc.VPDoc.has-aside .content-container {
+  max-width: 1080px;
+}
+
+/* 无侧边栏页面同步放开 */
+.VPDoc.VPDoc:not(.has-sidebar) .container {
+  max-width: none;
+}
+
+.VPDoc.VPDoc:not(.has-sidebar) .content {
+  max-width: 1120px;
 }
 
 /* 顶栏 */
