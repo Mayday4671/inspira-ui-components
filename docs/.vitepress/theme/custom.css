@@ -46,9 +46,12 @@
   color: var(--vp-c-text-2);
 }
 
-/* 首页（layout: page）去掉默认内容内边距冲突 */
-.page .container {
-  max-width: 100%;
+/* 首页（layout:page）为全宽输出，无需额外容器约束 */
+
+/* 全站禁止横向溢出滚动条 */
+html,
+body {
+  overflow-x: clip;
 }
 
 .demo-gradient-art {

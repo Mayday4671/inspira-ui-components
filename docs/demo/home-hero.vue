@@ -52,69 +52,83 @@ const principles = [
 
 <template>
   <div class="home">
-    <!-- Hero -->
+    <!-- Hero：全宽分区 -->
     <section class="hero">
-      <p class="hero-eyebrow">VUE 3 · TYPESCRIPT · NPM READY</p>
-      <h1 class="hero-title">
-        一套 <em>开箱即用</em> 的<br />动效组件库
-      </h1>
-      <p class="hero-desc">
-        Inspira UI 的视觉，Element Plus 的用法。按钮统一 size/loading 体系，弹窗传一个函数即用；
-        自带编译后 CSS，npm 安装后 import 即跑。
-      </p>
-      <div class="hero-actions">
-        <a class="hero-btn hero-btn-main" href="/guide/quick-start">快速上手 →</a>
-        <a class="hero-btn" href="/components/dialog">看组件</a>
-      </div>
+      <div class="home-inner">
+        <p class="hero-eyebrow">VUE 3 · TYPESCRIPT · NPM READY</p>
+        <h1 class="hero-title">
+          一套 <em>开箱即用</em> 的<br />动效组件库
+        </h1>
+        <p class="hero-desc">
+          Inspira UI 的视觉，Element Plus 的用法。按钮统一 size/loading 体系，弹窗传一个函数即用；
+          自带编译后 CSS，npm 安装后 import 即跑。
+        </p>
+        <div class="hero-actions">
+          <a class="hero-btn hero-btn-main" href="/guide/quick-start">快速上手 →</a>
+          <a class="hero-btn" href="/components/dialog">看组件</a>
+        </div>
 
-      <div class="hero-stats">
-        <div v-for="s in stats" :key="s.label" class="stat-card">
-          <div class="stat-value">{{ s.value }}</div>
-          <div class="stat-label">{{ s.label }}</div>
+        <div class="hero-stats">
+          <div v-for="s in stats" :key="s.label" class="stat-card">
+            <div class="stat-value">{{ s.value }}</div>
+            <div class="stat-label">{{ s.label }}</div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- 组件总览 -->
     <section class="section">
-      <h2 class="section-title">组件总览</h2>
-      <div class="comp-grid">
-        <a v-for="c in components" :key="c.name" class="comp-card" :href="c.link">
-          <span class="comp-icon">{{ c.icon }}</span>
-          <span class="comp-name">
-            {{ c.name }}
-            <em v-if="c.badge" class="comp-badge">{{ c.badge }}</em>
-          </span>
-          <span class="comp-desc">{{ c.desc }}</span>
-        </a>
+      <div class="home-inner">
+        <h2 class="section-title">组件总览</h2>
+        <div class="comp-grid">
+          <a v-for="c in components" :key="c.name" class="comp-card" :href="c.link">
+            <span class="comp-icon">{{ c.icon }}</span>
+            <span class="comp-name">
+              {{ c.name }}
+              <em v-if="c.badge" class="comp-badge">{{ c.badge }}</em>
+            </span>
+            <span class="comp-desc">{{ c.desc }}</span>
+          </a>
+        </div>
       </div>
     </section>
 
     <!-- 设计取舍 -->
-    <section class="section">
-      <h2 class="section-title">三条设计取舍</h2>
-      <div class="principle-grid">
-        <article v-for="p in principles" :key="p.no" class="principle">
-          <span class="principle-no">{{ p.no }}</span>
-          <h3 class="principle-title">{{ p.title }}</h3>
-          <p class="principle-desc">{{ p.desc }}</p>
-        </article>
+    <section class="section section-last">
+      <div class="home-inner">
+        <h2 class="section-title">三条设计取舍</h2>
+        <div class="principle-grid">
+          <article v-for="p in principles" :key="p.no" class="principle">
+            <span class="principle-no">{{ p.no }}</span>
+            <h3 class="principle-title">{{ p.title }}</h3>
+            <p class="principle-desc">{{ p.desc }}</p>
+          </article>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <style scoped>
+/* layout:page 下输出全宽，各区内容再用 home-inner 约束到 1400px */
 .home {
-  max-width: 1120px;
+  width: 100%;
+  overflow-x: clip;
+}
+
+.home-inner {
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 0 40px;
 }
 
 /* ---------- Hero ---------- */
 .hero {
-  padding: 72px 0 8px;
+  padding: 64px 0 24px;
   text-align: center;
+  background:
+    radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, var(--vp-c-brand-1) 8%, transparent), transparent 70%);
 }
 
 .hero-eyebrow {
@@ -126,8 +140,8 @@ const principles = [
 }
 
 .hero-title {
-  font-size: clamp(34px, 5vw, 52px);
-  line-height: 1.15;
+  font-size: clamp(36px, 4.6vw, 56px);
+  line-height: 1.14;
   font-weight: 800;
   letter-spacing: -0.03em;
   margin: 0 0 20px;
@@ -142,7 +156,7 @@ const principles = [
 }
 
 .hero-desc {
-  max-width: 620px;
+  max-width: 640px;
   margin: 0 auto 32px;
   font-size: 16px;
   line-height: 1.75;
@@ -153,7 +167,7 @@ const principles = [
   display: flex;
   justify-content: center;
   gap: 14px;
-  margin-bottom: 48px;
+  margin-bottom: 52px;
 }
 
 .hero-btn {
@@ -193,12 +207,12 @@ const principles = [
 .stat-card {
   border: 1px solid var(--vp-c-border);
   border-radius: 14px;
-  padding: 20px 12px;
+  padding: 22px 12px;
   background: var(--vp-c-bg-soft);
 }
 
 .stat-value {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--vp-c-text-1);
@@ -210,9 +224,15 @@ const principles = [
   color: var(--vp-c-text-3);
 }
 
-/* ---------- 组件总览 ---------- */
+/* ---------- 分区 ---------- */
 .section {
-  margin-top: 72px;
+  margin-top: 40px;
+  padding: 40px 0 8px;
+  border-top: 1px solid var(--vp-c-gutter);
+}
+
+.section-last {
+  padding-bottom: 88px;
 }
 
 .section-title {
@@ -222,9 +242,10 @@ const principles = [
   margin: 0 0 22px;
 }
 
+/* ---------- 组件总览：全宽 5 列起 ---------- */
 .comp-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
   gap: 14px;
 }
 
@@ -295,7 +316,7 @@ const principles = [
 .principle {
   border: 1px solid var(--vp-c-border);
   border-radius: 14px;
-  padding: 22px;
+  padding: 24px;
 }
 
 .principle-no {
@@ -319,6 +340,9 @@ const principles = [
 }
 
 @media (max-width: 900px) {
+  .home-inner {
+    padding: 0 20px;
+  }
   .hero-stats {
     grid-template-columns: repeat(2, 1fr);
   }
