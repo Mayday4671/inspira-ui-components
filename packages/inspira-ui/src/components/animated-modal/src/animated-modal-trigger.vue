@@ -1,0 +1,46 @@
+<script lang="ts" setup>
+import { cn } from '../../../utils'
+import { computed, inject } from 'vue'
+import { ANIMATED_MODAL_KEY } from './context'
+import type { AnimatedModalTriggerProps } from './modal-types'
+
+defineOptions({ name: 'IuAnimatedModalTrigger' })
+
+const props = withDefaults(defineProps<AnimatedModalTriggerProps>(), {
+  as: 'button',
+  disabled: false,
+})
+
+const modal = inject(ANIMATED_MODAL_KEY, null)
+if (!modal) {
+  throw new Error('IuAnimatedModalTrigger 必须在 <IuAnimatedModal> 内使用')
+}
+
+const isButton = computed(() => props.as === 'button')
+
+const onClick = (event: MouseEvent) => {
+  if (props.disabled) return
+  event.preventDefault()
+  modal.openModal()
+}
+</script>
+
+<template>
+  <component
+    :is="props.as"
+    :type="isButton ? 'button' : undefined"
+    :disabled="isButton ? props.disabled : undefined"
+    :aria-disabled="props.disabled ? 'true' : 'false'"
+    aria-haspopup="dialog"
+    :aria-expanded="modal.open.value ? 'true' : 'false'"
+    :class="
+      cn(
+        `relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-md px-4 py-2 text-center`,
+        props.disabled && 'cursor-not-allowed opacity-60',
+      )
+    "
+    @click="onClick"
+  >
+    <slot />
+  </component>
+</template>

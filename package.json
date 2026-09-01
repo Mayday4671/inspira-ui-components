@@ -1,0 +1,20 @@
+{
+  "name": "inspira-ui-components-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.24.0",
+  "description": "Inspira UI 风格的 Vue 3 组件库 monorepo（参考 Element Plus 库架构）",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter playground dev",
+    "dev:dist": "pnpm --filter playground dev:dist",
+    "dev:docs": "pnpm --filter docs dev",
+    "typecheck": "pnpm --filter inspira-ui typecheck",
+    "build": "pnpm --filter inspira-ui build",
+    "build:playground": "pnpm --filter playground build",
+    "build:docs": "pnpm --filter docs build",
+    "build:all": "pnpm typecheck && pnpm build && pnpm build:playground && pnpm build:docs"
+  }
+}

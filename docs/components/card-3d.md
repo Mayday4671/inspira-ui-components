@@ -1,0 +1,55 @@
+<script setup>
+import Demo from '../examples/card-3d/basic.vue'
+import DemoSource from '../examples/card-3d/basic.vue?raw'
+</script>
+
+# Card3D 3D 透视卡片
+
+鼠标悬停时整卡跟随旋转、内部元素沿 Z 轴分层抬升的 3D 卡片，由三个组件组合而成。
+
+## 基础用法
+
+<DemoBlock :demo="Demo" :code="DemoSource" title="3D 卡片示例" />
+
+## 组成
+
+| 组件                | 职责                                     |
+| ------------------- | ---------------------------------------- |
+| `IuCard3DContainer` | 外层容器，监听鼠标、驱动整卡旋转         |
+| `IuCard3DBody`      | 卡片主体（默认 384×384），保持 3D 空间   |
+| `IuCard3DItem`      | 可变换的内部元素，悬停时按 Z 轴浮起      |
+
+::: tip
+在 `IuCard3DBody` 内使用普通 `div` 包裹 `IuCard3DItem` 时，需要给该 div 加
+`style="transform-style: preserve-3d"`，否则 Z 轴位移不生效。
+:::
+
+## IuCard3DContainer 属性
+
+| 名称           | 说明                             | 类型     | 默认值 |
+| -------------- | -------------------------------- | -------- | ------ |
+| class          | 旋转层类名（合并）               | `string` | —      |
+| containerClass | 最外层 perspective 容器类名      | `string` | —      |
+
+## IuCard3DBody 属性
+
+| 名称  | 说明                 | 类型     | 默认值 |
+| ----- | -------------------- | -------- | ------ |
+| class | 主体类名（合并）     | `string` | —      |
+
+## IuCard3DItem 属性
+
+| 名称       | 说明                          | 类型     | 默认值  |
+| ---------- | ----------------------------- | -------- | ------- |
+| as         | 渲染的标签（如 `p`、`img`）   | `string` | `div`   |
+| translateX | 悬停时 X 轴位移（px）         | `number` | `0`     |
+| translateY | 悬停时 Y 轴位移（px）         | `number` | `0`     |
+| translateZ | 悬停时 Z 轴位移（px）         | `number` | `0`     |
+| rotateX    | 悬停时绕 X 轴旋转（deg）      | `number` | `0`     |
+| rotateY    | 悬停时绕 Y 轴旋转（deg）      | `number` | `0`     |
+| rotateZ    | 悬停时绕 Z 轴旋转（deg）      | `number` | `0`     |
+| class      | 元素类名（合并）              | `string` | —       |
+
+## 插槽
+
+三个组件均提供 `default` 插槽承载内容。

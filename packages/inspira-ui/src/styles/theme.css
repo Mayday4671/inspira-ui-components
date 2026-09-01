@@ -1,0 +1,51 @@
+/*
+ * inspira-ui-components Tailwind 主题层。
+ * 将组件内使用的 shadcn 语义色（bg-background / text-primary 等）
+ * 映射到 --iu-* CSS 变量上，使产物 CSS 可脱离 Tailwind 独立工作，并支持变量级主题定制。
+ *
+ * 该文件同时被组件库构建（styles/index.css）与 Playground 复用，请保持纯 @theme 声明。
+ */
+
+@theme inline {
+  --color-background: var(--iu-background);
+  --color-foreground: var(--iu-foreground);
+  --color-card: var(--iu-card);
+  --color-card-foreground: var(--iu-card-foreground);
+  --color-popover: var(--iu-popover);
+  --color-popover-foreground: var(--iu-popover-foreground);
+  --color-primary: var(--iu-primary);
+  --color-primary-foreground: var(--iu-primary-foreground);
+  --color-secondary: var(--iu-secondary);
+  --color-secondary-foreground: var(--iu-secondary-foreground);
+  --color-muted: var(--iu-muted);
+  --color-muted-foreground: var(--iu-muted-foreground);
+  --color-accent: var(--iu-accent);
+  --color-accent-foreground: var(--iu-accent-foreground);
+  --color-destructive: var(--iu-destructive);
+  --color-destructive-foreground: var(--iu-destructive-foreground);
+  --color-border: var(--iu-border);
+  --color-input: var(--iu-input);
+  --color-ring: var(--iu-ring);
+}
+
+@theme {
+  /* BentoGridItem 等组件使用的输入框阴影（shadcn "input" shadow） */
+  --shadow-input: 0px 2px 3px -1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+    0px 0px 0px 1px rgba(25, 28, 33, 0.08);
+
+  /* AuroraBackground 动画（keyframes 命名加 iu- 前缀避免与使用方冲突） */
+  --animate-aurora: iu-aurora 60s linear infinite;
+
+  @keyframes iu-aurora {
+    from {
+      background-position:
+        50% 50%,
+        50% 50%;
+    }
+    to {
+      background-position:
+        350% 50%,
+        350% 50%;
+    }
+  }
+}

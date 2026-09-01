@@ -1,0 +1,59 @@
+{
+  "name": "inspira-ui-components",
+  "version": "0.1.0",
+  "description": "Inspira UI 风格的 Vue 3 动效组件库 —— Element Plus 式 npm 包，自带编译后 CSS，使用方零 Tailwind 依赖",
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "inspira-ui",
+    "tailwind",
+    "animation",
+    "component-library"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/inspira-ui.cjs",
+  "module": "./dist/inspira-ui.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/inspira-ui.mjs",
+      "require": "./dist/inspira-ui.cjs"
+    },
+    "./dist/index.css": "./dist/index.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vue": ">=3.5.0"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "motion-v": "^2.3.0",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.1",
+    "@types/node": "^24.0.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "tailwindcss": "^4.2.1",
+    "typescript": "~5.9.0",
+    "vite": "^7.1.0",
+    "vite-plugin-dts": "^4.5.0",
+    "vue": "^3.5.20",
+    "vue-tsc": "^3.1.0"
+  }
+}

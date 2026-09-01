@@ -1,0 +1,13 @@
+node_modules/
+dist/
+dist-consumer/
+.zcode/
+.DS_Store
+*.local
+*.log
+**/.vitepress/cache/
+**/.vitepress/dist/
+coverage/
+.playwright-mcp/
+pg-*.png
+docs-*.png

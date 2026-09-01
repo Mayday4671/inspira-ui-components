@@ -1,0 +1,48 @@
+/*
+ * inspira-ui-components 设计令牌
+ * 主题定制入口：使用方覆盖这些 --iu-* CSS 变量即可全局换肤（对标 Element Plus 的 --el-*）。
+ * 语义色板参考 shadcn zinc 主题，暗色模式通过在 <html> 或任意祖先元素上添加 .dark 类启用。
+ */
+:root {
+  --iu-background: #ffffff;
+  --iu-foreground: #09090b;
+  --iu-card: #ffffff;
+  --iu-card-foreground: #09090b;
+  --iu-popover: #ffffff;
+  --iu-popover-foreground: #09090b;
+  --iu-primary: #18181b;
+  --iu-primary-foreground: #fafafa;
+  --iu-secondary: #f4f4f5;
+  --iu-secondary-foreground: #18181b;
+  --iu-muted: #f4f4f5;
+  --iu-muted-foreground: #71717a;
+  --iu-accent: #f4f4f5;
+  --iu-accent-foreground: #18181b;
+  --iu-destructive: #dc2626;
+  --iu-destructive-foreground: #fafafa;
+  --iu-border: #e4e4e7;
+  --iu-input: #e4e4e7;
+  --iu-ring: #18181b;
+}
+
+.dark {
+  --iu-background: #09090b;
+  --iu-foreground: #fafafa;
+  --iu-card: #09090b;
+  --iu-card-foreground: #fafafa;
+  --iu-popover: #09090b;
+  --iu-popover-foreground: #fafafa;
+  --iu-primary: #fafafa;
+  --iu-primary-foreground: #18181b;
+  --iu-secondary: #27272a;
+  --iu-secondary-foreground: #fafafa;
+  --iu-muted: #27272a;
+  --iu-muted-foreground: #a1a1aa;
+  --iu-accent: #27272a;
+  --iu-accent-foreground: #fafafa;
+  --iu-destructive: #ef4444;
+  --iu-destructive-foreground: #fafafa;
+  --iu-border: #27272a;
+  --iu-input: #27272a;
+  --iu-ring: #d4d4d8;
+}

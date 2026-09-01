@@ -1,0 +1,15 @@
+/*
+ * inspira-ui-components 样式入口（构建产物 dist/index.css 的来源）。
+ *
+ * - source(none) + 显式 @source：Tailwind 只扫描组件源码，产物 CSS 完全自包含，
+ *   使用方无需安装或配置 Tailwind。
+ * - 不引入 preflight（基础样式重置），避免污染使用方全局样式。
+ * - dark 变体基于 .dark 类而非系统偏好，使用方在 <html> 上加 .dark 即启用暗色。
+ */
+@import 'tailwindcss' source(none);
+@source '../components';
+
+@import './theme.css';
+@import './tokens.css';
+
+@custom-variant dark (&:is(.dark *));
