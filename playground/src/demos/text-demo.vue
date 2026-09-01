@@ -9,6 +9,7 @@ import {
 } from 'inspira-ui-components'
 
 const ticker = ref(98765)
+const revenue = ref(328.5)
 </script>
 
 <template>
@@ -18,12 +19,20 @@ const ticker = ref(98765)
 
     <div class="pg-demo">
       <p class="pg-demo-title">IuNumberTicker 数字滚动</p>
-      <p class="pg-demo-props">value · direction · duration · decimalPlaces · transition</p>
-      <div class="pg-demo-stage">
+      <p class="pg-demo-props">value · decimalPlaces · prefix · suffix · duration</p>
+      <div class="pg-demo-stage" style="gap: 40px">
         <span class="text-4xl font-bold">
-          <IuNumberTicker :value="ticker" :decimal-places="0" :duration="1500" />
+          <IuNumberTicker :value="ticker" :decimal-places="0" />
         </span>
-        <button class="pg-btn" type="button" @click="ticker += 1379">value +1379</button>
+        <span class="text-3xl font-bold text-emerald-600">
+          <IuNumberTicker :value="revenue" :decimal-places="1" prefix="¥" suffix="万" />
+        </span>
+        <span class="text-3xl font-bold text-blue-600">
+          <IuNumberTicker :value="98.7" suffix="%" />
+        </span>
+        <button class="pg-btn" type="button" @click="ticker += 1379; revenue += 12.3">
+          数值 +
+        </button>
       </div>
     </div>
 
@@ -43,7 +52,7 @@ const ticker = ref(98765)
       <p class="pg-demo-title">IuFlipWords 词语轮播</p>
       <p class="pg-demo-props">words · duration · animationStart / animationComplete 事件</p>
       <div class="pg-demo-stage">
-        <p class="text-xl">
+        <p class="text-xl m-0">
           一次引入，
           <IuFlipWords :words="['全局注册', '按需引入', 'npm 包调用']" class="font-bold text-blue-500" />
           任意组件
@@ -68,9 +77,9 @@ const ticker = ref(98765)
       <p class="pg-demo-props">duration · delay（stagger 系数）· blur · yOffset</p>
       <div class="pg-demo-stage col">
         <IuBlurReveal :duration="0.8" :delay="0.3">
-          <p class="text-lg font-bold">第一行：进入视口时模糊淡入</p>
-          <p class="pg-muted-text">第二行：按 delay 系数依次错落出现</p>
-          <p class="pg-muted-text">第三行：形成 stagger 揭示节奏</p>
+          <p class="text-lg font-bold m-0">第一行：进入视口时模糊淡入</p>
+          <p class="pg-muted-text m-0">第二行：按 delay 系数依次错落出现</p>
+          <p class="pg-muted-text m-0">第三行：形成 stagger 揭示节奏</p>
         </IuBlurReveal>
       </div>
     </div>

@@ -7,6 +7,9 @@ defineOptions({ name: 'IuFlipCard' })
 
 const props = withDefaults(defineProps<FlipCardProps>(), {
   rotate: 'y',
+  image: '',
+  backTitle: '',
+  backDescription: '',
 })
 
 const rotationClass = {
@@ -29,7 +32,10 @@ const rotation = computed(() => rotationClass[props.rotate])
     >
       <!-- 正面 -->
       <div class="absolute size-full overflow-hidden rounded-2xl border backface-hidden">
-        <slot />
+        <slot>
+          <div v-if="image" class="h-full w-full bg-cover bg-center" :style="{ backgroundImage: `url(${image})` }" />
+          <div v-else class="iu-flip-fallback h-full w-full" />
+        </slot>
       </div>
 
       <!-- 背面 -->
@@ -41,8 +47,25 @@ const rotation = computed(() => rotationClass[props.rotate])
           )
         "
       >
-        <slot name="back" />
+        <slot name="back">
+          <div class="flex h-full flex-col justify-center">
+            <p class="m-0 text-base font-semibold">{{ backTitle }}</p>
+            <p v-if="backDescription" class="mt-2 text-xs leading-relaxed opacity-70">
+              {{ backDescription }}
+            </p>
+          </div>
+        </slot>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.iu-flip-fallback {
+  background:
+    radial-gradient(80% 60% at 20% 10%, #60a5fa 0%, transparent 60%),
+    radial-gradient(70% 70% at 85% 30%, #c084fc 0%, transparent 55%),
+    radial-gradient(90% 90% at 50% 100%, #34d399 0%, transparent 60%),
+    #0f172a;
+}
+</style>

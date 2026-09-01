@@ -1,31 +1,51 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
+import { computed } from 'vue'
+import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
 import type { ShimmerButtonProps } from './shimmer-button'
 
 defineOptions({ name: 'IuShimmerButton' })
 
-withDefaults(defineProps<ShimmerButtonProps>(), {
-  shimmerColor: '#ffffff',
+const props = withDefaults(defineProps<ShimmerButtonProps>(), {
+  variant: 'dark',
+  shimmerColor: undefined,
   shimmerSize: '0.05em',
+  borderRadius: undefined,
   shimmerDuration: '3s',
-  borderRadius: '100px',
-  background: 'rgba(0, 0, 0, 1)',
+  background: undefined,
+  size: 'default',
 })
+
+const isLight = computed(() => props.variant === 'light')
+
+const resolved = computed(() => ({
+  shimmerColor: props.shimmerColor ?? (isLight.value ? '#0ea5e9' : '#ffffff'),
+  background: props.background ?? (isLight.value ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,1)'),
+  radius: props.borderRadius ?? (isLight.value ? '12px' : '100px'),
+  textColor: isLight.value
+    ? 'text-slate-900 border-slate-900/10'
+    : 'text-white border-white/10 dark:text-black',
+}))
 </script>
 
 <template>
   <button
+    :disabled="disabled || loading"
     :style="{
       '--spread': '90deg',
-      '--shimmer-color': shimmerColor,
-      '--radius': borderRadius,
+      '--shimmer-color': resolved.shimmerColor,
+      '--radius': resolved.radius,
       '--speed': shimmerDuration,
       '--cut': shimmerSize,
-      '--bg': background,
+      '--bg': resolved.background,
     }"
     :class="
       cn(
-        `group relative z-0 flex transform-gpu cursor-pointer items-center justify-center overflow-hidden [border-radius:var(--radius)] border border-white/10 px-6 py-3 whitespace-nowrap text-white transition-transform duration-300 ease-in-out [background:var(--bg)] active:translate-y-px dark:text-black`,
+        `group relative z-0 flex transform-gpu cursor-pointer items-center justify-center overflow-hidden border [border-radius:var(--radius)] whitespace-nowrap transition-transform duration-300 ease-in-out [background:var(--bg)] active:translate-y-px`,
+        resolved.textColor,
+        iuButtonSizeClass(size),
+        iuButtonStateClass,
+        block && 'flex w-full',
         $props.class,
       )
     "
@@ -39,6 +59,7 @@ withDefaults(defineProps<ShimmerButtonProps>(), {
         />
       </div>
     </div>
+    <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
     <slot />
 
     <div

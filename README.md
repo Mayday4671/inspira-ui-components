@@ -7,6 +7,7 @@ Inspira UI 风格的 **Vue 3 动效组件库** —— 参考 [Element Plus](http
 ## 特性
 
 - **Element Plus 式接入**：`app.use(InspiraUI)` 全量注册 `Iu` 前缀组件；也支持具名导入按需使用（tree-shaking 友好）
+- **配置解决八成，插槽兜底两成**：IuDialog 传一个 `confirm` 函数自动管 loading 与关闭；按钮统一 `size / loading / disabled / block`；IuCard3D 一行代码出卡片（三件套保留精细控制）
 - **自包含 CSS**：产物 `dist/index.css` 由 Tailwind v4 编译而成，使用方**零 Tailwind 依赖**，import 即用
 - **CSS 变量主题**：设计令牌收敛为 `--iu-*` 变量（对标 `--el-*`），覆盖变量即换肤；`.dark` 类即开暗色
 - **完整 TypeScript 类型**：含 Props 类型导出与 Volar `GlobalComponents` 全局提示
@@ -45,14 +46,15 @@ import { IuShimmerButton, IuAnimatedModal, IuNumberTicker } from 'inspira-ui-com
 
 完整文档（安装 / 快速上手 / 主题定制 / 每个组件的示例与 API 表格）见 `docs/` 文档站。
 
-## 首批组件（20 个）
+## 首批组件（22 个）
 
 | 分类 | 组件 |
 | ---- | ---- |
-| 按钮 | InteractiveHoverButton · RainbowButton · RippleButton · GradientButton · ShimmerButton |
-| 卡片 | Card3D（Container/Body/Item） · CardSpotlight · FlipCard · GlareCard |
+| 按钮 | InteractiveHoverButton · RainbowButton · RippleButton · GradientButton · ShimmerButton（统一 size/loading/disabled/block + variant 预设） |
+| 卡片 | Card3D（快捷模式 + 三件套） · CardSpotlight · FlipCard · GlareCard |
 | 文本动画 | NumberTicker · TypewriterText · FlipWords · TextGenerateEffect · BlurReveal |
-| 交互 | AnimatedModal（五件套） · AnimatedTooltip · Marquee · BentoGrid（三件套） |
+| 交互 | **Dialog（confirm 函数自动管 loading/关闭）** · AnimatedModal（五件套） · AnimatedTooltip · Marquee · BentoGrid |
+| 数据展示 | **Statistic（数字滚动 + 前后缀 + 涨跌幅）** |
 | 背景 | AuroraBackground · PatternBackground |
 
 ## Monorepo 结构

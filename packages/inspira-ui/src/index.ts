@@ -40,6 +40,8 @@ declare module 'vue' {
     IuRippleButton: typeof components.IuRippleButton
     IuGradientButton: typeof components.IuGradientButton
     IuShimmerButton: typeof components.IuShimmerButton
+    IuDialog: typeof components.IuDialog
+    IuCard3D: typeof components.IuCard3D
     IuCard3DContainer: typeof components.IuCard3DContainer
     IuCard3DBody: typeof components.IuCard3DBody
     IuCard3DItem: typeof components.IuCard3DItem
@@ -47,6 +49,7 @@ declare module 'vue' {
     IuFlipCard: typeof components.IuFlipCard
     IuGlareCard: typeof components.IuGlareCard
     IuNumberTicker: typeof components.IuNumberTicker
+    IuStatistic: typeof components.IuStatistic
     IuTypewriterText: typeof components.IuTypewriterText
     IuFlipWords: typeof components.IuFlipWords
     IuTextGenerateEffect: typeof components.IuTextGenerateEffect

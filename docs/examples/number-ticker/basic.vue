@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { IuNumberTicker } from 'inspira-ui-components'
-
-const value = ref(98765)
 </script>
 
 <template>
-  <span style="font-size: 36px; font-weight: 700">
-    <IuNumberTicker :value="value" :decimal-places="0" :duration="1500" />
+  <span style="font-size: 32px; font-weight: 700">
+    <IuNumberTicker :value="98765" :decimal-places="0" />
   </span>
-  <button
-    style="padding: 8px 16px; border-radius: 10px; border: 1px solid #ddd; background: transparent; cursor: pointer"
-    type="button"
-    @click="value += 1379"
-  >
-    value + 1379
-  </button>
+  <span style="font-size: 26px; font-weight: 700; color: #059669">
+    <IuNumberTicker :value="328.5" :decimal-places="1" prefix="¥" suffix="万" />
+  </span>
+  <span style="font-size: 26px; font-weight: 700; color: #2563eb">
+    <IuNumberTicker :value="98.7" suffix="%" />
+  </span>
 </template>

@@ -1,29 +1,24 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
-import type { GradientButtonProps } from './gradient-button'
+import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
+import { GRADIENT_PRESETS, type GradientButtonProps } from './gradient-button'
 
 defineOptions({ name: 'IuGradientButton' })
 
 const props = withDefaults(defineProps<GradientButtonProps>(), {
-  colors: () => [
-    '#FF0000',
-    '#FFA500',
-    '#FFFF00',
-    '#008000',
-    '#0000FF',
-    '#4B0082',
-    '#EE82EE',
-    '#FF0000',
-  ],
+  variant: 'rainbow',
   duration: 2500,
   borderWidth: 2,
   borderRadius: 8,
   blur: 4,
-  bgColor: '#000',
+  size: 'default',
 })
 
+const preset = GRADIENT_PRESETS[props.variant]
+
+const allColors = (props.colors ?? preset.colors).join(', ')
+const bgColor = props.bgColor ?? preset.bgColor
 const durationInMilliseconds = `${props.duration}ms`
-const allColors = props.colors.join(', ')
 const borderWidthInPx = `${props.borderWidth}px`
 const borderRadiusInPx = `${props.borderRadius}px`
 const blurPx = `${props.blur}px`
@@ -31,14 +26,19 @@ const blurPx = `${props.blur}px`
 
 <template>
   <button
+    :disabled="disabled || loading"
     :class="
       cn(
-        `animate-rainbow rainbow-btn relative flex min-h-10 min-w-28 cursor-pointer items-center justify-center overflow-hidden before:absolute before:-inset-[200%]`,
+        `animate-rainbow rainbow-btn relative flex cursor-pointer items-center justify-center overflow-hidden before:absolute before:-inset-[200%]`,
+        iuButtonSizeClass(size),
+        iuButtonStateClass,
+        block && 'flex w-full',
         props.class,
       )
     "
   >
     <span class="btn-content inline-flex size-full items-center justify-center px-4 py-2">
+      <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
       <slot />
     </span>
   </button>

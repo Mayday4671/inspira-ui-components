@@ -15,11 +15,11 @@ import {
 
     <div class="pg-demo">
       <p class="pg-demo-title">IuAuroraBackground 极光背景</p>
-      <p class="pg-demo-props">radialGradient · class（覆盖默认 h-screen）</p>
+      <p class="pg-demo-props">height · rounded —— 局部使用不再需要手写 style 覆盖</p>
       <div class="pg-demo-stage col">
-        <IuAuroraBackground class="h-80 rounded-xl">
-          <h4 class="z-10 text-2xl font-bold">Aurora Background</h4>
-          <p class="z-10 mt-2 text-sm opacity-70">流动的极光渐变（亮 / 暗色下表现不同）</p>
+        <IuAuroraBackground height="320px" rounded="14px">
+          <h4 class="z-10 text-2xl font-bold m-0">Aurora Background</h4>
+          <p class="z-10 mt-2 text-sm mb-0 opacity-70">流动的极光渐变（亮 / 暗色下表现不同）</p>
         </IuAuroraBackground>
       </div>
     </div>

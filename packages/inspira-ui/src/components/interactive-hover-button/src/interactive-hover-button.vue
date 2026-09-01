@@ -1,23 +1,30 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
+import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
 import type { InteractiveHoverButtonProps } from './interactive-hover-button'
 
 defineOptions({ name: 'IuInteractiveHoverButton' })
 
 const props = withDefaults(defineProps<InteractiveHoverButtonProps>(), {
   text: 'Button',
+  size: 'default',
 })
 </script>
 
 <template>
   <button
+    :disabled="disabled || loading"
     :class="
       cn(
-        `group bg-background relative w-auto cursor-pointer overflow-hidden rounded-full border p-2 px-6 text-center font-semibold`,
+        `group bg-background text-foreground relative inline-flex w-auto cursor-pointer items-center justify-center overflow-hidden rounded-full border p-2 text-center font-semibold`,
+        iuButtonSizeClass(size),
+        iuButtonStateClass,
+        block && 'flex w-full',
         props.class,
       )
     "
   >
+    <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
     <div class="flex items-center gap-2">
       <div
         class="bg-primary size-2 scale-100 rounded-lg transition-all duration-300 group-hover:scale-[100.8]"

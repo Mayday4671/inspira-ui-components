@@ -1,17 +1,23 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, useSlots } from 'vue'
 import type { CardSpotlightProps } from './card-spotlight'
 
 defineOptions({ name: 'IuCardSpotlight' })
 
 const props = withDefaults(defineProps<CardSpotlightProps>(), {
+  title: '',
+  description: '',
+  padded: true,
   class: '',
   slotClass: '',
   gradientSize: 200,
   gradientColor: '#262626',
   gradientOpacity: 0.8,
 })
+
+const slots = useSlots()
+const quickMode = computed(() => !slots.default)
 
 const mouseX = ref(-props.gradientSize * 10)
 const mouseY = ref(-props.gradientSize * 10)
@@ -53,8 +59,14 @@ const backgroundStyle = computed(() => {
     @mousemove="handleMouseMove"
     @mouseleave="handleMouseLeave"
   >
-    <div :class="cn(`relative z-10`, props.slotClass)">
-      <slot />
+    <!-- 快捷模式：title / description 直接出卡片；插槽模式：完全自定义 -->
+    <div :class="cn(`relative z-10 flex-1`, padded && quickMode && 'p-6', slotClass)">
+      <slot>
+        <h3 class="text-lg font-bold">{{ title }}</h3>
+        <p v-if="description" class="mt-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+          {{ description }}
+        </p>
+      </slot>
     </div>
     <div
       class="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"

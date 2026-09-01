@@ -12,6 +12,8 @@ const props = withDefaults(defineProps<NumberTickerProps>(), {
   delay: 0,
   duration: 1000,
   decimalPlaces: 2,
+  prefix: '',
+  suffix: '',
   transition: 'easeOutCubic',
 })
 
@@ -70,6 +72,8 @@ watch(
       )
     "
   >
+    <span v-if="prefix" class="mr-0.5 font-semibold">{{ prefix }}</span>
     {{ output }}
+    <span v-if="suffix" class="ml-0.5 font-semibold">{{ suffix }}</span>
   </span>
 </template>

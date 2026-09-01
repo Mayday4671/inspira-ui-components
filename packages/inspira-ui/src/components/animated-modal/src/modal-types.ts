@@ -13,6 +13,8 @@ export interface AnimatedModalBodyProps {
   overlayClass?: string
   /** 内容包裹层类名 */
   contentClass?: string
+  /** 弹层宽度（CSS 宽度，如 '460px'、'80%'） */
+  width?: string
   /** 是否显示右上角关闭按钮 */
   showClose?: boolean
   /** 点击遮罩关闭 */

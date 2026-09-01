@@ -20,6 +20,8 @@ import DemoSource from '../examples/number-ticker/basic.vue?raw'
 | duration      | 动画时长（毫秒）                            | `number` | `1000`         |
 | delay         | 动画延迟（毫秒）                            | `number` | `0`            |
 | decimalPlaces | 小数位数                                    | `number` | `2`            |
+| prefix        | 数字前缀，如 ¥、$                           | `string` | —              |
+| suffix        | 数字后缀，如 %、万                          | `string` | —              |
 | transition    | 缓动曲线（@vueuse TransitionPresets 键名）  | `string` | `easeOutCubic` |
 | class         | 根元素类名（合并）                          | `string` | —              |
 

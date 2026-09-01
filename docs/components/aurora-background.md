@@ -13,14 +13,16 @@ import DemoSource from '../examples/aurora-background/basic.vue?raw'
 
 ## 属性
 
-| 名称           | 说明                     | 类型      | 默认值  |
-| -------------- | ------------------------ | --------- | ------- |
-| radialGradient | 启用右上角径向遮罩       | `boolean` | `true`  |
-| class          | 根元素类名（合并）       | `string`  | —       |
+| 名称           | 说明                         | 类型      | 默认值   |
+| -------------- | ---------------------------- | --------- | -------- |
+| height         | 容器高度（CSS 长度）         | `string`  | `100vh`  |
+| rounded        | 容器圆角（CSS 长度）         | `string`  | —        |
+| radialGradient | 启用右上角径向遮罩           | `boolean` | `true`   |
+| class          | 根元素类名（合并）           | `string`  | —        |
 
 ::: tip
-组件默认渲染 `<main>` 并占满整屏（`h-screen`）且内容居中，适合作为落地页根容器；
-如需局部使用，可通过 class / style 覆盖高度（示例代码中演示了覆盖方式）。
+组件默认渲染 `<main>` 并整屏居中，适合作为落地页根容器；
+局部使用直接传 `height="320px"` 和 `rounded="14px"` 即可（上方示例代码）。
 :::
 
 ## 插槽

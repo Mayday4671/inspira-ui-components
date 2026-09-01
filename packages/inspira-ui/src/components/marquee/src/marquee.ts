@@ -10,4 +10,8 @@ export interface MarqueeProps {
   vertical?: boolean
   /** 内容重复次数（需覆盖宽度/高度以实现无缝滚动） */
   repeat?: number
+  /** 一圈滚动时长（秒） */
+  speed?: number
+  /** 相邻内容间距（CSS 长度） */
+  gap?: string
 }

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
+import { computed } from 'vue'
 import type { MarqueeProps } from './marquee'
 
 defineOptions({ name: 'IuMarquee' })
@@ -8,14 +9,22 @@ const props = withDefaults(defineProps<MarqueeProps>(), {
   pauseOnHover: false,
   vertical: false,
   repeat: 4,
+  speed: 40,
+  gap: '1rem',
 })
+
+const rootStyle = computed(() => ({
+  '--duration': `${props.speed}s`,
+  '--gap': props.gap,
+}))
 </script>
 
 <template>
   <div
+    :style="rootStyle"
     :class="
       cn(
-        `group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]`,
+        `group flex gap-(--gap) overflow-hidden p-2`,
         vertical ? 'flex-col' : 'flex-row',
         props.class,
       )

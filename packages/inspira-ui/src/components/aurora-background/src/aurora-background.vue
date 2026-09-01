@@ -7,7 +7,14 @@ defineOptions({ name: 'IuAuroraBackground' })
 
 const props = withDefaults(defineProps<AuroraBackgroundProps>(), {
   radialGradient: true,
+  height: '100vh',
+  rounded: '',
 })
+
+const rootStyle = computed(() => ({
+  height: props.height,
+  ...(props.rounded ? { borderRadius: props.rounded } : {}),
+}))
 
 const styles = computed(() => {
   return {
@@ -33,9 +40,10 @@ const styles = computed(() => {
 <template>
   <main>
     <div
+      :style="rootStyle"
       :class="
         cn(
-          `relative flex h-screen flex-col items-center justify-center bg-zinc-50 text-slate-950 dark:bg-zinc-900`,
+          `relative flex flex-col items-center justify-center bg-zinc-50 text-slate-950 dark:bg-zinc-900`,
           props.class,
         )
       "

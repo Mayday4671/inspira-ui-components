@@ -59,10 +59,19 @@ export default defineConfig({
           text: '交互 Misc',
           collapsed: false,
           items: [
-            { text: 'AnimatedModal 动画模态框', link: '/components/animated-modal' },
+            { text: 'Dialog 弹窗（推荐）', link: '/components/dialog' },
+            { text: 'AnimatedModal 五件套', link: '/components/animated-modal' },
             { text: 'AnimatedTooltip 悬浮名片', link: '/components/animated-tooltip' },
             { text: 'Marquee 跑马灯', link: '/components/marquee' },
             { text: 'BentoGrid Bento 网格', link: '/components/bento-grid' },
+          ],
+        },
+        {
+          text: '数据展示 Data',
+          collapsed: false,
+          items: [
+            { text: 'Statistic 指标卡', link: '/components/statistic' },
+            { text: 'NumberTicker 数字滚动', link: '/components/number-ticker' },
           ],
         },
         {

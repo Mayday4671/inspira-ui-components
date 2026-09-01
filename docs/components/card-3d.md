@@ -1,17 +1,35 @@
 <script setup>
+import Quick from '../examples/card-3d/quick.vue'
+import QuickSource from '../examples/card-3d/quick.vue?raw'
 import Demo from '../examples/card-3d/basic.vue'
 import DemoSource from '../examples/card-3d/basic.vue?raw'
 </script>
 
 # Card3D 3D 透视卡片
 
-鼠标悬停时整卡跟随旋转、内部元素沿 Z 轴分层抬升的 3D 卡片，由三个组件组合而成。
+鼠标悬停时整卡跟随旋转、内部元素沿 Z 轴分层抬升的 3D 卡片。提供**快捷模式**与**三件套高级模式**两种用法。
 
-## 基础用法
+## 快捷模式（推荐）
 
-<DemoBlock :demo="Demo" :code="DemoSource" title="3D 卡片示例" />
+<DemoBlock :demo="Quick" :code="QuickSource" title="一行代码出一张 3D 卡片" />
 
-## 组成
+## 高级模式（三件套）
+
+需要逐元素控制变换时使用：
+
+<DemoBlock :demo="Demo" :code="DemoSource" title="IuCard3DContainer / Body / Item" />
+
+## IuCard3D 属性
+
+| 名称         | 说明                     | 类型     | 默认值            |
+| ------------ | ------------------------ | -------- | ----------------- |
+| title        | 标题                     | `string` | —                 |
+| description  | 描述文字                 | `string` | —                 |
+| image        | 背景图地址（自动铺满）   | `string` | 内置渐变底图      |
+| cta          | 底部胶囊按钮文案         | `string` | —                 |
+| class        | 卡片主体类名（合并）     | `string` | —                 |
+
+## 三件套组件
 
 | 组件                | 职责                                     |
 | ------------------- | ---------------------------------------- |
@@ -20,7 +38,7 @@ import DemoSource from '../examples/card-3d/basic.vue?raw'
 | `IuCard3DItem`      | 可变换的内部元素，悬停时按 Z 轴浮起      |
 
 ::: tip
-在 `IuCard3DBody` 内使用普通 `div` 包裹 `IuCard3DItem` 时，需要给该 div 加
+在 `IuCard3DBody` 内用普通 `div` 包裹 `IuCard3DItem` 时，需要给该 div 加
 `style="transform-style: preserve-3d"`，否则 Z 轴位移不生效。
 :::
 
@@ -52,4 +70,4 @@ import DemoSource from '../examples/card-3d/basic.vue?raw'
 
 ## 插槽
 
-三个组件均提供 `default` 插槽承载内容。
+三件套组件均提供 `default` 插槽承载内容。

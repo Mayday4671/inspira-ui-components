@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
 import { ref, watchEffect } from 'vue'
+import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
 import type { RippleButtonProps } from './ripple-button'
 
 defineOptions({ name: 'IuRippleButton' })
 
 const props = withDefaults(defineProps<RippleButtonProps>(), {
-  rippleColor: '#ADD8E6',
+  rippleColor: undefined,
   duration: 600,
+  size: 'default',
 })
 
 const emit = defineEmits<{
@@ -18,6 +20,7 @@ const rippleButtonRef = ref<HTMLButtonElement | null>(null)
 const buttonRipples = ref<Array<{ x: number; y: number; size: number; key: number }>>([])
 
 function handleClick(event: MouseEvent) {
+  if (props.disabled || props.loading) return
   createRipple(event)
   emit('click', event)
 }
@@ -48,16 +51,21 @@ watchEffect(() => {
 <template>
   <button
     ref="rippleButtonRef"
+    :disabled="disabled || loading"
     :style="{ '--duration': `${props.duration}ms` }"
     :class="
       cn(
-        `bg-background text-primary border-border relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 px-4 py-2 text-center`,
+        `bg-background text-primary border-border relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 text-center`,
+        iuButtonSizeClass(size),
+        iuButtonStateClass,
+        block && 'flex w-full',
         props.class,
       )
     "
     @click="handleClick"
   >
-    <div class="relative z-10">
+    <div class="relative z-10 flex items-center">
+      <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
       <slot />
     </div>
 
@@ -71,7 +79,7 @@ watchEffect(() => {
           height: `${ripple.size}px`,
           top: `${ripple.y}px`,
           left: `${ripple.x}px`,
-          backgroundColor: props.rippleColor,
+          backgroundColor: rippleColor,
           transform: 'scale(0)',
           animationDuration: `${props.duration}ms`,
         }"
@@ -93,5 +101,6 @@ watchEffect(() => {
 
 .ripple-animation {
   animation: rippling var(--duration) ease-out;
+  background-color: var(--iu-primary, currentColor);
 }
 </style>

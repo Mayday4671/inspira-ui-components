@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { GlareCardProps } from './glare-card'
 
 defineOptions({ name: 'IuGlareCard' })
 
-const props = defineProps<GlareCardProps>()
+const props = withDefaults(defineProps<GlareCardProps>(), {
+  image: '',
+  width: 320,
+  radius: 48,
+})
 
 const isPointerInside = ref(false)
 const refElement = ref<HTMLElement | null>(null)
@@ -15,6 +19,11 @@ const state = ref({
   background: { x: 50, y: 50 },
   rotate: { x: 0, y: 0 },
 })
+
+const rootStyle = computed(() => ({
+  width: `${props.width}px`,
+  '--radius': `${props.radius}px`,
+}))
 
 function handlePointerMove(event: PointerEvent) {
   const rotateFactor = 0.4
@@ -62,6 +71,7 @@ function handlePointerLeave() {
 <template>
   <div
     ref="refElement"
+    :style="rootStyle"
     class="container-style relative isolate container aspect-17/21 w-[320px] transition-transform delay-(--delay) duration-(--duration) ease-(--easing) will-change-transform contain-[layout_style] perspective-[600px]"
     @pointermove="handlePointerMove"
     @pointerenter="handlePointerEnter"
@@ -74,7 +84,12 @@ function handlePointerLeave() {
         class="grid size-full mix-blend-soft-light [clip-path:inset(0_0_0_0_round_var(--radius))] [grid-area:1/1]"
       >
         <div :class="cn(`size-full bg-slate-950`, props.class)">
-          <slot />
+          <div
+            v-if="image"
+            class="h-full w-full bg-cover bg-center"
+            :style="{ backgroundImage: `url(${image})` }"
+          />
+          <slot v-else />
         </div>
       </div>
       <div

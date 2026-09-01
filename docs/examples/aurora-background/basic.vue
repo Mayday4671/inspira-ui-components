@@ -3,8 +3,8 @@ import { IuAuroraBackground } from 'inspira-ui-components'
 </script>
 
 <template>
-  <!-- 默认占满整屏（h-screen），这里用 style 覆盖为演示尺寸 -->
-  <IuAuroraBackground style="height: 320px; border-radius: 14px">
+  <!-- 局部使用：height / rounded 直接传参，无需手写样式覆盖 -->
+  <IuAuroraBackground height="320px" rounded="14px">
     <h4 style="position: relative; z-index: 10; margin: 0; font-size: 22px; font-weight: 700">
       Aurora Background
     </h4>

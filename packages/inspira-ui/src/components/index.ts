@@ -1,8 +1,12 @@
+export type { IuButtonSize, IuButtonBaseProps } from './button-shared'
+
 export * from './interactive-hover-button'
 export * from './rainbow-button'
 export * from './ripple-button'
 export * from './gradient-button'
 export * from './shimmer-button'
+
+export * from './dialog'
 
 export * from './card-3d'
 export * from './card-spotlight'
@@ -19,6 +23,8 @@ export * from './animated-modal'
 export * from './animated-tooltip'
 export * from './marquee'
 export * from './bento-grid'
+
+export * from './statistic'
 
 export * from './aurora-background'
 export * from './pattern-background'

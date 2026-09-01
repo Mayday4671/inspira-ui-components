@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<AnimatedModalBodyProps>(), {
   class: '',
   overlayClass: '',
   contentClass: '',
+  width: '',
   showClose: true,
   closeOnOutside: true,
   lockScroll: true,
@@ -131,6 +132,7 @@ onBeforeUnmount(() => {
           role="dialog"
           aria-modal="true"
           tabindex="-1"
+          :style="props.width ? { width: props.width } : undefined"
           :initial="{
             opacity: 0,
             scale: 0.5,

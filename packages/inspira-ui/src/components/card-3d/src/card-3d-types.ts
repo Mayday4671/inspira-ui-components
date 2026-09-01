@@ -1,5 +1,9 @@
 import type { HTMLAttributes } from 'vue'
 
+import type { Card3DProps } from './card-3d-quick'
+
+export type { Card3DProps }
+
 export interface Card3DContainerProps {
   class?: HTMLAttributes['class']
   /** 外层容器（perspective 容器）类名 */
