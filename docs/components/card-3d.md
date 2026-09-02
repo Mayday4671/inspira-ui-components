@@ -33,11 +33,6 @@ import DemoSource from '../examples/card-3d/basic.vue?raw'
 | `IuCard3DBody`      | 卡片主体（默认 384×384），保持 3D 空间   |
 | `IuCard3DItem`      | 可变换的内部元素，悬停时按 Z 轴浮起      |
 
-::: tip
-在 `IuCard3DBody` 内用普通 `div` 包裹 `IuCard3DItem` 时，需要给该 div 加
-`style="transform-style: preserve-3d"`，否则 Z 轴位移不生效。
-:::
-
 ## IuCard3DContainer 属性
 
 | 名称           | 说明                             | 类型     | 默认值 |

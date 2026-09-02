@@ -65,7 +65,7 @@ const principles = [
         </p>
         <div class="hero-actions">
           <a class="hero-btn hero-btn-main" href="/guide/quick-start">快速上手 →</a>
-          <a class="hero-btn" href="/components/dialog">看组件</a>
+          <a class="hero-btn" href="/components/">看组件</a>
         </div>
 
         <div class="hero-stats">
