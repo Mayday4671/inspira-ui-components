@@ -30,5 +30,12 @@ import InteractiveSource from '../examples/number-ticker/interactive.vue?raw'
 | suffix        | 数字后缀，如 %、万                          | `string` | —              |
 | transition    | 缓动曲线（@vueuse TransitionPresets 键名）  | `string` | `easeOutCubic` |
 | class         | 根元素类名（合并）                          | `string` | —              |
+| reducedMotion | 减少动效策略                                | `'system' \| 'always' \| 'never'` | `system` |
+
+## 实例方法
+
+| 名称 | 说明 |
+| --- | --- |
+| restart | 重新播放数字动画 |
 
 可用缓动包括：`linear`、`easeOut`、`easeInOut`、`easeOutCubic`、`easeOutExpo`、`easeOutBack`、`circOut` 等。

@@ -28,3 +28,8 @@ import DemoSource from '../examples/typewriter-text/basic.vue?raw'
 | cursorClass             | 光标类名                                   | `string`    | `ml-1`   |
 | cursorAnimationVariants | 光标动画（motion-v variants）              | `object`    | 闪烁动画 |
 | class                   | 根元素类名（合并）                         | `string`    | —        |
+| reducedMotion           | 减少动效策略                               | `'system' \| 'always' \| 'never'` | `system` |
+
+## 实例方法
+
+`play()`、`pause()`、`restart()` 用于控制播放。

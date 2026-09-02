@@ -2,6 +2,8 @@
 import { cn } from '../../../utils'
 import { TransitionPresets, useElementVisibility, useTransition } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
+import { nextTick } from 'vue'
+import { shouldReduceMotion, type RestartableMotionExposes } from '../../motion-shared'
 import type { NumberTickerProps } from './number-ticker'
 
 defineOptions({ name: 'IuNumberTicker' })
@@ -15,7 +17,10 @@ const props = withDefaults(defineProps<NumberTickerProps>(), {
   prefix: '',
   suffix: '',
   transition: 'easeOutCubic',
+  reducedMotion: 'system',
 })
+
+const reduceMotion = computed(() => shouldReduceMotion(props.reducedMotion))
 
 const spanRef = ref<HTMLSpanElement>()
 
@@ -28,10 +33,11 @@ const transitionOutput = useTransition(transitionValue, {
 })
 
 const output = computed(() => {
+  const displayedValue = reduceMotion.value ? props.value : transitionOutput.value
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: props.decimalPlaces,
     maximumFractionDigits: props.decimalPlaces,
-  }).format(Number(transitionOutput.value.toFixed(props.decimalPlaces)))
+  }).format(Number(displayedValue.toFixed(props.decimalPlaces)))
 })
 
 const isInView = useElementVisibility(spanRef, {
@@ -60,6 +66,16 @@ watch(
     }
   },
 )
+
+function restart() {
+  if (reduceMotion.value) return
+  transitionValue.value = props.direction === 'down' ? props.value : 0
+  void nextTick(() => {
+    transitionValue.value = props.direction === 'down' ? 0 : props.value
+  })
+}
+
+defineExpose<RestartableMotionExposes>({ restart })
 </script>
 
 <template>

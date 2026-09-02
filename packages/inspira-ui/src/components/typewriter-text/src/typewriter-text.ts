@@ -1,5 +1,6 @@
 import type { HTMLAttributes } from 'vue'
 import type { VariantType } from 'motion-v'
+import type { ReducedMotionMode } from '../../motion-shared'
 
 type VariantResolver = (custom: any) => VariantType
 
@@ -34,4 +35,5 @@ export interface TypewriterTextProps {
   cursorAnimationVariants?: TypewriterCursorAnimationVariants
   cursorClass?: HTMLAttributes['class']
   class?: HTMLAttributes['class']
+  reducedMotion?: ReducedMotionMode
 }

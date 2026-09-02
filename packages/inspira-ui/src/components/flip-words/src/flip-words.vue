@@ -2,12 +2,14 @@
 import { cn } from '../../../utils'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { FlipWordsProps } from './flip-words'
+import { shouldReduceMotion, type PlayableMotionExposes } from '../../motion-shared'
 
 defineOptions({ name: 'IuFlipWords' })
 
 const props = withDefaults(defineProps<FlipWordsProps>(), {
   duration: 3000,
   class: '',
+  reducedMotion: 'system',
 })
 
 defineEmits(['animationStart', 'animationComplete'])
@@ -15,6 +17,7 @@ defineEmits(['animationStart', 'animationComplete'])
 const currentWord = ref(props.words[0])
 const isVisible = ref(true)
 const timeoutId = ref<number | null>(null)
+const paused = ref(false)
 
 function startAnimation() {
   isVisible.value = false
@@ -35,9 +38,29 @@ const splitWords = computed(() => {
 })
 
 function startTimeout() {
+  if (paused.value || shouldReduceMotion(props.reducedMotion) || props.words.length < 2) return
   timeoutId.value = window.setTimeout(() => {
     startAnimation()
   }, props.duration)
+}
+
+function pause() {
+  paused.value = true
+  if (timeoutId.value) clearTimeout(timeoutId.value)
+}
+
+function play() {
+  if (!paused.value) return
+  paused.value = false
+  startTimeout()
+}
+
+function restart() {
+  if (timeoutId.value) clearTimeout(timeoutId.value)
+  currentWord.value = props.words[0] ?? ''
+  isVisible.value = true
+  paused.value = false
+  startTimeout()
 }
 
 onMounted(() => {
@@ -55,6 +78,8 @@ watch(isVisible, (newValue) => {
     startTimeout()
   }
 })
+
+defineExpose<PlayableMotionExposes>({ play, pause, restart })
 </script>
 
 <template>

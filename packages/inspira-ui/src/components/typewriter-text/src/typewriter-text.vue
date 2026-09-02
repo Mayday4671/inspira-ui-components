@@ -3,6 +3,7 @@ import { cn } from '../../../utils'
 import { Motion } from 'motion-v'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { TypewriterTextProps } from './typewriter-text'
+import { shouldReduceMotion, type PlayableMotionExposes } from '../../motion-shared'
 
 defineOptions({ name: 'IuTypewriterText', inheritAttrs: false })
 
@@ -29,6 +30,7 @@ const props = withDefaults(defineProps<TypewriterTextProps>(), {
       },
     },
   }),
+  reducedMotion: 'system',
 })
 
 const texts = computed(() => (Array.isArray(props.text) ? props.text : [props.text]))
@@ -36,9 +38,12 @@ const displayText = ref('')
 const currentIndex = ref(0)
 const currentTextIndex = ref(0)
 const isDeleting = ref(false)
+const paused = ref(false)
 let timeoutId: ReturnType<typeof setTimeout> | undefined
 
 const currentText = computed(() => texts.value[currentTextIndex.value] ?? '')
+const reduceMotion = computed(() => shouldReduceMotion(props.reducedMotion))
+const renderedText = computed(() => reduceMotion.value ? currentText.value : displayText.value)
 const hideCursor = computed(
   () =>
     props.hideCursorOnType && (currentIndex.value < currentText.value.length || isDeleting.value),
@@ -53,6 +58,7 @@ function clearTypingTimeout() {
 
 function scheduleTyping(delay: number) {
   clearTypingTimeout()
+  if (paused.value || shouldReduceMotion(props.reducedMotion)) return
   timeoutId = setTimeout(typeNextCharacter, Math.max(0, delay))
 }
 
@@ -94,13 +100,36 @@ function resetTyping() {
   currentIndex.value = 0
   currentTextIndex.value = 0
   isDeleting.value = false
+  if (shouldReduceMotion(props.reducedMotion)) {
+    displayText.value = currentText.value
+    currentIndex.value = currentText.value.length
+    return
+  }
   scheduleTyping(props.initialDelay)
+}
+
+function play() {
+  if (!paused.value) return
+  paused.value = false
+  scheduleTyping(0)
+}
+
+function pause() {
+  paused.value = true
+  clearTypingTimeout()
+}
+
+function restart() {
+  paused.value = false
+  resetTyping()
 }
 
 onMounted(resetTyping)
 onBeforeUnmount(clearTypingTimeout)
 
 watch(() => props.text, resetTyping, { deep: true })
+
+defineExpose<PlayableMotionExposes>({ play, pause, restart })
 </script>
 
 <template>
@@ -109,10 +138,10 @@ watch(() => props.text, resetTyping, { deep: true })
     v-bind="$attrs"
     :class="cn('inline tracking-tight whitespace-pre-wrap', props.class)"
   >
-    <span>{{ displayText }}</span>
+    <span>{{ renderedText }}</span>
 
     <Motion
-      v-if="props.showCursor"
+      v-if="props.showCursor && !reduceMotion"
       as="span"
       :variants="props.cursorAnimationVariants"
       initial="initial"

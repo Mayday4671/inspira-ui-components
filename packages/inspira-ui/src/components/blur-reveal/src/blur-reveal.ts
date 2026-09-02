@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from 'vue'
+import type { ReducedMotionMode } from '../../motion-shared'
 
 export interface BlurRevealProps {
   /** 单个子元素动画时长（秒） */
@@ -10,4 +11,5 @@ export interface BlurRevealProps {
   /** 初始 Y 轴偏移（px） */
   yOffset?: number
   class?: HTMLAttributes['class']
+  reducedMotion?: ReducedMotionMode
 }

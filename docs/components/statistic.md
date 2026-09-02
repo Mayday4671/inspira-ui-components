@@ -24,6 +24,11 @@ import DemoSource from '../examples/statistic/basic.vue?raw'
 | trend       | 涨跌幅（百分比数值，正绿▲负红▼）            | `number` | —       |
 | trend-label | 涨跌幅说明文字                              | `string` | —       |
 | class       | 根元素类名（合并）                          | `string` | —       |
+| reducedMotion | 减少动效策略                              | `'system' \| 'always' \| 'never'` | `system` |
+
+## 实例方法
+
+`restart()` 重新播放内部数字动画。
 
 ## 插槽
 

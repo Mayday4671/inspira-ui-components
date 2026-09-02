@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from 'vue'
+import type { ReducedMotionMode } from '../../motion-shared'
 
 export interface TextGenerateEffectProps {
   /** 要逐词显示的文本 */
@@ -10,4 +11,5 @@ export interface TextGenerateEffectProps {
   /** 首个词出现前的延迟（毫秒） */
   delay?: number
   class?: HTMLAttributes['class']
+  reducedMotion?: ReducedMotionMode
 }

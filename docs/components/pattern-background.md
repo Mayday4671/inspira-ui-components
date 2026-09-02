@@ -22,6 +22,10 @@ import DemoSource from '../examples/pattern-background/basic.vue?raw'
 | mask      | 遮罩           | `'ellipse' \| 'ellipse-top'` | `ellipse` |
 | speed     | 动画速度（毫秒/周期） | `number` | `10000` |
 | class     | 根元素类名（合并）| `string` | — |
+| height / rounded | 容器高度 / 圆角 | `string` | — |
+| centered  | 居中插槽内容 | `boolean` | `false` |
+| paused    | 暂停背景动画 | `boolean` | `false` |
+| reducedMotion | 减少动效策略 | `'system' \| 'always' \| 'never'` | `system` |
 
 ## 常量
 

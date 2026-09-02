@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { Motion } from 'motion-v'
-import { onMounted, ref, useSlots, watchEffect, type VNode } from 'vue'
+import { computed, onMounted, ref, useSlots, watchEffect, type VNode } from 'vue'
 import type { BlurRevealProps } from './blur-reveal'
+import { shouldReduceMotion, type RestartableMotionExposes } from '../../motion-shared'
 
 defineOptions({ name: 'IuBlurReveal' })
 
@@ -10,11 +11,14 @@ const props = withDefaults(defineProps<BlurRevealProps>(), {
   delay: 2,
   blur: '20px',
   yOffset: 20,
+  reducedMotion: 'system',
 })
 
 const slots = useSlots() as unknown as { default?: () => VNode[] }
 
 const children = ref<VNode[]>([])
+const renderKey = ref(0)
+const reduceMotion = computed(() => shouldReduceMotion(props.reducedMotion))
 
 onMounted(() => {
   // 响应式捕获默认插槽中的全部子节点
@@ -38,11 +42,21 @@ function getAnimate() {
     y: 0,
   }
 }
+
+function restart() {
+  renderKey.value += 1
+}
+
+defineExpose<RestartableMotionExposes>({ restart })
 </script>
 
 <template>
-  <div :class="props.class">
+  <div :key="renderKey" :class="props.class">
+    <template v-if="reduceMotion">
+      <component :is="child" v-for="(child, index) in children" :key="index" />
+    </template>
     <Motion
+      v-else
       v-for="(child, index) in children"
       :key="index"
       as="div"

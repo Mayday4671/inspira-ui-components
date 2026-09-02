@@ -1,5 +1,6 @@
 import type { HTMLAttributes } from 'vue'
 import type { TransitionPresets } from '@vueuse/core'
+import type { ReducedMotionMode } from '../../motion-shared'
 
 type TransitionPresetKey = keyof typeof TransitionPresets
 
@@ -21,6 +22,7 @@ export interface NumberTickerProps {
   class?: HTMLAttributes['class']
   /** 缓动曲线（@vueuse/core TransitionPresets 键名） */
   transition?: TransitionPresetKey
+  reducedMotion?: ReducedMotionMode
 }
 
 export type { TransitionPresetKey }

@@ -20,6 +20,11 @@ import DemoSource from '../examples/blur-reveal/basic.vue?raw'
 | blur     | 初始模糊半径                   | `string` | `20px`  |
 | yOffset  | 初始 Y 轴偏移（px）            | `number` | `20`    |
 | class    | 根元素类名（合并）             | `string` | —       |
+| reducedMotion | 减少动效策略               | `'system' \| 'always' \| 'never'` | `system` |
+
+## 实例方法
+
+`restart()` 重新播放揭示动画。
 
 ::: tip
 每个直接子元素会依次延迟 `delay × 索引` 秒出现，形成错落揭示节奏。

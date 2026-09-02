@@ -11,6 +11,9 @@ import {
     :variant="PATTERN_BACKGROUND_VARIANT.Grid"
     :speed="PATTERN_BACKGROUND_SPEED.Slow"
     animate
+    centered
+    height="200px"
+    rounded="14px"
   >
     Grid 图案 · 缓慢滚动
   </IuPatternBackground>

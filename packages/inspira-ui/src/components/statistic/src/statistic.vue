@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { IuNumberTicker } from '../../number-ticker'
+import type { RestartableMotionExposes } from '../../motion-shared'
 import type { StatisticProps } from './statistic'
 
 defineOptions({ name: 'IuStatistic' })
@@ -14,9 +15,17 @@ const props = withDefaults(defineProps<StatisticProps>(), {
   duration: 1200,
   trend: undefined,
   trendLabel: '',
+  reducedMotion: 'system',
 })
 
 const trendUp = computed(() => (props.trend ?? 0) >= 0)
+const tickerRef = ref<RestartableMotionExposes>()
+
+function restart() {
+  tickerRef.value?.restart()
+}
+
+defineExpose<RestartableMotionExposes>({ restart })
 </script>
 
 <template>
@@ -29,11 +38,13 @@ const trendUp = computed(() => (props.trend ?? 0) >= 0)
     <div class="flex items-baseline gap-2">
       <p class="m-0 text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
         <IuNumberTicker
+          ref="tickerRef"
           :value="value"
           :decimal-places="decimals"
           :duration="duration"
           :prefix="prefix"
           :suffix="suffix"
+          :reduced-motion="reducedMotion"
         />
       </p>
 

@@ -20,3 +20,8 @@ import DemoSource from '../examples/text-generate-effect/basic.vue?raw'
 | duration | 每个词的过渡时长（秒）        | `number`  | `0.7`  |
 | delay    | 首个词出现前的延迟（毫秒）    | `number`  | `0`    |
 | class    | 根元素类名（合并）            | `string`  | —      |
+| reducedMotion | 减少动效策略              | `'system' \| 'always' \| 'never'` | `system` |
+
+## 实例方法
+
+`restart()` 重新播放文本生成效果。

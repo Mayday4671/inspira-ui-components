@@ -1,6 +1,7 @@
 import type { VariantProps } from 'class-variance-authority'
 import type { HTMLAttributes } from 'vue'
 import { cva } from 'class-variance-authority'
+import type { ReducedMotionMode } from '../../motion-shared'
 
 type ObjectValues<T> = T[keyof T]
 
@@ -48,6 +49,11 @@ export interface PatternBackgroundProps {
   mask?: PatternBackgroundMaskVariants['mask']
   /** 动画速度（毫秒/周期） */
   speed?: ObjectValues<typeof PATTERN_BACKGROUND_SPEED>
+  height?: string
+  rounded?: string
+  centered?: boolean
+  paused?: boolean
+  reducedMotion?: ReducedMotionMode
 }
 
 export const patternBackgroundVariants = cva('relative text-clip', {

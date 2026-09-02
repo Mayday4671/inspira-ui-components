@@ -19,6 +19,8 @@ import DemoSource from '../examples/aurora-background/basic.vue?raw'
 | rounded        | 容器圆角（CSS 长度）         | `string`  | —        |
 | radialGradient | 启用右上角径向遮罩           | `boolean` | `true`   |
 | class          | 根元素类名（合并）           | `string`  | —        |
+| paused         | 暂停背景动画                 | `boolean` | `false`  |
+| reducedMotion  | 减少动效策略                 | `'system' \| 'always' \| 'never'` | `system` |
 
 ::: tip
 组件默认渲染 `<main>` 并整屏居中，适合作为落地页根容器；

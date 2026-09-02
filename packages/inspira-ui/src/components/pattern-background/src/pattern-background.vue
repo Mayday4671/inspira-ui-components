@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
 import { computed } from 'vue'
+import { shouldReduceMotion } from '../../motion-shared'
 import {
   PATTERN_BACKGROUND_DIRECTION,
   PATTERN_BACKGROUND_SPEED,
@@ -18,16 +19,29 @@ const props = withDefaults(defineProps<PatternBackgroundProps>(), {
   speed: () => PATTERN_BACKGROUND_SPEED.Default,
   size: undefined,
   mask: undefined,
+  height: undefined,
+  rounded: undefined,
+  centered: false,
+  paused: false,
+  reducedMotion: 'system',
 })
 
 const durationFromSpeed = computed(() => `${props.speed}ms`)
+const animationPaused = computed(() => props.paused || shouldReduceMotion(props.reducedMotion))
+const rootStyle = computed(() => ({
+  height: props.height,
+  borderRadius: props.rounded,
+  animationPlayState: animationPaused.value ? 'paused' : 'running',
+}))
 </script>
 
 <template>
   <div
+    :style="rootStyle"
     :class="[
       patternBackgroundVariants({ variant, size }),
       ` ${animate ? `move move-${direction}` : ''} `,
+      centered ? 'flex items-center justify-center overflow-hidden' : '',
       props.class,
     ]"
   >
@@ -39,7 +53,9 @@ const durationFromSpeed = computed(() => `${props.speed}ms`)
         )
       "
     />
-    <slot />
+    <div class="relative z-10">
+      <slot />
+    </div>
   </div>
 </template>
 

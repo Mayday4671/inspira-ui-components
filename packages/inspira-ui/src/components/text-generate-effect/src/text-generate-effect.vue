@@ -2,6 +2,7 @@
 import { cn } from '../../../utils'
 import { computed, onMounted, ref } from 'vue'
 import type { TextGenerateEffectProps } from './text-generate-effect'
+import { shouldReduceMotion, type RestartableMotionExposes } from '../../motion-shared'
 
 defineOptions({ name: 'IuTextGenerateEffect' })
 
@@ -9,20 +10,34 @@ const props = withDefaults(defineProps<TextGenerateEffectProps>(), {
   duration: 0.7,
   delay: 0,
   filter: true,
+  reducedMotion: 'system',
 })
 
 const scope = ref<HTMLElement | null>(null)
 const wordsArray = computed(() => props.words.split(' '))
 
 const spanStyle = computed(() => ({
-  opacity: 0,
-  filter: props.filter ? 'blur(10px)' : 'none',
+  opacity: shouldReduceMotion(props.reducedMotion) ? 1 : 0,
+  filter: shouldReduceMotion(props.reducedMotion) ? 'none' : props.filter ? 'blur(10px)' : 'none',
   transition: `opacity ${props.duration}s, filter ${props.duration}s`,
 }))
 
-onMounted(() => {
+function restart() {
   if (scope.value) {
     const spans = scope.value.querySelectorAll('span')
+
+    if (shouldReduceMotion(props.reducedMotion)) {
+      spans.forEach((span: HTMLElement) => {
+        span.style.opacity = '1'
+        span.style.filter = 'none'
+      })
+      return
+    }
+
+    spans.forEach((span: HTMLElement) => {
+      span.style.opacity = '0'
+      span.style.filter = props.filter ? 'blur(10px)' : 'none'
+    })
 
     setTimeout(() => {
       spans.forEach((span: HTMLElement, index: number) => {
@@ -33,7 +48,10 @@ onMounted(() => {
       })
     }, props.delay)
   }
-})
+}
+
+onMounted(restart)
+defineExpose<RestartableMotionExposes>({ restart })
 </script>
 
 <template>

@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from 'vue'
+import type { ReducedMotionMode } from '../../motion-shared'
 
 export interface StatisticProps {
   /** 指标名称 */
@@ -18,4 +19,5 @@ export interface StatisticProps {
   /** 涨跌幅说明文字 */
   trendLabel?: string
   class?: HTMLAttributes['class']
+  reducedMotion?: ReducedMotionMode
 }

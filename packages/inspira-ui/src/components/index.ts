@@ -1,4 +1,9 @@
 export type { IuButtonSize, IuButtonBaseProps, IuButtonExposes } from './button-shared'
+export type {
+  ReducedMotionMode,
+  RestartableMotionExposes,
+  PlayableMotionExposes,
+} from './motion-shared'
 
 export * from './interactive-hover-button'
 export * from './rainbow-button'
