@@ -1,4 +1,4 @@
-export type { IuButtonSize, IuButtonBaseProps } from './button-shared'
+export type { IuButtonSize, IuButtonBaseProps, IuButtonExposes } from './button-shared'
 
 export * from './interactive-hover-button'
 export * from './rainbow-button'

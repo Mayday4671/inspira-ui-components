@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
 import { computed } from 'vue'
-import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
+import { iuButtonSizeClass, iuButtonStateClass, useIuButton } from '../../button-shared'
 import type { ShimmerButtonProps } from './shimmer-button'
 
 defineOptions({ name: 'IuShimmerButton' })
@@ -14,7 +14,12 @@ const props = withDefaults(defineProps<ShimmerButtonProps>(), {
   shimmerDuration: '3s',
   background: undefined,
   size: 'default',
+  nativeType: 'button',
 })
+
+const emit = defineEmits<{ click: [event: MouseEvent] }>()
+const { rootRef, resolvedTag, rootAttrs, handleClick, focus, blur } = useIuButton(props, (event, value) => emit(event, value))
+defineExpose({ ref: rootRef, focus, blur })
 
 const isLight = computed(() => props.variant === 'light')
 
@@ -29,8 +34,10 @@ const resolved = computed(() => ({
 </script>
 
 <template>
-  <button
-    :disabled="disabled || loading"
+  <component
+    :is="resolvedTag"
+    ref="rootRef"
+    v-bind="rootAttrs"
     :style="{
       '--spread': '90deg',
       '--shimmer-color': resolved.shimmerColor,
@@ -49,6 +56,7 @@ const resolved = computed(() => ({
         $props.class,
       )
     "
+    @click="handleClick"
   >
     <div class="@container-[size] absolute inset-0 -z-30 overflow-visible blur-[2px]">
       <div
@@ -60,7 +68,8 @@ const resolved = computed(() => ({
       </div>
     </div>
     <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-    <slot />
+    <template v-if="loading && loadingText">{{ loadingText }}</template>
+    <slot v-else />
 
     <div
       class="insert-0 absolute size-full transform-gpu rounded-2xl px-4 py-1.5 text-sm font-medium shadow-[inset_0_-8px_10px_#ffffff1f] transition-all duration-300 ease-in-out group-hover:shadow-[inset_0_-6px_10px_#ffffff3f] group-active:shadow-[inset_0_-10px_10px_#ffffff3f]"
@@ -69,7 +78,7 @@ const resolved = computed(() => ({
     <div
       class="absolute inset-(--cut) -z-20 [border-radius:var(--radius)] [background:var(--bg)]"
     />
-  </button>
+  </component>
 </template>
 
 <style scoped>

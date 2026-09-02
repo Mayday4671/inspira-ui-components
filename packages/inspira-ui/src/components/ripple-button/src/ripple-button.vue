@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
 import { ref, watchEffect } from 'vue'
-import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
+import { iuButtonSizeClass, iuButtonStateClass, useIuButton } from '../../button-shared'
 import type { RippleButtonProps } from './ripple-button'
 
 defineOptions({ name: 'IuRippleButton' })
@@ -10,23 +10,28 @@ const props = withDefaults(defineProps<RippleButtonProps>(), {
   rippleColor: undefined,
   duration: 600,
   size: 'default',
+  nativeType: 'button',
 })
 
 const emit = defineEmits<{
   (e: 'click', event: MouseEvent): void
 }>()
 
-const rippleButtonRef = ref<HTMLButtonElement | null>(null)
+const { rootRef, resolvedTag, rootAttrs, handleClick: emitClick, focus, blur } = useIuButton(
+  props,
+  (event, value) => emit(event, value),
+)
+defineExpose({ ref: rootRef, focus, blur })
 const buttonRipples = ref<Array<{ x: number; y: number; size: number; key: number }>>([])
 
 function handleClick(event: MouseEvent) {
   if (props.disabled || props.loading) return
   createRipple(event)
-  emit('click', event)
+  emitClick(event)
 }
 
 function createRipple(event: MouseEvent) {
-  const button = rippleButtonRef.value
+  const button = rootRef.value
   if (!button) return
 
   const rect = button.getBoundingClientRect()
@@ -49,9 +54,10 @@ watchEffect(() => {
 </script>
 
 <template>
-  <button
-    ref="rippleButtonRef"
-    :disabled="disabled || loading"
+  <component
+    :is="resolvedTag"
+    ref="rootRef"
+    v-bind="rootAttrs"
     :style="{ '--duration': `${props.duration}ms` }"
     :class="
       cn(
@@ -66,7 +72,8 @@ watchEffect(() => {
   >
     <div class="relative z-10 flex items-center">
       <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-      <slot />
+      <template v-if="loading && loadingText">{{ loadingText }}</template>
+      <slot v-else />
     </div>
 
     <span class="pointer-events-none absolute inset-0">
@@ -85,7 +92,7 @@ watchEffect(() => {
         }"
       />
     </span>
-  </button>
+  </component>
 </template>
 
 <style scoped>

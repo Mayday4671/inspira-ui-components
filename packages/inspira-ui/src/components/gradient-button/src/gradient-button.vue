@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
 import { computed } from 'vue'
-import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
+import { iuButtonSizeClass, iuButtonStateClass, useIuButton } from '../../button-shared'
 import { GRADIENT_PRESETS, type GradientButtonProps } from './gradient-button'
 
 defineOptions({ name: 'IuGradientButton' })
@@ -13,7 +13,12 @@ const props = withDefaults(defineProps<GradientButtonProps>(), {
   borderRadius: 8,
   blur: 4,
   size: 'default',
+  nativeType: 'button',
 })
+
+const emit = defineEmits<{ click: [event: MouseEvent] }>()
+const { rootRef, resolvedTag, rootAttrs, handleClick, focus, blur } = useIuButton(props, (event, value) => emit(event, value))
+defineExpose({ ref: rootRef, focus, blur })
 
 const preset = GRADIENT_PRESETS[props.variant]
 
@@ -42,8 +47,10 @@ function textColorFor(bg: string): string {
 </script>
 
 <template>
-  <button
-    :disabled="disabled || loading"
+  <component
+    :is="resolvedTag"
+    ref="rootRef"
+    v-bind="rootAttrs"
     :class="
       cn(
         `animate-rainbow rainbow-btn relative flex cursor-pointer items-center justify-center overflow-hidden before:absolute before:-inset-[200%]`,
@@ -53,12 +60,14 @@ function textColorFor(bg: string): string {
         props.class,
       )
     "
+    @click="handleClick"
   >
     <span class="btn-content inline-flex size-full items-center justify-center px-4 py-2">
       <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-      <slot />
+      <template v-if="loading && loadingText">{{ loadingText }}</template>
+      <slot v-else />
     </span>
-  </button>
+  </component>
 </template>
 
 <style scoped>

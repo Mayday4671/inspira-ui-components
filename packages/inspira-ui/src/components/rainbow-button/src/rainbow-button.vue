@@ -1,23 +1,32 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
-import { iuButtonSizeClass, iuButtonStateClass } from '../../button-shared'
+import { iuButtonSizeClass, iuButtonStateClass, useIuButton } from '../../button-shared'
 import type { RainbowButtonProps } from './rainbow-button'
 
 defineOptions({ name: 'IuRainbowButton' })
 
 const props = withDefaults(defineProps<RainbowButtonProps>(), {
   speed: 2,
-  is: 'button',
   size: 'default',
+  nativeType: 'button',
 })
+
+const emit = defineEmits<{ click: [event: MouseEvent] }>()
+const { rootRef, resolvedTag, rootAttrs, handleClick, focus, blur } = useIuButton(
+  props,
+  (event, value) => emit(event, value),
+  () => props.is,
+)
+defineExpose({ ref: rootRef, focus, blur })
 
 const speedInSeconds = `${props.speed}s`
 </script>
 
 <template>
   <component
-    :is="is"
-    :disabled="is === 'button' ? disabled || loading : undefined"
+    :is="resolvedTag"
+    ref="rootRef"
+    v-bind="rootAttrs"
     :class="
       cn(
         `rainbow-button group text-primary-foreground focus-visible:ring-ring relative inline-flex cursor-pointer items-center justify-center rounded-xl border-0 bg-[linear-gradient(#121213,#121213),linear-gradient(#121213_50%,rgba(18,18,19,0.6)_80%,rgba(18,18,19,0)),linear-gradient(90deg,var(--color-1),var(--color-5),var(--color-3),var(--color-4),var(--color-2))] bg-size-[200%] [background-clip:padding-box,border-box,border-box] bg-origin-border font-medium transition-colors [border:calc(0.08*1rem)_solid_transparent] before:absolute before:bottom-[-20%] before:left-1/2 before:z-0 before:h-1/5 before:w-3/5 before:-translate-x-1/2 before:bg-[linear-gradient(90deg,var(--color-1),var(--color-5),var(--color-3),var(--color-4),var(--color-2))] before:bg-size-[200%] before:filter-[blur(calc(0.8*1rem))] focus-visible:ring-1 focus-visible:outline-none dark:bg-[linear-gradient(#fff,#fff),linear-gradient(#fff_50%,rgba(255,255,255,0.6)_80%,rgba(0,0,0,0)),linear-gradient(90deg,var(--color-1),var(--color-5),var(--color-3),var(--color-4),var(--color-2))]`,
@@ -27,9 +36,11 @@ const speedInSeconds = `${props.speed}s`
         props.class,
       )
     "
+    @click="handleClick"
   >
     <span v-if="loading" class="mr-2 inline-block size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-    <slot />
+    <template v-if="loading && loadingText">{{ loadingText }}</template>
+    <slot v-else />
   </component>
 </template>
 
