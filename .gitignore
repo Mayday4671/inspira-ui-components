@@ -9,5 +9,6 @@ dist-consumer/
 **/.vitepress/dist/
 coverage/
 .playwright-mcp/
+.worktrees/
 pg-*.png
 docs-*.png
