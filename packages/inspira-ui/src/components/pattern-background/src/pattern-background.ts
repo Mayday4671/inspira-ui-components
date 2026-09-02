@@ -56,7 +56,7 @@ export interface PatternBackgroundProps {
   reducedMotion?: ReducedMotionMode
 }
 
-export const patternBackgroundVariants = cva('relative text-clip', {
+export const patternBackgroundVariants = cva('relative w-full text-clip', {
   variants: {
     variant: {
       [PATTERN_BACKGROUND_VARIANT.Grid]:

@@ -27,6 +27,7 @@ describe('motion public contracts', () => {
     expect(pattern.attributes('style')).toContain('height: 180px')
     expect(pattern.attributes('style')).toContain('border-radius: 12px')
     expect(pattern.attributes('style')).toContain('animation-play-state: paused')
+    expect(pattern.classes()).toContain('w-full')
   })
 
   it.each([
