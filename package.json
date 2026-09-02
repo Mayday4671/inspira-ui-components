@@ -11,8 +11,9 @@
     "dev": "pnpm --filter playground dev",
     "dev:dist": "pnpm --filter playground dev:dist",
     "dev:docs": "pnpm --filter docs dev",
-    "typecheck": "pnpm --filter inspira-ui typecheck",
-    "build": "pnpm --filter inspira-ui build",
+    "test:workspace": "node scripts/verify-workspace-filters.mjs",
+    "typecheck": "pnpm --filter inspira-ui-components typecheck",
+    "build": "pnpm --filter inspira-ui-components build",
     "build:playground": "pnpm --filter playground build",
     "build:docs": "pnpm --filter docs build",
     "build:all": "pnpm typecheck && pnpm build && pnpm build:playground && pnpm build:docs"

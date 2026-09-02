@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import dts from 'vite-plugin-dts'
@@ -7,6 +7,10 @@ import dts from 'vite-plugin-dts'
 const r = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
 export default defineConfig({
+  test: {
+    environment: 'happy-dom',
+    include: ['src/**/*.spec.ts'],
+  },
   plugins: [
     vue(),
     tailwindcss(),
