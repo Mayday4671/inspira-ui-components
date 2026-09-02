@@ -19,9 +19,15 @@ import DemoSource from '../examples/animated-tooltip/basic.vue?raw'
 
 ```ts
 interface AnimatedTooltipItem {
-  id: number
+  id: string | number
   name: string        // 成员名称
   designation: string // 职位 / 描述
   image: string       // 头像图片地址
 }
 ```
+
+## 事件
+
+| 名称 | 参数 | 说明 |
+| --- | --- | --- |
+| item-click | `(item, event)` | 点击或键盘激活成员时触发 |

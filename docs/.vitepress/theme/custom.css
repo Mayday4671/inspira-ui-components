@@ -74,6 +74,11 @@ body {
   overflow-x: clip;
 }
 
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 3px;
+}
+
 .demo-gradient-art {
   width: 100%;
   height: 100%;

@@ -12,6 +12,14 @@
     "component-library"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mayday4671/inspira-ui-components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mayday4671/inspira-ui-components/issues"
+  },
+  "homepage": "https://github.com/Mayday4671/inspira-ui-components#readme",
   "type": "module",
   "main": "./dist/inspira-ui.cjs",
   "module": "./dist/inspira-ui.mjs",

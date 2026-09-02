@@ -17,8 +17,12 @@ import DemoSource from '../examples/flip-card/basic.vue?raw'
 | --------------- | --------------------------------------- | ---------------- | ------ |
 | rotate          | 翻转轴：x 上下 / y 左右                 | `'x' \| 'y'`     | `y`    |
 | image           | 正面背景图地址（有默认插槽时忽略）      | `string`         | —      |
+| imageAlt        | 正面图片替代文本                        | `string`         | —      |
 | backTitle       | 背面标题（有 back 插槽时忽略）          | `string`         | —      |
 | backDescription | 背面描述                                | `string`         | —      |
+| cta / href      | 背面行动文案 / 链接                     | `string`         | —      |
+| target          | 链接打开目标                            | `string`         | —      |
+| disabled        | 禁用行动链接                            | `boolean`        | `false`|
 | class           | 根元素类名（合并）                      | `string`         | —      |
 
 ## 插槽

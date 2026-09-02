@@ -19,6 +19,13 @@ import DemoSource from '../examples/bento-grid/basic.vue?raw'
 | `IuBentoGridItem`  | 基础卡片（header / icon / title / description 插槽） |
 | `IuBentoGridCard`  | 大卡片（悬停上浮 + 行动链接）              |
 
+## IuBentoGrid 属性
+
+| 名称 | 说明 | 类型 | 默认值 |
+| --- | --- | --- | --- |
+| items | 数据驱动卡片列表；默认插槽优先 | `BentoGridDataItem[]` | — |
+| class | 网格容器类名 | `string` | — |
+
 ## IuBentoGridItem 插槽
 
 | 名称         | 说明           |
@@ -37,6 +44,9 @@ import DemoSource from '../examples/bento-grid/basic.vue?raw'
 | href        | 行动链接地址       | `string`             | —      |
 | cta         | 行动文案           | `string`             | —      |
 | icon        | 图标（组件/标签名）| `string \| Component` | —     |
+| image / imageAlt | 背景图 / 替代文本 | `string` | — |
+| target      | 链接打开目标       | `string` | — |
+| disabled    | 禁用行动链接       | `boolean` | `false` |
 
 ## IuBentoGridCard 插槽
 

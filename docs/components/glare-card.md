@@ -16,7 +16,13 @@ import DemoSource from '../examples/glare-card/basic.vue?raw'
 | 名称   | 说明                              | 类型     | 默认值 |
 | ------ | --------------------------------- | -------- | ------ |
 | image  | 内容图地址（自动铺满）            | `string` | —      |
+| imageAlt | 图片替代文本                     | `string` | —      |
+| title / description | 快捷模式标题 / 描述       | `string` | —      |
+| cta / href | 行动文案 / 链接                  | `string` | —      |
+| target | 链接打开目标                       | `string` | —      |
+| disabled | 禁用行动链接                     | `boolean` | `false` |
 | width  | 卡片宽度（px）                    | `number` | `320`  |
+| height | 卡片高度（px）                    | `number` | 默认比例 |
 | radius | 卡片圆角（px）                    | `number` | `48`   |
 | class  | 内容层类名（默认底色 slate-950）  | `string` | —      |
 

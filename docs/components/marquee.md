@@ -22,3 +22,10 @@ import DemoSource from '../examples/marquee/basic.vue?raw'
 | vertical     | 纵向滚动                             | `boolean` | `false` |
 | repeat       | 内容重复次数（需足够覆盖滚动区域）   | `number`  | `4`    |
 | class        | 根元素类名（合并）                   | `string`  | —      |
+| items        | 字符串或 `{ key, label }` 列表；默认插槽优先 | `MarqueeItem[]` | — |
+
+## 插槽
+
+| 名称 | 说明 |
+| --- | --- |
+| default | 自定义滚动内容，优先于 `items` |

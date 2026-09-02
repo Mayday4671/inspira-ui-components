@@ -4,23 +4,34 @@
  * code 由外部以 `?raw` 方式导入，保证展示的源码与运行的示例永远一致。
  */
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, useId, watch } from 'vue'
 import { useData } from 'vitepress'
 import { codeToHtml } from 'shiki'
 import type { Component } from 'vue'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   title?: string
   demo: Component
   code: string
-}>()
+  layout?: 'row' | 'column' | 'center' | 'grid'
+  surface?: 'default' | 'light' | 'dark' | 'checker'
+  minHeight?: number | string
+}>(), {
+  layout: 'row',
+  surface: 'default',
+  minHeight: undefined,
+})
 
 const expanded = ref(false)
 const copied = ref(false)
 const html = ref('')
 const { isDark } = useData()
+const sourceId = `demo-source-${useId()}`
 
 const theme = computed(() => (isDark.value ? 'github-dark' : 'github-light'))
+const stageStyle = computed(() => ({
+  minHeight: typeof props.minHeight === 'number' ? `${props.minHeight}px` : props.minHeight,
+}))
 
 async function highlight() {
   html.value = await codeToHtml(props.code, {
@@ -50,22 +61,32 @@ async function copy() {
   <div class="demo-block">
     <p v-if="title" class="demo-block-title">{{ title }}</p>
 
-    <div class="demo-block-stage">
+    <div
+      :class="['demo-block-stage', `is-${layout}`, `is-${surface}`]"
+      :style="stageStyle"
+    >
       <component :is="demo" />
     </div>
 
     <div class="demo-block-divider">
       <div class="demo-block-actions">
-        <button type="button" class="demo-block-btn" @click="copy">
+        <button type="button" class="demo-block-btn" aria-label="复制示例代码" @click="copy">
           {{ copied ? '✓ 已复制' : '复制代码' }}
         </button>
-        <button type="button" class="demo-block-btn demo-block-btn-main" @click="toggle">
+        <button
+          type="button"
+          class="demo-block-btn demo-block-btn-main"
+          aria-label="切换示例代码"
+          :aria-expanded="expanded"
+          :aria-controls="sourceId"
+          @click="toggle"
+        >
           {{ expanded ? '隐藏代码' : '显示代码' }}
         </button>
       </div>
     </div>
 
-    <div v-show="expanded" class="demo-block-source">
+    <div :id="sourceId" v-show="expanded" class="demo-block-source">
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-if="html" class="demo-block-code" v-html="html" />
       <pre v-else class="demo-block-plain">{{ code }}</pre>
@@ -100,6 +121,41 @@ async function copy() {
 .demo-block-stage.col {
   flex-direction: column;
   align-items: stretch;
+}
+
+.demo-block-stage.is-column {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.demo-block-stage.is-center {
+  justify-content: center;
+}
+
+.demo-block-stage.is-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.demo-block-stage.is-light {
+  color: #18181b;
+  background: #fff;
+}
+
+.demo-block-stage.is-dark {
+  color: #fafafa;
+  background: #18181b;
+}
+
+.demo-block-stage.is-checker {
+  background-color: var(--vp-c-bg-soft);
+  background-image:
+    linear-gradient(45deg, var(--vp-c-divider) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--vp-c-divider) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--vp-c-divider) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--vp-c-divider) 75%);
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-size: 16px 16px;
 }
 
 .demo-block-divider {

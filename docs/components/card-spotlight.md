@@ -17,6 +17,10 @@ import DemoSource from '../examples/card-spotlight/basic.vue?raw'
 | --------------- | ------------------------------------------- | --------- | --------- |
 | title           | 标题（快捷模式；有默认插槽时忽略）          | `string`  | —         |
 | description     | 描述文字（快捷模式）                        | `string`  | —         |
+| image / imageAlt | 图片地址 / 替代文本                        | `string`  | —         |
+| cta / href      | 行动文案 / 链接                             | `string`  | —         |
+| target          | 链接打开目标                                | `string`  | —         |
+| disabled        | 禁用行动链接                                | `boolean` | `false`   |
 | padded          | 快捷模式自带内边距                          | `boolean` | `true`    |
 | gradientSize    | 光斑半径（px）                              | `number`  | `200`     |
 | gradientColor   | 光斑颜色                                    | `string`  | `#262626` |
