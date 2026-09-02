@@ -8,6 +8,12 @@ defineOptions({ name: 'IuCardSpotlight' })
 const props = withDefaults(defineProps<CardSpotlightProps>(), {
   title: '',
   description: '',
+  image: '',
+  imageAlt: '',
+  cta: '',
+  href: '',
+  target: undefined,
+  disabled: false,
   padded: true,
   class: '',
   slotClass: '',
@@ -32,6 +38,11 @@ function handleMouseMove(e: MouseEvent) {
 function handleMouseLeave() {
   mouseX.value = -props.gradientSize * 10
   mouseY.value = -props.gradientSize * 10
+}
+
+function handleActionClick(event: MouseEvent) {
+  if (!props.disabled) return
+  event.preventDefault()
 }
 
 onMounted(() => {
@@ -62,10 +73,22 @@ const backgroundStyle = computed(() => {
     <!-- 快捷模式：title / description 直接出卡片；插槽模式：完全自定义 -->
     <div :class="cn(`relative z-10 flex-1`, padded && quickMode && 'p-6', slotClass)">
       <slot>
+        <img v-if="image" :src="image" :alt="imageAlt" class="mb-4 h-36 w-full rounded-lg object-cover" />
         <h3 class="text-lg font-bold">{{ title }}</h3>
         <p v-if="description" class="mt-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
           {{ description }}
         </p>
+        <a
+          v-if="cta && href"
+          :href="href"
+          :target="target"
+          :aria-disabled="disabled ? 'true' : undefined"
+          :tabindex="disabled ? -1 : undefined"
+          class="mt-4 inline-flex text-sm font-semibold text-current underline-offset-4 hover:underline"
+          @click="handleActionClick"
+        >
+          {{ cta }} →
+        </a>
       </slot>
     </div>
     <div

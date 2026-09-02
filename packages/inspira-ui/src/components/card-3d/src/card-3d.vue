@@ -11,18 +11,28 @@ const props = withDefaults(defineProps<Card3DProps>(), {
   title: '',
   description: '',
   image: '',
+  imageAlt: '',
   cta: '',
+  href: '',
+  target: undefined,
+  disabled: false,
 })
+
+function handleActionClick(event: MouseEvent) {
+  if (!props.disabled) return
+  event.preventDefault()
+}
 </script>
 
 <template>
   <Card3DContainer>
     <Card3DBody :class="cn('overflow-hidden rounded-2xl', props.class)">
       <Card3DItem :translate-z="160" class="absolute inset-0">
-        <div
+        <img
           v-if="image"
-          class="h-full w-full bg-cover bg-center"
-          :style="{ backgroundImage: `url(${image})` }"
+          :src="image"
+          :alt="imageAlt"
+          class="h-full w-full object-cover"
         />
         <div v-else class="iu-card-3d-fallback h-full w-full" />
       </Card3DItem>
@@ -35,10 +45,18 @@ const props = withDefaults(defineProps<Card3DProps>(), {
         <p v-if="description" class="text-sm leading-relaxed text-white/75">
           {{ description }}
         </p>
-        <span
-          v-if="cta"
+        <a
+          v-if="cta && href"
+          :href="href"
+          :target="target"
+          :aria-disabled="disabled ? 'true' : undefined"
+          :tabindex="disabled ? -1 : undefined"
           class="mt-3 inline-flex w-fit rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black"
+          @click="handleActionClick"
         >
+          {{ cta }}
+        </a>
+        <span v-else-if="cta" class="mt-3 inline-flex w-fit rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-black">
           {{ cta }}
         </span>
       </Card3DItem>

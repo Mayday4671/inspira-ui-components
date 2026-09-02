@@ -1,7 +1,16 @@
 import type { HTMLAttributes } from 'vue'
 
+export interface MarqueeObjectItem {
+  key: string | number
+  label: string
+}
+
+export type MarqueeItem = string | MarqueeObjectItem
+
 export interface MarqueeProps {
   class?: HTMLAttributes['class']
+  /** 快捷模式内容；默认插槽存在时忽略 */
+  items?: MarqueeItem[]
   /** 反向滚动 */
   reverse?: boolean
   /** 悬停时暂停 */

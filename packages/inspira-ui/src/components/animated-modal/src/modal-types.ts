@@ -25,6 +25,8 @@ export interface AnimatedModalBodyProps {
   zIndex?: number
   /** Teleport 目标 */
   teleportTo?: string | HTMLElement
+  ariaLabelledby?: string
+  ariaDescribedby?: string
 }
 
 export interface AnimatedModalContentProps {

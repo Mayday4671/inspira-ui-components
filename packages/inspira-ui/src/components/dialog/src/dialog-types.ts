@@ -8,6 +8,15 @@ import type { HTMLAttributes } from 'vue'
  */
 export type DialogConfirmHandler = () => Promise<unknown> | unknown
 
+export type DialogBeforeClose = (done: () => void) => Promise<void> | void
+
+export interface DialogExposes {
+  open: () => void
+  close: () => Promise<void>
+  handleConfirm: () => Promise<void>
+  handleCancel: () => Promise<void>
+}
+
 export interface DialogProps {
   /** v-model：弹窗开关 */
   modelValue?: boolean
@@ -27,6 +36,12 @@ export interface DialogProps {
   loading?: boolean
   /** 点击遮罩关闭 */
   closeOnClickModal?: boolean
+  /** 按下 Escape 关闭 */
+  closeOnPressEscape?: boolean
+  /** 关闭前回调；仅调用 done 后才会关闭 */
+  beforeClose?: DialogBeforeClose
+  /** 关闭后销毁弹窗内容 */
+  destroyOnClose?: boolean
   /** 显示右上角关闭按钮 */
   showClose?: boolean
   /** 确认按钮是否使用危险色 */

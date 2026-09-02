@@ -10,6 +10,7 @@ export const IuBentoGridCard = withInstall(BentoGridCard)
 
 export type {
   BentoGridProps,
+  BentoGridDataItem,
   BentoGridItemProps,
   BentoGridCardProps,
 } from './src/bento-grid-types'

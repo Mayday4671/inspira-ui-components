@@ -5,6 +5,11 @@ import type { BentoGridCardProps } from './bento-grid-types'
 defineOptions({ name: 'IuBentoGridCard' })
 
 const props = defineProps<BentoGridCardProps>()
+
+function handleActionClick(event: MouseEvent) {
+  if (!props.disabled) return
+  event.preventDefault()
+}
 </script>
 
 <template>
@@ -17,7 +22,9 @@ const props = defineProps<BentoGridCardProps>()
       )
     "
   >
-    <slot name="background" />
+    <slot name="background">
+      <img v-if="image" :src="image" :alt="imageAlt ?? ''" class="absolute inset-0 size-full object-cover opacity-35" />
+    </slot>
 
     <div
       class="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10"
@@ -41,8 +48,13 @@ const props = defineProps<BentoGridCardProps>()
       class="pointer-events-none absolute bottom-0 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
     >
       <a
+        v-if="cta && href"
         :href="href"
+        :target="target"
+        :aria-disabled="disabled ? 'true' : undefined"
+        :tabindex="disabled ? -1 : undefined"
         class="pointer-events-auto inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
+        @click="handleActionClick"
       >
         {{ cta }} →
       </a>

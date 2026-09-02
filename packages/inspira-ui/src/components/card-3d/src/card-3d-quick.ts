@@ -12,7 +12,15 @@ export interface Card3DProps {
   description?: string
   /** 背景图地址（自动铺满） */
   image?: string
+  /** 背景图替代文本 */
+  imageAlt?: string
   /** 底部胶囊按钮文案 */
   cta?: string
+  /** 点击行动区跳转地址 */
+  href?: string
+  /** 链接打开目标 */
+  target?: string
+  /** 禁止行动区跳转 */
+  disabled?: boolean
   class?: HTMLAttributes['class']
 }

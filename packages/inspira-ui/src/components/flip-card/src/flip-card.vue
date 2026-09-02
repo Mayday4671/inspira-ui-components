@@ -8,8 +8,13 @@ defineOptions({ name: 'IuFlipCard' })
 const props = withDefaults(defineProps<FlipCardProps>(), {
   rotate: 'y',
   image: '',
+  imageAlt: '',
   backTitle: '',
   backDescription: '',
+  cta: '',
+  href: '',
+  target: undefined,
+  disabled: false,
 })
 
 const rotationClass = {
@@ -18,6 +23,11 @@ const rotationClass = {
 }
 
 const rotation = computed(() => rotationClass[props.rotate])
+
+function handleActionClick(event: MouseEvent) {
+  if (!props.disabled) return
+  event.preventDefault()
+}
 </script>
 
 <template>
@@ -33,7 +43,7 @@ const rotation = computed(() => rotationClass[props.rotate])
       <!-- 正面 -->
       <div class="absolute size-full overflow-hidden rounded-2xl border backface-hidden">
         <slot>
-          <div v-if="image" class="h-full w-full bg-cover bg-center" :style="{ backgroundImage: `url(${image})` }" />
+          <img v-if="image" :src="image" :alt="imageAlt" class="h-full w-full object-cover" />
           <div v-else class="iu-flip-fallback h-full w-full" />
         </slot>
       </div>
@@ -53,6 +63,17 @@ const rotation = computed(() => rotationClass[props.rotate])
             <p v-if="backDescription" class="mt-2 text-xs leading-relaxed opacity-70">
               {{ backDescription }}
             </p>
+            <a
+              v-if="cta && href"
+              :href="href"
+              :target="target"
+              :aria-disabled="disabled ? 'true' : undefined"
+              :tabindex="disabled ? -1 : undefined"
+              class="mt-4 inline-flex w-fit text-sm font-semibold underline-offset-4 hover:underline"
+              @click="handleActionClick"
+            >
+              {{ cta }} →
+            </a>
           </div>
         </slot>
       </div>

@@ -5,6 +5,18 @@ export interface CardSpotlightProps {
   title?: string
   /** 描述文字（快捷模式） */
   description?: string
+  /** 快捷模式图片 */
+  image?: string
+  /** 图片替代文本 */
+  imageAlt?: string
+  /** 行动文案 */
+  cta?: string
+  /** 行动链接 */
+  href?: string
+  /** 链接打开目标 */
+  target?: string
+  /** 禁止行动区跳转 */
+  disabled?: boolean
   /** 自带内边距，快捷模式默认开启 */
   padded?: boolean
   class?: HTMLAttributes['class']

@@ -2,6 +2,24 @@ import type { Component, HTMLAttributes } from 'vue'
 
 export interface BentoGridProps {
   class?: HTMLAttributes['class']
+  /** 快捷模式数据；默认插槽存在时忽略 */
+  items?: BentoGridDataItem[]
+}
+
+export interface BentoGridDataItem {
+  key: string | number
+  name: string
+  description: string
+  icon?: string | Component
+  image?: string
+  imageAlt?: string
+  href?: string
+  target?: string
+  cta?: string
+  disabled?: boolean
+  colSpan?: number
+  rowSpan?: number
+  class?: HTMLAttributes['class']
 }
 
 export interface BentoGridItemProps {
@@ -17,7 +35,11 @@ export interface BentoGridCardProps {
   /** 描述文本 */
   description: string
   /** 跳转链接 */
-  href: string
+  href?: string
   /** 行动文案 */
-  cta: string
+  cta?: string
+  image?: string
+  imageAlt?: string
+  target?: string
+  disabled?: boolean
 }

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, useId, watch } from 'vue'
 import { IuAnimatedModal, IuAnimatedModalBody } from '../../animated-modal'
-import type { DialogProps } from './dialog-types'
+import type { DialogExposes, DialogProps } from './dialog-types'
 
 defineOptions({ name: 'IuDialog' })
 
@@ -16,6 +16,9 @@ const props = withDefaults(defineProps<DialogProps>(), {
   confirm: undefined,
   loading: false,
   closeOnClickModal: true,
+  closeOnPressEscape: true,
+  beforeClose: undefined,
+  destroyOnClose: false,
   showClose: true,
   danger: false,
   zIndex: 10000,
@@ -27,12 +30,17 @@ const emit = defineEmits<{
   (e: 'confirm'): void
   (e: 'cancel'): void
   (e: 'open'): void
+  (e: 'opened'): void
   (e: 'close'): void
+  (e: 'closed'): void
 }>()
 
 const visible = computed<boolean>({
   get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
+  set: (value) => {
+    if (value) open()
+    else void close()
+  },
 })
 
 const internalLoading = ref(false)
@@ -41,9 +49,49 @@ const isLoading = computed(() => props.loading || internalLoading.value)
 const panelWidth = computed(() =>
   typeof props.width === 'number' ? `${props.width}px` : props.width,
 )
+const titleId = `iu-dialog-title-${useId()}`
+const descriptionId = `iu-dialog-description-${useId()}`
+const shouldRenderContent = computed(() => !props.destroyOnClose || props.modelValue)
+let closePromise: Promise<void> | undefined
 
-function close() {
-  visible.value = false
+function open() {
+  if (!props.modelValue) emit('update:modelValue', true)
+}
+
+function close(): Promise<void> {
+  if (!props.modelValue) return Promise.resolve()
+  if (closePromise) return closePromise
+
+  if (!props.beforeClose) {
+    emit('update:modelValue', false)
+    return Promise.resolve()
+  }
+
+  closePromise = new Promise<void>((resolve) => {
+    let doneCalled = false
+    const done = () => {
+      if (doneCalled) return
+      doneCalled = true
+      emit('update:modelValue', false)
+      closePromise = undefined
+      resolve()
+    }
+
+    try {
+      const result = props.beforeClose?.(done)
+      if (result instanceof Promise) {
+        result.catch(() => {
+          closePromise = undefined
+          resolve()
+        })
+      }
+    } catch {
+      closePromise = undefined
+      resolve()
+    }
+  })
+
+  return closePromise
 }
 
 async function handleConfirm() {
@@ -54,26 +102,40 @@ async function handleConfirm() {
     internalLoading.value = true
     try {
       const result = await props.confirm()
-      if (result !== false) close()
+      if (result !== false) await close()
     } catch {
       // 提交失败保持弹窗打开，由调用方提示错误
     } finally {
       internalLoading.value = false
     }
   } else {
-    close()
+    await close()
   }
 }
 
-function handleCancel() {
+async function handleCancel() {
   if (isLoading.value) return
   emit('cancel')
-  close()
+  await close()
 }
+
+watch(
+  () => props.modelValue,
+  async (value) => {
+    if (value) emit('open')
+    else emit('close')
+    await nextTick()
+    if (props.modelValue !== value) return
+    if (value) emit('opened')
+    else emit('closed')
+  },
+)
+
+defineExpose<DialogExposes>({ open, close, handleConfirm, handleCancel })
 </script>
 
 <template>
-  <IuAnimatedModal v-model:open="visible" @open="emit('open')" @close="emit('close')">
+  <IuAnimatedModal v-model:open="visible" :close-on-esc="closeOnPressEscape && !isLoading">
     <IuAnimatedModalBody
       :show-close="showClose"
       :close-on-outside="closeOnClickModal && !isLoading"
@@ -81,14 +143,17 @@ function handleCancel() {
       :teleport-to="teleportTo"
       :width="panelWidth"
       :class="cn('w-auto', props.class)"
+      :aria-labelledby="titleId"
+      :aria-describedby="description ? descriptionId : undefined"
     >
+      <template v-if="shouldRenderContent">
       <!-- 标题区 -->
-      <div class="flex flex-col gap-1.5 p-6 pb-0">
+      <div :id="titleId" class="flex flex-col gap-1.5 p-6 pb-0">
         <slot name="header">
           <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
             {{ title }}
           </h3>
-          <p v-if="description" class="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+          <p v-if="description" :id="descriptionId" class="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
             {{ description }}
           </p>
         </slot>
@@ -136,6 +201,7 @@ function handleCancel() {
           </button>
         </slot>
       </div>
+      </template>
     </IuAnimatedModalBody>
   </IuAnimatedModal>
 </template>

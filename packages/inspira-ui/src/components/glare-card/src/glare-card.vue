@@ -7,7 +7,15 @@ defineOptions({ name: 'IuGlareCard' })
 
 const props = withDefaults(defineProps<GlareCardProps>(), {
   image: '',
+  imageAlt: '',
+  title: '',
+  description: '',
+  cta: '',
+  href: '',
+  target: undefined,
+  disabled: false,
   width: 320,
+  height: undefined,
   radius: 48,
 })
 
@@ -22,8 +30,14 @@ const state = ref({
 
 const rootStyle = computed(() => ({
   width: `${props.width}px`,
+  height: props.height ? `${props.height}px` : undefined,
   '--radius': `${props.radius}px`,
 }))
+
+function handleActionClick(event: MouseEvent) {
+  if (!props.disabled) return
+  event.preventDefault()
+}
 
 function handlePointerMove(event: PointerEvent) {
   const rotateFactor = 0.4
@@ -83,13 +97,32 @@ function handlePointerLeave() {
       <div
         class="grid size-full mix-blend-soft-light [clip-path:inset(0_0_0_0_round_var(--radius))] [grid-area:1/1]"
       >
-        <div :class="cn(`size-full bg-slate-950`, props.class)">
-          <div
+        <div :class="cn(`relative size-full bg-slate-950`, props.class)">
+          <img
             v-if="image"
-            class="h-full w-full bg-cover bg-center"
-            :style="{ backgroundImage: `url(${image})` }"
+            :src="image"
+            :alt="imageAlt"
+            class="h-full w-full object-cover"
           />
           <slot v-else />
+          <div
+            v-if="title || description || cta"
+            class="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/90 via-black/55 to-transparent p-6 pt-16 text-white"
+          >
+            <h3 v-if="title" class="text-xl font-semibold">{{ title }}</h3>
+            <p v-if="description" class="mt-1 text-sm text-white/75">{{ description }}</p>
+            <a
+              v-if="cta && href"
+              :href="href"
+              :target="target"
+              :aria-disabled="disabled ? 'true' : undefined"
+              :tabindex="disabled ? -1 : undefined"
+              class="mt-4 inline-flex rounded-full bg-white px-4 py-2 text-xs font-semibold text-black"
+              @click="handleActionClick"
+            >
+              {{ cta }}
+            </a>
+          </div>
         </div>
       </div>
       <div

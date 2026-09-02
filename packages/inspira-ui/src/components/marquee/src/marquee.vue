@@ -17,6 +17,14 @@ const rootStyle = computed(() => ({
   '--duration': `${props.speed}s`,
   '--gap': props.gap,
 }))
+
+function itemKey(item: NonNullable<MarqueeProps['items']>[number], index: number) {
+  return typeof item === 'string' ? `${item}-${index}` : item.key
+}
+
+function itemLabel(item: NonNullable<MarqueeProps['items']>[number]) {
+  return typeof item === 'string' ? item : item.label
+}
 </script>
 
 <template>
@@ -44,7 +52,16 @@ const rootStyle = computed(() => ({
         )
       "
     >
-      <slot />
+      <slot v-if="$slots.default" />
+      <template v-else>
+        <span
+          v-for="(item, itemIndex) in items"
+          :key="itemKey(item, itemIndex)"
+          class="inline-flex items-center rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground"
+        >
+          {{ itemLabel(item) }}
+        </span>
+      </template>
     </div>
   </div>
 </template>

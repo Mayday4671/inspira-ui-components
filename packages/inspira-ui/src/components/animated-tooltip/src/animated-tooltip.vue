@@ -5,7 +5,8 @@ import type { AnimatedTooltipProps } from './animated-tooltip'
 
 defineOptions({ name: 'IuAnimatedTooltip' })
 
-defineProps<AnimatedTooltipProps>()
+const props = defineProps<AnimatedTooltipProps>()
+const emit = defineEmits<{ itemClick: [item: AnimatedTooltipProps['items'][number], event: MouseEvent] }>()
 
 const hoveredIndex = ref<number | null>(null)
 const mouseX = ref<number>(0)
@@ -36,14 +37,21 @@ function handleMouseMove(event: MouseEvent) {
 </script>
 
 <template>
-  <div
-    v-for="item in items"
-    :key="item.id"
-    class="group relative -mr-4"
-    @mouseenter="(e) => handleMouseEnter(e, item.id)"
-    @mouseleave="hoveredIndex = null"
-    @mousemove="handleMouseMove"
-  >
+  <div class="flex items-center -space-x-4" role="list">
+    <button
+      v-for="item in props.items"
+      :key="item.id"
+      type="button"
+      class="group relative m-0 border-0 bg-transparent p-0 focus-visible:z-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      role="listitem"
+      :aria-label="`${item.name}，${item.designation}`"
+      @mouseenter="(e) => handleMouseEnter(e, item.id)"
+      @mouseleave="hoveredIndex = null"
+      @mousemove="handleMouseMove"
+      @focus="hoveredIndex = item.id"
+      @blur="hoveredIndex = null"
+      @click="emit('itemClick', item, $event)"
+    >
     <!-- Tooltip -->
     <Motion
       v-if="hoveredIndex === item.id"
@@ -91,5 +99,6 @@ function handleMouseMove(event: MouseEvent) {
       :alt="item.name"
       class="relative m-0! size-14 rounded-full border-2 border-white object-cover object-top p-0! transition duration-500 group-hover:z-30 group-hover:scale-105"
     />
+    </button>
   </div>
 </template>
