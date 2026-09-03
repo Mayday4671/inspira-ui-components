@@ -68,7 +68,7 @@ describe('documentation information architecture', () => {
     const css = await readFile(customCss, 'utf8')
     expect(css).toContain('--iu-doc-sidebar-width: 260px')
     expect(css).toContain('--iu-doc-aside-width: 220px')
-    expect(css).toContain('.VPDoc.has-aside .content-container')
+    expect(css).toContain('.VPDoc.VPDoc.has-aside .content-container.content-container')
     expect(css).toMatch(/max-width:\s*none/)
     expect(css).toContain('@media (max-width: 1439px)')
     expect(css).toContain('@media (max-width: 959px)')

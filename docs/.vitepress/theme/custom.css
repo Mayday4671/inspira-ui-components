@@ -25,22 +25,22 @@
 }
 
 /* 三栏文档工作台：固定导航和目录，中间正文使用全部剩余空间。 */
-.VPDoc.VPDoc.has-aside .container,
-.VPDoc.VPDoc.has-sidebar .container,
-.VPDoc.VPDoc:not(.has-sidebar) .container {
+.VPDoc.VPDoc.has-aside .container.container,
+.VPDoc.VPDoc.has-sidebar .container.container,
+.VPDoc.VPDoc:not(.has-sidebar) .container.container {
   max-width: none;
 }
 
-.VPDoc.VPDoc.has-aside .content,
-.VPDoc.VPDoc.has-sidebar .content,
-.VPDoc.VPDoc:not(.has-sidebar) .content {
+.VPDoc.VPDoc.has-aside .content.content,
+.VPDoc.VPDoc.has-sidebar .content.content,
+.VPDoc.VPDoc:not(.has-sidebar) .content.content {
   max-width: none;
   padding-inline: var(--iu-doc-content-gutter);
 }
 
-.VPDoc.has-aside .content-container,
-.VPDoc.has-sidebar .content-container,
-.VPDoc:not(.has-sidebar) .content-container {
+.VPDoc.VPDoc.has-aside .content-container.content-container,
+.VPDoc.VPDoc.has-sidebar .content-container.content-container,
+.VPDoc.VPDoc:not(.has-sidebar) .content-container.content-container {
   max-width: none;
 }
 
@@ -114,9 +114,9 @@ body {
     --iu-doc-content-gutter: 20px;
   }
 
-  .VPDoc.VPDoc.has-aside .content,
-  .VPDoc.VPDoc.has-sidebar .content,
-  .VPDoc.VPDoc:not(.has-sidebar) .content {
+  .VPDoc.VPDoc.has-aside .content.content,
+  .VPDoc.VPDoc.has-sidebar .content.content,
+  .VPDoc.VPDoc:not(.has-sidebar) .content.content {
     padding-inline: var(--iu-doc-content-gutter);
   }
 }
