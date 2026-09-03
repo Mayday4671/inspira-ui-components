@@ -7,6 +7,7 @@ const examplesRoot = resolve(projectRoot, 'docs/examples')
 const docsConfig = resolve(projectRoot, 'docs/.vitepress/config.mts')
 const packageJson = resolve(projectRoot, 'packages/inspira-ui/package.json')
 const demoBlock = resolve(projectRoot, 'docs/demo/demo-block.vue')
+const customCss = resolve(projectRoot, 'docs/.vitepress/theme/custom.css')
 
 async function findBasicExamples(): Promise<string[]> {
   const componentDirectories = await readdir(examplesRoot, { withFileTypes: true })
@@ -61,5 +62,15 @@ describe('documentation information architecture', () => {
     expect(source).toContain('minHeight?: number | string')
     expect(source).toContain('aria-label="复制示例代码"')
     expect(source).toContain('aria-label="切换示例代码"')
+  })
+
+  it('uses the approved responsive three-column workspace', async () => {
+    const css = await readFile(customCss, 'utf8')
+    expect(css).toContain('--iu-doc-sidebar-width: 260px')
+    expect(css).toContain('--iu-doc-aside-width: 220px')
+    expect(css).toContain('.VPDoc.has-aside .content-container')
+    expect(css).toMatch(/max-width:\s*none/)
+    expect(css).toContain('@media (max-width: 1439px)')
+    expect(css).toContain('@media (max-width: 959px)')
   })
 })

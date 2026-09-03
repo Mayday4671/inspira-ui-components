@@ -11,10 +11,11 @@
     'Microsoft YaHei',
     system-ui,
     sans-serif;
-
-  /* 放开整页宽度上限（默认 1440px），宽屏下内容区基本铺满。
-     :root:root 双伪类提高优先级，压过主题 vars.css 的同名列 */
-  --vp-layout-max-width: 1760px;
+  --iu-doc-sidebar-width: 260px;
+  --iu-doc-aside-width: 220px;
+  --iu-doc-content-gutter: clamp(32px, 2.5vw, 48px);
+  --vp-sidebar-width: var(--iu-doc-sidebar-width);
+  --vp-layout-max-width: 100vw;
 }
 
 .dark {
@@ -23,20 +24,29 @@
   --vp-c-brand-3: #93c5fd;
 }
 
-/* 放开文档内容窄栏（默认 688px）。
-   VPDoc 的 688px 是 SFC scoped 样式、注入晚于 theme CSS，同优先级压不住，
-   因此用 .VPDoc.VPDoc 双类提高优先级 */
-.VPDoc.VPDoc.has-aside .content-container {
-  max-width: 1080px;
-}
-
-/* 无侧边栏页面同步放开 */
+/* 三栏文档工作台：固定导航和目录，中间正文使用全部剩余空间。 */
+.VPDoc.VPDoc.has-aside .container,
+.VPDoc.VPDoc.has-sidebar .container,
 .VPDoc.VPDoc:not(.has-sidebar) .container {
   max-width: none;
 }
 
+.VPDoc.VPDoc.has-aside .content,
+.VPDoc.VPDoc.has-sidebar .content,
 .VPDoc.VPDoc:not(.has-sidebar) .content {
-  max-width: 1120px;
+  max-width: none;
+  padding-inline: var(--iu-doc-content-gutter);
+}
+
+.VPDoc.has-aside .content-container,
+.VPDoc.has-sidebar .content-container,
+.VPDoc:not(.has-sidebar) .content-container {
+  max-width: none;
+}
+
+.VPDoc.VPDoc .aside {
+  width: var(--iu-doc-aside-width);
+  padding-left: 24px;
 }
 
 /* 顶栏 */
@@ -87,4 +97,26 @@ body {
     radial-gradient(70% 70% at 85% 30%, #c084fc 0%, transparent 55%),
     radial-gradient(90% 90% at 50% 100%, #34d399 0%, transparent 60%),
     #0f172a;
+}
+
+@media (max-width: 1439px) {
+  :root {
+    --iu-doc-content-gutter: 32px;
+  }
+
+  .VPDoc.VPDoc .aside {
+    display: none;
+  }
+}
+
+@media (max-width: 959px) {
+  :root {
+    --iu-doc-content-gutter: 20px;
+  }
+
+  .VPDoc.VPDoc.has-aside .content,
+  .VPDoc.VPDoc.has-sidebar .content,
+  .VPDoc.VPDoc:not(.has-sidebar) .content {
+    padding-inline: var(--iu-doc-content-gutter);
+  }
 }
