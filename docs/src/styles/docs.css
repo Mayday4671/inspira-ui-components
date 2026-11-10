@@ -95,6 +95,40 @@ button:disabled {
   background: rgba(101, 88, 232, 0.2);
 }
 
+/* ---------- 滚动条精致化（Windows 默认滚动条破坏整体质感） ----------
+   设计原则：细（8px）、圆角、轨道透明、滑块用边框色系、hover 加深、暗色随动。
+   覆盖主页面滚动条与全部可滚动容器；侧栏 / 搜索结果保持隐藏（原型规则）。 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--weak);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox：细滚动条并随主题变化 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-2) transparent;
+}
+
 .icon {
   width: 18px;
   height: 18px;
