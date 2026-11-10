@@ -42,7 +42,13 @@ export function bindThemeToaster(handler: (msg: string) => void) {
   toastHandler = handler
 }
 
-/** 把主题类挂到 body（同时驱动文档站与组件库 --iu-* 令牌的暗色映射） */
+/**
+ * 主题类同时挂到 html 与 body：
+ * - 视口滚动条属于 html 层，只挂 body 会导致滚动条读不到暗色变量；
+ * - 组件库 --iu-* 令牌按 .dark 祖先匹配，html 级同样生效。
+ */
 watchEffect(() => {
-  document.body.classList.toggle('dark', current.value === 'dark')
+  const dark = current.value === 'dark'
+  document.documentElement.classList.toggle('dark', dark)
+  document.body.classList.toggle('dark', dark)
 })

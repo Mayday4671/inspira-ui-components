@@ -27,7 +27,7 @@
   --radius: 14px;
 }
 
-body.dark {
+.dark {
   --bg: #10131c;
   --surface: #191d28;
   --surface-2: #202534;
@@ -501,7 +501,7 @@ button:disabled {
   justify-content: center;
 }
 
-body.dark .hero-art {
+.dark .hero-art {
   background:
     radial-gradient(circle at 80% 6%, #45386d 0, transparent 38%),
     linear-gradient(140deg, #242338, #222739);
@@ -571,7 +571,7 @@ body.dark .hero-art {
   overflow: hidden;
 }
 
-body.dark .art-preview {
+.dark .art-preview {
   background: #27253a;
   border-color: #3a354f;
 }
@@ -721,7 +721,7 @@ body.dark .art-preview {
   overflow: hidden;
 }
 
-body.dark .feature-preview {
+.dark .feature-preview {
   background: radial-gradient(circle at center, #312f4f, #212533 74%);
 }
 
@@ -1103,7 +1103,7 @@ body.dark .feature-preview {
   z-index: 0;
 }
 
-body.dark .preview-stage::before {
+.dark .preview-stage::before {
   background: radial-gradient(ellipse, #4840695c, transparent 68%);
 }
 
@@ -1418,7 +1418,7 @@ body.dark .preview-stage::before {
   background: linear-gradient(140deg, #f6f6ff, #f8fafe);
 }
 
-body.dark .catalog-visual {
+.dark .catalog-visual {
   background: linear-gradient(140deg, #252338, #202631);
 }
 
@@ -2056,4 +2056,40 @@ body.dark .catalog-visual {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ---------- 层级与暗色可读性修补 ---------- */
+
+/* 侧栏二级（组件链接）相对一级/分类标题明显缩进 */
+.side-sub .side-link {
+  padding-left: 34px;
+  font-size: 12px;
+}
+
+.side-sub .side-link::before {
+  content: '';
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 99px;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+.side-link {
+  position: relative;
+}
+
+/* 暗色下代码块与背景几乎同色（原型 token 缺陷），加边框与投影做区隔 */
+.dark .code-block {
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.35);
+}
+
+.dark .code-block .copy {
+  background: #1d2432;
+  border-color: #333c4f;
 }
