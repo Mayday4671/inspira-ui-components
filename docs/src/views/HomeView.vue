@@ -26,9 +26,6 @@ function goShimmer() {
       <div>
         <span class="eyebrow">VUE 3 · TYPESCRIPT · NPM READY</span>
         <h1 class="hero-title">让动效组件，<br /><span class="soft-gradient">开箱即用。</span></h1>
-        <p class="hero-p">
-          灵感来自 Inspira UI 的精致动效，像使用 Element Plus 一样简单。npm 安装、按需引入，让每个交互细节更出彩。
-        </p>
         <div class="hero-actions">
           <router-link to="/guide" class="btn primary large">快速开始</router-link>
           <router-link to="/components" class="btn large">浏览组件 <UiIcon name="grid" small /></router-link>
@@ -66,21 +63,18 @@ function goShimmer() {
         <div class="metric-ico"><UiIcon name="package" /></div>
         <div>
           <strong>开箱即用</strong>
-          <p>统一 Props、Events 与使用方式</p>
         </div>
       </div>
       <div class="metric">
         <div class="metric-ico"><UiIcon name="bolt" /></div>
         <div>
           <strong>灵动且克制</strong>
-          <p>性能优先，兼容减少动态效果设置</p>
         </div>
       </div>
       <div class="metric">
         <div class="metric-ico"><UiIcon name="code" /></div>
         <div>
           <strong>类型友好</strong>
-          <p>Vue 3 + TypeScript，支持按需引入</p>
         </div>
       </div>
     </section>
@@ -90,7 +84,6 @@ function goShimmer() {
       <div class="section-h">
         <div>
           <h2>精选组件</h2>
-          <p>先看效果，再决定如何使用。无需在满屏链接中寻找灵感。</p>
         </div>
         <router-link to="/components">查看全部组件</router-link>
       </div>

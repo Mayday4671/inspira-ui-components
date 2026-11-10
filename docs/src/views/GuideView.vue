@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UiIcon from '../components/UiIcon.vue'
 import DocsShell from '../components/DocsShell.vue'
 import CodeBlock from '../components/CodeBlock.vue'
 import { PACKAGE_NAME } from '../data/registry'
@@ -43,7 +42,6 @@ createApp(App).use(InspiraUI).mount('#app')
   <DocsShell active="guide" :toc-links="tocLinks">
     <div class="page-heading">
       <h1>快速开始</h1>
-      <p>以最小化的 Vue 3 + Vite 项目为例，三步接入组件库。此页面按开发者实际使用顺序编排，不把教程拆成过多零碎页面。</p>
     </div>
 
     <div class="steps">
@@ -62,9 +60,7 @@ createApp(App).use(InspiraUI).mount('#app')
     </div>
 
     <h2 id="step1" class="h2">01 · 安装组件库</h2>
-    <p class="prose">
-      在已有 Vue 3 项目中执行以下命令。包名为 <code style="font-size: 12px; color: var(--primary)">{{ PACKAGE_NAME }}</code>（与仓库 packages/inspira-ui 的 package.json name 一致）。
-    </p>
+    <p class="prose">在已有 Vue 3 项目中执行以下命令：</p>
     <div class="term-tabs">
       <button
         v-for="t in ['pnpm', 'npm', 'yarn']"
@@ -83,15 +79,15 @@ createApp(App).use(InspiraUI).mount('#app')
     <CodeBlock :code="onDemandCode" lang="vue" />
 
     <h2 id="step3" class="h2">03 · 或者：全局注册</h2>
-    <p class="prose">更适合快速验证或统一注入场景。组件导出自带 install 方法（Element Plus 同款模式），支持整体 app.use 与单个组件 app.use。</p>
+    <p class="prose">组件导出自带 install 方法，支持整体 app.use 或单个组件 app.use。</p>
     <CodeBlock :code="globalCode" lang="ts" />
 
     <h2 id="step4" class="h2">04 · 验证与排错</h2>
     <div class="hint">
-      <strong>验收前检查：</strong>
-      组件可从包入口具名导出（31 个 Iu* 导出）；样式经 dist/index.css 引入后组件即拥有完整外观（自包含 CSS，无需 Tailwind）；
-      类型声明随包分发（dist/index.d.ts + GlobalComponents）；动画基于 motion-v 与 CSS 运行。
-      若示例 API 与真实代码不一致，以源码为准修正文档。
+      <strong>常见问题：</strong>
+      组件未注册 → 检查是否执行 app.use(InspiraUI) 或具名导入；
+      样式丢失 → 确认引入了 dist/index.css；
+      类型无提示 → 确保 TS 项目包含包自带的 d.ts（随 node_modules 自动生效）。
     </div>
     <router-link to="/component/shimmer-button" class="btn primary">
       前往第一个组件

@@ -28,7 +28,6 @@ function clearFilters() {
   <DocsShell active="components">
     <div class="page-heading">
       <h1>所有组件</h1>
-      <p>快速预览动效与交互，按类别筛选或搜索。每个组件均可进入详情查看完整示例、可调参数与 API。</p>
     </div>
 
     <div class="catalog-head">
@@ -86,8 +85,5 @@ function clearFilters() {
       </div>
     </div>
 
-    <div class="hint" style="margin-top: 24px">
-      <strong>数据来源</strong>：本页组件数量、命名与分类均从仓库真实导出（packages/inspira-ui/src）生成，详情页示例与 API 与源码一致。
-    </div>
   </DocsShell>
 </template>

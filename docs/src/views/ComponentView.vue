@@ -75,7 +75,6 @@ function onControlEnter(e: KeyboardEvent) {
       <div class="component-symbol"><UiIcon :name="categoryIcon" /></div>
       <div class="page-heading">
         <h1>{{ meta.name }} <span class="dot-accent">·</span> {{ meta.zh }}</h1>
-        <p>{{ meta.desc }}。以统一 API 封装动效体验，支持在 Vue 3 项目中直接使用。</p>
         <div class="heading-tags">
           <span class="neutral-tag">{{ meta.category }}</span>
           <span class="neutral-tag">Vue 3</span>
@@ -176,7 +175,6 @@ function onControlEnter(e: KeyboardEvent) {
 
     <!-- API -->
     <h2 id="section-api" class="h2">API 属性</h2>
-    <p class="prose">以下属性、类型与默认值均来自组件源码的真实定义（packages/inspira-ui/src）。</p>
     <div style="overflow-x: auto">
       <table class="api-table">
         <thead>

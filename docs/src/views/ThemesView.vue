@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import UiIcon from '../components/UiIcon.vue'
 import DocsShell from '../components/DocsShell.vue'
 import CodeBlock from '../components/CodeBlock.vue'
 import { setTheme, useTheme } from '../composables/theme'
@@ -46,7 +45,6 @@ const a11yCode = `@media (prefers-reduced-motion: reduce) {
   <DocsShell active="themes" :toc-links="tocLinks">
     <div class="page-heading">
       <h1>主题定制</h1>
-      <p>遵循「内容优先、动效克制、交互清晰」的设计原则。所有示例均支持亮色与暗色模式，并遵守系统减少动效偏好。</p>
     </div>
 
     <h2 id="theme-preview" class="h2">主题预览</h2>
@@ -91,10 +89,7 @@ const a11yCode = `@media (prefers-reduced-motion: reduce) {
     </p>
 
     <h2 id="theme-tokens" class="h2">设计变量</h2>
-    <p class="prose">
-      组件库将设计令牌收敛为 <code style="font-size: 12px; color: var(--primary)">--iu-*</code> CSS 变量，覆盖变量即可换肤，无需重新编译；
-      文档站的界面令牌（--bg / --surface 等）与组件库令牌互不污染。
-    </p>
+    <p class="prose">覆盖 <code style="font-size: 12px; color: var(--primary)">--iu-*</code> CSS 变量即可换肤，无需重新编译：</p>
     <CodeBlock :code="tokensCode" lang="css" />
 
     <h2 id="theme-a11y" class="h2">动效与可访问性</h2>
