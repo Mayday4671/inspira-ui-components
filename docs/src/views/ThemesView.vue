@@ -43,9 +43,6 @@ const a11yCode = `@media (prefers-reduced-motion: reduce) {
 
 <template>
   <DocsShell active="themes" :toc-links="tocLinks">
-    <div class="page-heading">
-      <h1>主题定制</h1>
-    </div>
 
     <h2 id="theme-preview" class="h2">主题预览</h2>
     <div class="theme-card">

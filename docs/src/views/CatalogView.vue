@@ -26,9 +26,6 @@ function clearFilters() {
 
 <template>
   <DocsShell active="components">
-    <div class="page-heading">
-      <h1>所有组件</h1>
-    </div>
 
     <div class="catalog-head">
       <div class="catalog-search">

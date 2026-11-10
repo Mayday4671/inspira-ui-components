@@ -40,9 +40,6 @@ createApp(App).use(InspiraUI).mount('#app')
 
 <template>
   <DocsShell active="guide" :toc-links="tocLinks">
-    <div class="page-heading">
-      <h1>快速开始</h1>
-    </div>
 
     <div class="steps">
       <div class="step">
