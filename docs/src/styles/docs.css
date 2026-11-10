@@ -1089,8 +1089,12 @@ button:disabled {
   z-index: 0;
 }
 
+.dark .preview-stage {
+  background-image: radial-gradient(var(--border-2) 0.9px, transparent 0.9px);
+}
+
 .dark .preview-stage::before {
-  background: radial-gradient(ellipse, #4840695c, transparent 68%);
+  background: radial-gradient(ellipse, #544a7d99, transparent 68%);
 }
 
 .preview-stage > * {

@@ -134,14 +134,19 @@ const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流
   </div>
 
   <div v-else-if="meta.slug === 'card-spotlight'" class="demo-fit" style="height: 240px; width: 100%; max-width: 560px">
+    <!-- 插槽模式：内容均匀分布填满卡片，展示插槽自定义能力 -->
     <IuCardSpotlight
-      :title="String(s.title)"
-      description="鼠标在卡片上移动，会有一道聚光灯跟随光斑。组件支持标题、描述、背景图与底部按钮的快捷配置。" 
-      cta="查看详情"
-      href="#section-preview"
       :gradient-size="Number(s.gradientSize) || 240"
       style="position: absolute; inset: 0"
-    />
+    >
+      <div class="spot-fill">
+        <div>
+          <h4>{{ String(s.title) }}</h4>
+          <p>鼠标在卡片上移动，会有一道聚光灯跟随光斑。</p>
+        </div>
+        <span class="spot-cta">查看详情</span>
+      </div>
+    </IuCardSpotlight>
   </div>
 
   <div v-else-if="meta.slug === 'flip-card'" class="demo-fit" style="height: 320px">
@@ -308,6 +313,33 @@ const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流
 </template>
 
 <style scoped>
+.spot-fill {
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.spot-fill h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.spot-fill p {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  opacity: 0.75;
+}
+
+.spot-cta {
+  font-size: 13px;
+  font-weight: 650;
+}
+
 .demo-fit {
   position: relative;
   display: flex;
