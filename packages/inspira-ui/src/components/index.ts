@@ -33,3 +33,25 @@ export * from './statistic'
 
 export * from './aurora-background'
 export * from './pattern-background'
+
+// —— 批次 2：文本动画扩展 ——
+export * from './letter-pullup'
+export * from './spinning-text'
+export * from './box-reveal'
+export * from './line-shadow-text'
+export * from './hyper-text'
+export * from './encrypted-text'
+export * from './morphing-text'
+export * from './focus'
+export * from './colourful-text'
+export * from './letter-swap'
+export * from './text-highlight'
+export * from './underline-text'
+
+// —— 批次 2：特效与场景扩展 ——
+export * from './border-beam'
+export * from './meteors'
+export * from './compare'
+export * from './lens'
+export * from './animated-list'
+export * from './flickering-grid'

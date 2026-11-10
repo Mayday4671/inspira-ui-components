@@ -44,7 +44,7 @@ const code = computed(() => meta.value.demoCode(state))
 
 const categoryIcon = computed(
   () =>
-    ({ 按钮: 'bolt', 卡片: 'box', 文本: 'type', 交互: 'mouse', 数据: 'chart', 背景: 'layers' })[
+    ({ 按钮: 'bolt', 卡片: 'box', 文本: 'type', 交互: 'mouse', 数据: 'chart', 特效: 'spark', 背景: 'layers' })[
       meta.value.category
     ] ?? 'bolt',
 )

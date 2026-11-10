@@ -48,6 +48,24 @@ export type PreviewKind =
   | 'stat'
   | 'aurora'
   | 'pattern'
+  | 'pullup'
+  | 'spin'
+  | 'box'
+  | 'line-shadow'
+  | 'hyper'
+  | 'encrypt'
+  | 'morph'
+  | 'focus'
+  | 'colourful'
+  | 'beam'
+  | 'meteors'
+  | 'compare'
+  | 'lens'
+  | 'alist'
+  | 'fgrid'
+  | 'lswap'
+  | 'thl'
+  | 'uline'
 
 export interface ComponentMeta {
   /** 导出名（含 Iu 前缀） */
@@ -55,7 +73,7 @@ export interface ComponentMeta {
   /** 展示名 */
   name: string
   zh: string
-  category: '按钮' | '卡片' | '文本' | '交互' | '数据' | '背景'
+  category: '按钮' | '卡片' | '文本' | '交互' | '数据' | '特效' | '背景'
   desc: string
   slug: string
   recommended?: boolean
@@ -72,7 +90,7 @@ export interface ComponentMeta {
   note?: string
 }
 
-export const CATEGORIES = ['全部', '按钮', '卡片', '文本', '交互', '数据', '背景'] as const
+export const CATEGORIES = ['全部', '按钮', '卡片', '文本', '特效', '交互', '数据', '背景'] as const
 
 const CATEGORY_EN: Record<string, string> = {
   按钮: 'Buttons',
@@ -81,6 +99,7 @@ const CATEGORY_EN: Record<string, string> = {
   交互: 'Interaction',
   数据: 'Data',
   背景: 'Backgrounds',
+  特效: 'Special',
 }
 
 export const categoryEn = (cat: string) => CATEGORY_EN[cat] ?? cat
@@ -943,6 +962,353 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'speed', desc: '动画速度（毫秒/周期）', type: 'number', def: '10000' },
     ],
   },
+  // ========= 批次 2：文本动画扩展 =========
+  {
+    importName: 'IuLetterPullup', name: 'LetterPullup', zh: '字母升起',
+    category: '文本', desc: '字母逐个升起入场', slug: 'letter-pullup', preview: 'pullup',
+    demoState: { words: 'Inspira UI', delay: 0.05 },
+    controls: [{ kind: 'text', key: 'words', label: '文本 Words' }, { kind: 'number', key: 'delay', label: '延迟 Delay（秒）', step: 0.01 }],
+    demoCode: (s) => {
+      return scriptedCode('IuLetterPullup', [['words', `'${s.words}'`], ['delay', String(s.delay)]], '  <IuLetterPullup :words="words" :delay="delay" />')
+    },
+    apiRows: [
+      { prop: 'words', desc: '要逐字升起的文本', type: 'string', def: '必填' },
+      { prop: 'delay', desc: '每个字母间的延迟（秒）', type: 'number', def: '0.05' },
+    ],
+  },
+  {
+    importName: 'IuSpinningText', name: 'SpinningText', zh: '旋转文字',
+    category: '文本', desc: '文字环形旋转动画', slug: 'spinning-text', preview: 'spin',
+    demoState: { text: 'Loading · · ·', duration: 10, radius: 5 },
+    controls: [
+      { kind: 'text', key: 'text', label: '文本 Text' },
+      { kind: 'number', key: 'duration', label: '周期 Duration（秒）', step: 1 },
+      { kind: 'number', key: 'radius', label: '半径 Radius', step: 1 },
+    ],
+    demoCode: (s) => {
+      return scriptedCode('IuSpinningText', [['text', `'${s.text}'`], ['duration', String(s.duration)], ['radius', String(s.radius)]],
+        '  <IuSpinningText :text="text" :duration="duration" :radius="radius" />')
+    },
+    apiRows: [
+      { prop: 'text', desc: '环形排列的文本', type: 'string', def: '必填' },
+      { prop: 'duration', desc: '旋转一圈时长（秒）', type: 'number', def: '10' },
+      { prop: 'radius', desc: '旋转半径（em）', type: 'number', def: '5' },
+      { prop: 'reverse', desc: '反向旋转', type: 'boolean', def: 'false' },
+    ],
+  },
+  {
+    importName: 'IuBoxReveal', name: 'BoxReveal', zh: '方块揭示',
+    category: '文本', desc: '色块滑出揭示内容', slug: 'box-reveal', preview: 'box',
+    demoState: { color: '#5046e6', duration: 0.5, delay: 0.25 },
+    controls: [
+      { kind: 'text', key: 'color', label: '色块颜色 Color' },
+      { kind: 'number', key: 'duration', label: '时长 Duration（秒）', step: 0.1 },
+      { kind: 'number', key: 'delay', label: '延迟 Delay（秒）', step: 0.05 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['color', `'${s.color}'`],
+        ['duration', String(s.duration)],
+        ['delay', String(s.delay)],
+      ]
+      const body = [
+        '  <IuBoxReveal :color="color" :duration="duration" :delay="delay">',
+        '    <h3>Box Reveal</h3>',
+        '    <p>色块滑出后揭示内容。</p>',
+        '  </IuBoxReveal>',
+      ].join('\n')
+      return scriptedCode('IuBoxReveal', consts, body)
+    },
+    apiRows: [
+      { prop: 'color', desc: '揭示色块颜色', type: 'string', def: "'#5046e6'" },
+      { prop: 'duration', desc: '动画时长（秒）', type: 'number', def: '0.5' },
+      { prop: 'delay', desc: '动画延迟（秒）', type: 'number', def: '0.25' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被揭示的内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuLineShadowText', name: 'LineShadowText', zh: '行阴影文字',
+    category: '文本', desc: '斜线阴影循环扫过', slug: 'line-shadow-text', preview: 'line-shadow',
+    demoState: { shadowColor: 'black' },
+    controls: [{ kind: 'text', key: 'shadowColor', label: '阴影色 Shadow Color' }],
+    demoCode: (s) => {
+      return scriptedCode('IuLineShadowText', [['shadowColor', `'${s.shadowColor}'`]], '  <IuLineShadowText :shadow-color="shadowColor">Hover Text</IuLineShadowText>')
+    },
+    apiRows: [
+      { prop: 'shadowColor', desc: '阴影斜线颜色', type: 'string', def: "'black'" },
+      { prop: 'as', desc: '渲染的标签', type: 'string', def: "'span'" },
+    ],
+    slotRows: [{ prop: 'default', desc: '文字内容（仅字符串）', type: 'string', def: '必填' }],
+  },
+  {
+    importName: 'IuHyperText', name: 'HyperText', zh: '乱码解码',
+    category: '文本', desc: '悬停时乱码解码动画', slug: 'hyper-text', preview: 'hyper',
+    demoState: { text: 'Hover Me', duration: 800 },
+    controls: [
+      { kind: 'text', key: 'text', label: '文本 Text' },
+      { kind: 'number', key: 'duration', label: '时长 Duration（毫秒）', step: 100 },
+    ],
+    demoCode: (s) => {
+      return scriptedCode('IuHyperText', [['text', `'${s.text}'`], ['duration', String(s.duration)]], '  <IuHyperText :text="text" :duration="duration" :animate-on-load="true" />')
+    },
+    apiRows: [
+      { prop: 'text', desc: '目标文本', type: 'string', def: '必填' },
+      { prop: 'duration', desc: '解码动画时长（毫秒）', type: 'number', def: '800' },
+      { prop: 'animateOnLoad', desc: '加载时自动播放', type: 'boolean', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuEncryptedText', name: 'EncryptedText', zh: '加密解密',
+    category: '文本', desc: '进入视口时从乱码解密', slug: 'encrypted-text', preview: 'encrypt',
+    demoState: { text: 'Encrypted Text' },
+    controls: [{ kind: 'text', key: 'text', label: '文本 Text' }],
+    demoCode: (s) => {
+      return scriptedCode('IuEncryptedText', [['text', `'${s.text}'`]], '  <IuEncryptedText :text="text" />')
+    },
+    apiRows: [
+      { prop: 'text', desc: '目标文本', type: 'string', def: '必填' },
+      { prop: 'revealDelayMs', desc: '每个字符解密间隔（毫秒）', type: 'number', def: '50' },
+      { prop: 'charset', desc: '乱码字符集', type: 'string', def: '字母+数字+符号' },
+    ],
+  },
+  {
+    importName: 'IuMorphingText', name: 'MorphingText', zh: '形变文字',
+    category: '文本', desc: '多组文本模糊形变切换', slug: 'morphing-text', preview: 'morph',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const texts = `['软件工程师', '设计师', '创造者']`
+      const body = '  <IuMorphingText :texts="texts" />'
+      return scriptedCode('IuMorphingText', [['texts', texts]], body)
+    },
+    apiRows: [
+      { prop: 'texts', desc: '形变切换的文本数组', type: 'string[]', def: '必填' },
+      { prop: 'morphTime', desc: '形变时长（秒）', type: 'number', def: '1.5' },
+      { prop: 'coolDownTime', desc: '切换间隔冷却（秒）', type: 'number', def: '0.5' },
+    ],
+  },
+  {
+    importName: 'IuFocus', name: 'Focus', zh: '聚焦文字',
+    category: '文本', desc: '逐词聚焦高亮动画', slug: 'focus', preview: 'focus',
+    demoState: { sentence: 'Coding Is A Focus Game' },
+    controls: [{ kind: 'text', key: 'sentence', label: '句子 Sentence' }],
+    demoCode: (s) => {
+      return scriptedCode('IuFocus', [['sentence', `'${s.sentence}'`]], '  <IuFocus :sentence="sentence" :manual-mode="true" />')
+    },
+    apiRows: [
+      { prop: 'sentence', desc: '句子内容', type: 'string', def: "'Inspira Focus'" },
+      { prop: 'manualMode', desc: '手动模式（鼠标控制）', type: 'boolean', def: 'false' },
+      { prop: 'blurAmount', desc: '未聚焦模糊度', type: 'number', def: '5' },
+    ],
+  },
+  {
+    importName: 'IuColourfulText', name: 'ColourfulText', zh: '多彩文字',
+    category: '文本', desc: '彩色字符随机变化', slug: 'colourful-text', preview: 'colourful',
+    demoState: { text: 'Colourful' },
+    controls: [{ kind: 'text', key: 'text', label: '文本 Text' }],
+    demoCode: (s) => {
+      return scriptedCode('IuColourfulText', [['text', `'${s.text}'`]], '  <IuColourfulText :text="text" />')
+    },
+    apiRows: [
+      { prop: 'text', desc: '文本内容', type: 'string', def: '必填' },
+      { prop: 'colors', desc: '颜色池', type: 'string[]', def: '10 种彩色' },
+      { prop: 'duration', desc: '动画时长（秒）', type: 'number', def: '0.5' },
+    ],
+  },
+  {
+    importName: 'IuLetterSwap', name: 'LetterSwap', zh: '字母交换',
+    category: '文本', desc: '悬停时字母乱序交换', slug: 'letter-swap', preview: 'lswap',
+    demoState: { label: 'Hover Me' },
+    controls: [{ kind: 'text', key: 'label', label: '文本 Label' }],
+    demoCode: (s) => {
+      return scriptedCode('IuLetterSwap', [['label', `'${s.label}'`]], '  <IuLetterSwap :label="label" />')
+    },
+    apiRows: [
+      { prop: 'label', desc: '文本内容', type: 'string', def: '必填' },
+      { prop: 'animation', desc: '动画模式', type: "'forward' | 'pingpong'", def: "'forward'" },
+      { prop: 'staggerDuration', desc: '字母交错延迟', type: 'number', def: '0.03' },
+    ],
+  },
+  {
+    importName: 'IuTextHighlight', name: 'TextHighlight', zh: '文本高亮',
+    category: '文本', desc: '进入视口时高亮文字', slug: 'text-highlight', preview: 'thl',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      return scriptedCode('IuTextHighlight', [], '  <IuTextHighlight>高亮的文字内容</IuTextHighlight>')
+    },
+    apiRows: [
+      { prop: 'delay', desc: '动画延迟（毫秒）', type: 'number', def: '0' },
+      { prop: 'duration', desc: '动画时长（毫秒）', type: 'number', def: '2000' },
+      { prop: 'textEndColor', desc: '高亮后的文字色', type: 'string', def: "'inherit'" },
+    ],
+    slotRows: [{ prop: 'default', desc: '要高亮的文本内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuUnderlineText', name: 'UnderlineText', zh: '下划线动画',
+    category: '文本', desc: '进入视口时下划线动画', slug: 'underline-text', preview: 'uline',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      return scriptedCode('IuUnderlineText', [], '  <IuUnderlineText>下划线动画文字</IuUnderlineText>')
+    },
+    apiRows: [
+      { prop: 'as', desc: '渲染的标签', type: 'string', def: "'span'" },
+      { prop: 'variant', desc: '下划线样式', type: "'center' | 'comes-in-goes-out' | 'goes-out-comes-in'", def: "'center'" },
+      { prop: 'direction', desc: '动画方向', type: "'left' | 'right'", def: "'left'" },
+      { prop: 'underlineHeightRatio', desc: '下划线高度比例', type: 'number', def: '0.1' },
+    ],
+    slotRows: [{ prop: 'default', desc: '文本内容', type: '—', def: '—' }],
+  },
+  // ========= 批次 2：特效扩展 =========
+  {
+    importName: 'IuBorderBeam', name: 'BorderBeam', zh: '边框光束',
+    category: '特效', desc: '沿容器边框流动的光束', slug: 'border-beam', preview: 'beam',
+    demoState: { size: 200, duration: 6000, colorFrom: '#ffaa40', colorTo: '#9c40ff' },
+    controls: [
+      { kind: 'number', key: 'duration', label: '周期 Duration（毫秒）', step: 1000 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['colorFrom', `'${s.colorFrom}'`],
+        ['colorTo', `'${s.colorTo}'`],
+        ['duration', String(s.duration)],
+      ]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border p-6">',
+        '    <IuBorderBeam :color-from="colorFrom" :color-to="colorTo" :duration="duration" />',
+        '    <p>Border Beam 内容</p>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuBorderBeam', consts, body)
+    },
+    apiRows: [
+      { prop: 'size', desc: '光束长度（px）', type: 'number', def: '200' },
+      { prop: 'duration', desc: '一圈时长（毫秒）', type: 'number', def: '6000' },
+      { prop: 'colorFrom / colorTo', desc: '光束渐变色', type: 'string', def: '—' },
+      { prop: 'borderWidth', desc: '光束宽度', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuMeteors', name: 'Meteors', zh: '流星',
+    category: '特效', desc: '从上方划过的流星雨', slug: 'meteors', preview: 'meteors',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden h-40 border">',
+        '    <span class="absolute inset-0">',
+        '      <IuMeteors />',
+        '    </span>',
+        '    <p class="p-6">Meteor Shower</p>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuMeteors', [], body)
+    },
+    apiRows: [
+      { prop: 'number', desc: '流星数量', type: 'number', def: '20' },
+      { prop: 'angle', desc: '流星角度', type: 'number', def: '215' },
+    ],
+  },
+  {
+    importName: 'IuFlickeringGrid', name: 'FlickeringGrid', zh: '闪烁网格',
+    category: '特效', desc: '随机闪烁的网格粒子背景', slug: 'flickering-grid', preview: 'fgrid',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <FlickeringGrid',
+        '    class="absolute inset-0 z-0 [mask-image:radial-gradient(450px_circle_at_center,white,transparent)]"',
+        '    :square-size="4"',
+        '    :grid-gap="4"',
+        '    color="#60a5fa"',
+        '    :max-opacity="0.6"',
+        '    :flicker-chance="0.1"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('FlickeringGrid', [], body)
+    },
+    apiRows: [
+      { prop: 'squareSize', desc: '方块大小（px）', type: 'number', def: '4' },
+      { prop: 'gridGap', desc: '网格间距（px）', type: 'number', def: '4' },
+      { prop: 'flickerChance', desc: '闪烁概率', type: 'number', def: '0.3' },
+      { prop: 'color', desc: '方块颜色', type: 'string', def: "'rgb(242,242,242)'" },
+      { prop: 'maxOpacity', desc: '最大不透明度', type: 'number', def: '0.3' },
+    ],
+  },
+  // ========= 批次 2：场景扩展 =========
+  {
+    importName: 'IuCompare', name: 'Compare', zh: '图片对比',
+    category: '特效', desc: '拖动分割线对比两张图片', slug: 'compare', preview: 'compare',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuCompare',
+        '    first-image="/before.jpg"',
+        '    second-image="/after.jpg"',
+        '    :slide-mode="\'drag\'"',
+        '    class="h-80"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuCompare', [], body)
+    },
+    apiRows: [
+      { prop: 'firstImage / secondImage', desc: '前后两张图片', type: 'string', def: '必填' },
+      { prop: 'slideMode', desc: '交互方式', type: "'hover' | 'drag'", def: "'drag'" },
+      { prop: 'showHandlebar', desc: '显示拖动把手', type: 'boolean', def: 'true' },
+      { prop: 'autoplay', desc: '自动播放动画', type: 'boolean', def: 'false' },
+    ],
+  },
+  {
+    importName: 'IuLens', name: 'Lens', zh: '放大镜',
+    category: '特效', desc: '悬停放大局部区域', slug: 'lens', preview: 'lens',
+    demoState: { zoomFactor: 1.5, lensSize: 170 },
+    controls: [
+      { kind: 'number', key: 'zoomFactor', label: '倍率 Zoom Factor', step: 0.5 },
+      { kind: 'number', key: 'lensSize', label: '镜面尺寸 Lens Size', step: 20 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['zoomFactor', String(s.zoomFactor)],
+        ['lensSize', String(s.lensSize)],
+      ]
+      const body = [
+        '  <IuLens :zoom-factor="zoomFactor" :lens-size="lensSize" is-static>',
+        '    <img src="/image.jpg" alt="" class="w-full" />',
+        '  </IuLens>',
+      ].join('\n')
+      return scriptedCode('IuLens', consts, body)
+    },
+    apiRows: [
+      { prop: 'zoomFactor', desc: '放大倍率', type: 'number', def: '1.5' },
+      { prop: 'lensSize', desc: '镜面尺寸（px）', type: 'number', def: '170' },
+      { prop: 'isStatic', desc: '固定位置不跟随鼠标', type: 'boolean', def: 'false' },
+      { prop: 'hovering', desc: '外部控制悬停状态', type: 'boolean', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被放大的内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuAnimatedList', name: 'AnimatedList', zh: '列表入场',
+    category: '特效', desc: '子元素逐个入场动画', slug: 'animated-list', preview: 'alist',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuAnimatedList :delay="800">',
+        '    <div>第一条内容</div>',
+        '    <div>第二条内容</div>',
+        '    <div>第三条内容</div>',
+        '  </IuAnimatedList>',
+      ].join('\n')
+      return scriptedCode('IuAnimatedList', [], body)
+    },
+    apiRows: [
+      { prop: 'delay', desc: '子元素入场间隔（毫秒）', type: 'number', def: '1000' },
+    ],
+    slotRows: [{ prop: 'default', desc: '列表子元素', type: '—', def: '—' }],
+  },
+
 ]
 
 export const getComponent = (slug: string): ComponentMeta | undefined =>
