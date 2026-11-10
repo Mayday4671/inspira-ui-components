@@ -59,12 +59,7 @@ const tooltipItems = [
   { id: 2, name: '李娜', designation: 'UI 设计师', image: avatar('Li Na', '#ec4899') },
 ]
 
-const marqueeItems = [
-  { key: 1, label: 'Vue 3' },
-  { key: 2, label: 'TypeScript' },
-  { key: 3, label: 'Motion' },
-  { key: 4, label: 'Inspira UI' },
-]
+const marqueeItems = ['Vue 3', 'TypeScript', 'Motion', 'Inspira UI']
 
 const bentoItems = [
   { key: 'a', name: '统一 API', description: '统一 Props、Events 与插槽体验。' },

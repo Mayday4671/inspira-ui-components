@@ -128,10 +128,9 @@ function buttonCode(tag: string, state: Record<string, any>, useTextProp = false
 const INSTALL_SNIPPET = `\n\n<script setup lang="ts">\nimport { %NAME% } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n<\/script>`
 
 function staticCode(template: string, importName: string): string {
-  return (
-    template.replace('%NAME%', importName) +
-    (template.includes('<script') ? '' : INSTALL_SNIPPET)
-  )
+  // 先拼接再全局替换：INSTALL_SNIPPET 追加段中的 %NAME% 也必须被替换
+  const full = template + (template.includes('<script') ? '' : INSTALL_SNIPPET)
+  return full.split('%NAME%').join(importName)
 }
 
 export const COMPONENTS: ComponentMeta[] = [
@@ -702,12 +701,12 @@ export const COMPONENTS: ComponentMeta[] = [
       if (s.reverse) attrs.push('reverse')
       if (s.pauseOnHover) attrs.push('pause-on-hover')
       return staticCode(
-        `<template>\n  <IuMarquee ${attrs.join(' ')} :items="[\n    { key: 1, label: 'Vue 3' },\n    { key: 2, label: 'TypeScript' },\n    { key: 3, label: 'Motion' },\n  ]" />\n</template>`,
+        `<template>\n  <IuMarquee ${attrs.join(' ')} :items="['Vue 3', 'TypeScript', 'Motion']" />\n</template>`,
         'IuMarquee',
       )
     },
     apiRows: [
-      { prop: 'items', desc: '滚动内容（快捷模式）', type: 'MarqueeItem[]', def: '—' },
+      { prop: 'items', desc: '滚动内容；字符串自动生成胶囊，对象可自定义 key/label', type: '(string | { key, label })[]', def: '—' },
       { prop: 'speed', desc: '一圈滚动时长（秒）', type: 'number', def: '40' },
       { prop: 'gap', desc: '相邻内容间距（CSS 长度）', type: 'string', def: "'1rem'" },
       { prop: 'reverse', desc: '反向滚动', type: 'boolean', def: 'false' },
