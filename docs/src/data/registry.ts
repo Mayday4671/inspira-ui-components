@@ -760,6 +760,8 @@ export const COMPONENTS: ComponentMeta[] = [
         ['items', `[
     { id: 1, name: '张伟', designation: '前端工程师', image: avatar('Zhang Wei', '#6366f1') },
     { id: 2, name: '李娜', designation: 'UI 设计师', image: avatar('Li Na', '#ec4899') },
+    { id: 3, name: '王强', designation: '架构师', image: avatar('Wang Qiang', '#14b8a6') },
+    { id: 4, name: '赵敏', designation: '产品经理', image: avatar('Zhao Min', '#f59e0b') },
   ]`],
         ['avatar', avatarFn],
       ]

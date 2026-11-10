@@ -8,6 +8,7 @@ import {
   IuAnimatedModal,
   IuAnimatedModalBody,
   IuAnimatedModalContent,
+  IuAnimatedTooltip,
   IuAnimatedModalTrigger,
   IuAuroraBackground,
   IuBentoGrid,
