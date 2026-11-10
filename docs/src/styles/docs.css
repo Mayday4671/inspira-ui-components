@@ -2081,3 +2081,16 @@ button:disabled {
   background: #1d2432;
   border-color: #333c4f;
 }
+
+/* 无标题页（指南/总览/主题）：首个区块不产生额外顶部空带 */
+.doc-main > .h2:first-child {
+  margin-top: 0;
+}
+
+.doc-main > .catalog-head:first-child {
+  margin-top: 0;
+}
+
+.doc-main > .steps:first-child {
+  margin-top: 0;
+}

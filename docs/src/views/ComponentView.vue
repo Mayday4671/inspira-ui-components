@@ -42,6 +42,13 @@ function resetPreview() {
 
 const code = computed(() => meta.value.demoCode(state))
 
+const categoryIcon = computed(
+  () =>
+    ({ 按钮: 'bolt', 卡片: 'box', 文本: 'type', 交互: 'mouse', 数据: 'chart', 背景: 'layers' })[
+      meta.value.category
+    ] ?? 'bolt',
+)
+
 const tocLinks: Array<[string, string]> = [
   ['section-preview', '实时演示'],
   ['section-install', '安装与引入'],
@@ -63,6 +70,19 @@ function onControlEnter(e: KeyboardEvent) {
 
 <template>
   <DocsShell active="components" :toc-links="tocLinks">
+    <div class="component-title-row">
+      <div class="component-symbol"><UiIcon :name="categoryIcon" /></div>
+      <div class="page-heading">
+        <h1>{{ meta.name }} <span class="dot-accent">·</span> {{ meta.zh }}</h1>
+        <p>{{ meta.desc }}</p>
+        <div class="heading-tags">
+          <span class="neutral-tag">{{ meta.category }}</span>
+          <span class="neutral-tag">Vue 3</span>
+          <span class="neutral-tag">TypeScript</span>
+          <span v-if="meta.recommended" class="tag">推荐</span>
+        </div>
+      </div>
+    </div>
 
     <!-- 实时演示 -->
     <h2 id="section-preview" class="h2">
