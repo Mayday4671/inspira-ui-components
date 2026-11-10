@@ -241,14 +241,18 @@ const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流
 
   <IuAnimatedTooltip v-else-if="meta.slug === 'animated-tooltip'" :items="tooltipItems" />
 
-  <div v-else-if="meta.slug === 'marquee'" class="demo-fit" style="height: 90px; width: 100%; max-width: 520px; border: 1px solid var(--border); border-radius: 12px">
+  <div
+    v-else-if="meta.slug === 'marquee'"
+    class="demo-fit marquee-stage"
+    style="height: 110px; width: 100%"
+  >
     <IuMarquee
       :items="marqueeItems"
       :speed="Number(s.speed) || 20"
       :reverse="Boolean(s.reverse)"
       :pause-on-hover="Boolean(s.pauseOnHover)"
-      gap="0.75rem"
-      style="height: 100%"
+      gap="1rem"
+      style="width: 100%"
     />
   </div>
 
@@ -338,6 +342,12 @@ const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流
 .spot-cta {
   font-size: 13px;
   font-weight: 650;
+}
+
+.marquee-stage {
+  background: var(--surface-2, var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 12px;
 }
 
 .demo-fit {
