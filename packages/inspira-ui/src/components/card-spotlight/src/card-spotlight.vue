@@ -87,7 +87,7 @@ const backgroundStyle = computed(() => {
           class="mt-4 inline-flex text-sm font-semibold text-current underline-offset-4 hover:underline"
           @click="handleActionClick"
         >
-          {{ cta }} →
+          {{ cta }}
         </a>
       </slot>
     </div>

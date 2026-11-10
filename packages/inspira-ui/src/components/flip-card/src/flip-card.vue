@@ -72,7 +72,7 @@ function handleActionClick(event: MouseEvent) {
               class="mt-4 inline-flex w-fit text-sm font-semibold underline-offset-4 hover:underline"
               @click="handleActionClick"
             >
-              {{ cta }} →
+              {{ cta }}
             </a>
           </div>
         </slot>

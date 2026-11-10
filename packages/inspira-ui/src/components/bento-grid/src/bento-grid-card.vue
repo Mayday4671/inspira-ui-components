@@ -56,7 +56,7 @@ function handleActionClick(event: MouseEvent) {
         class="pointer-events-auto inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
         @click="handleActionClick"
       >
-        {{ cta }} →
+        {{ cta }}
       </a>
     </div>
     <div

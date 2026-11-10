@@ -133,10 +133,12 @@ const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流
     </div>
   </div>
 
-  <div v-else-if="meta.slug === 'card-spotlight'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px">
+  <div v-else-if="meta.slug === 'card-spotlight'" class="demo-fit" style="height: 240px; width: 100%; max-width: 560px">
     <IuCardSpotlight
       :title="String(s.title)"
-      description="鼠标在卡片上移动，会有一道聚光灯跟随光斑。"
+      description="鼠标在卡片上移动，会有一道聚光灯跟随光斑。组件支持标题、描述、背景图与底部按钮的快捷配置。" 
+      cta="查看详情"
+      href="#section-preview"
       :gradient-size="Number(s.gradientSize) || 240"
       style="position: absolute; inset: 0"
     />

@@ -164,9 +164,9 @@ button:disabled {
 
 .top-inner {
   height: 100%;
-  max-width: 1600px;
+  max-width: none;
   margin: auto;
-  padding: 0 48px;
+  padding: 0 32px;
   display: flex;
   align-items: center;
   gap: 36px;
@@ -424,9 +424,9 @@ button:disabled {
 
 /* ---------- 首页 ---------- */
 .home-container {
-  max-width: 1250px;
+  max-width: 1440px;
   margin: auto;
-  padding: 0 30px;
+  padding: 0 40px;
 }
 
 .hero {
@@ -760,8 +760,7 @@ button:disabled {
 .docs-shell {
   display: grid;
   grid-template-columns: 249px minmax(0, 1fr);
-  max-width: 1600px;
-  margin: auto;
+  max-width: none;
   align-items: start;
 }
 
@@ -900,18 +899,17 @@ button:disabled {
 }
 
 .docs-grid {
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: none;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 175px;
   align-items: start;
-  gap: 58px;
-  padding: 46px 50px 100px 61px;
+  gap: 48px;
+  padding: 40px 56px 100px 56px;
 }
 
 .docs-grid.no-toc {
   grid-template-columns: minmax(0, 1fr);
-  max-width: 1240px;
+  max-width: none;
 }
 
 .doc-main {
