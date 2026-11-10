@@ -14,7 +14,6 @@
     "inspira-ui-components": "workspace:*"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.2.1",
     "@vitejs/plugin-vue": "^6.0.0",
     "tailwindcss": "^4.2.1",
     "typescript": "~5.9.0",

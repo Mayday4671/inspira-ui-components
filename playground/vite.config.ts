@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import tailwindcss from '@tailwindcss/vite'
+import { iuTailwindPlugin } from '../packages/inspira-ui/scripts/iu-tailwind-plugin.mjs'
 
 /**
  * 两种运行模式：
@@ -12,7 +12,15 @@ export default defineConfig(({ mode }) => {
   const useDist = mode === 'dist'
 
   return {
-    plugins: [vue(), tailwindcss()],
+    plugins: [
+    vue(),
+    // 自定义管线：demo 自身工具类（含 dark:）正确生成
+    iuTailwindPlugin({
+      stylesId: 'E:/My_Project/inspira-ui-components/playground/src/assets/tw.css'.replace(/\/g, '/'),
+      base: 'E:/My_Project/inspira-ui-components/playground/src/assets/',
+      sourceDirs: ['E:/My_Project/inspira-ui-components/playground/src'],
+    }),
+  ],
     resolve: {
       alias: {
         'inspira-ui-components': useDist

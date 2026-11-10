@@ -1,6 +1,5 @@
 import type { App, Plugin } from 'vue'
 import * as components from './components'
-import './styles/index.css'
 
 export * from './components'
 export * from './utils'

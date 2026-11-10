@@ -7,9 +7,8 @@
  * - dark 变体基于 .dark 类而非系统偏好，使用方在 <html> 上加 .dark 即启用暗色。
  */
 @import 'tailwindcss' source(none);
-@source '../components';
+@custom-variant dark (&:is(.dark *));
+
 
 @import './theme.css';
 @import './tokens.css';
-
-@custom-variant dark (&:is(.dark *));

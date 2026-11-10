@@ -1,8 +1,8 @@
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
-import tailwindcss from '@tailwindcss/vite'
 import dts from 'vite-plugin-dts'
+import { iuTailwindPlugin, libTailwindOptions } from './scripts/iu-tailwind-plugin.mjs'
 
 const r = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
@@ -13,7 +13,8 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    tailwindcss(),
+    // 自定义 Tailwind 编译管线（替代 @tailwindcss/vite —— 其扫描阶段丢失 dark: 候选）
+    iuTailwindPlugin(libTailwindOptions),
     dts({ tsconfigPath: r('./tsconfig.json'), entryRoot: 'src' }),
   ],
   build: {
