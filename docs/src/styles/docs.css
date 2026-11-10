@@ -2094,3 +2094,29 @@ button:disabled {
 .doc-main > .steps:first-child {
   margin-top: 0;
 }
+
+/* 侧栏二级链接：中文为主、英文弱化为副标注 */
+.side-sub .side-link {
+  gap: 6px;
+}
+
+.side-sub .side-link .side-zh {
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.side-sub .side-link .side-en {
+  font-size: 10.5px;
+  color: var(--weak);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.side-sub .side-link .side-rec {
+  font-size: 9px;
+  color: var(--primary);
+  margin-left: auto;
+  flex-shrink: 0;
+}

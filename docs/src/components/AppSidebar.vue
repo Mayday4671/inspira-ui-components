@@ -77,8 +77,9 @@ void COMPONENTS
             :class="{ active: activeSlug === c.slug }"
             @click="emit('close')"
           >
-            {{ c.name }}
-            <span v-if="c.recommended" style="font-size: 9px; color: var(--primary); margin-left: auto">荐</span>
+            <span class="side-zh">{{ c.zh }}</span>
+            <span class="side-en">{{ c.name }}</span>
+            <span v-if="c.recommended" class="side-rec">荐</span>
           </router-link>
         </div>
       </template>
