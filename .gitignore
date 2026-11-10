@@ -12,3 +12,4 @@ coverage/
 .worktrees/
 pg-*.png
 docs-*.png
+.tools/

@@ -4,16 +4,22 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vitepress dev",
-    "build": "vitepress build",
-    "preview": "vitepress preview"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "inspira-ui-components": "workspace:*"
+    "inspira-ui-components": "workspace:*",
+    "vue": "^3.5.20",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "shiki": "^3.0.0",
-    "vitepress": "^1.6.4",
-    "vue": "^3.5.20"
+    "@tailwindcss/vite": "^4.2.1",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "tailwindcss": "^4.2.1",
+    "typescript": "~5.9.0",
+    "vite": "^7.1.0",
+    "vue-tsc": "^3.1.0"
   }
 }

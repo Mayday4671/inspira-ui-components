@@ -1,0 +1,7 @@
+{
+  "name": "inspira-ui-components-docs-redesign",
+  "theme": {"light": {"bg": "#f8f9fc", "surface": "#ffffff", "surface2": "#f5f7fb", "text": "#202535", "muted": "#737b8c", "border": "#e8ebf1", "primary": "#6558e8", "primarySoft": "#f0eeff"}, "dark": {"bg": "#10131c", "surface": "#191d28", "surface2": "#202534", "text": "#f3f4fc", "muted": "#a3aabc", "border": "#2c3342", "primary": "#9a91ff", "primarySoft": "#302c4f"}},
+  "geometry": {"headerDesktop": 68, "headerMobile": 62, "sidebarDesktop": 249, "tocDesktop": 175, "cardRadius": 14, "buttonRadius": 10},
+  "breakpoints": {"wideLayout": 1250, "hideToc": 1020, "mobileNav": 760, "singleColumnCatalog": 480},
+  "constraints": {"visiblePrimaryScrollbarCount": 1, "horizontalPageOverflowPx": 0, "previewMustUseRealComponentsInProduction": true, "componentCountDerivedFromRealExports": true}
+}
