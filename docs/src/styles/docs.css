@@ -950,18 +950,6 @@ button:disabled {
   font-weight: 750;
 }
 
-.crumbs {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--weak);
-  font-size: 11px;
-  margin-bottom: 17px;
-}
-
-.crumbs a:hover {
-  color: var(--primary);
-}
 
 .page-heading {
   margin-bottom: 31px;
@@ -1219,7 +1207,7 @@ button:disabled {
 
 .code-block .lang {
   position: absolute;
-  right: 64px;
+  right: 50px;
   top: 17px;
   color: #9ca7be;
   font-size: 10px;

@@ -41,11 +41,6 @@ createApp(App).use(InspiraUI).mount('#app')
 
 <template>
   <DocsShell active="guide" :toc-links="tocLinks">
-    <div class="crumbs">
-      <router-link to="/home">首页</router-link>
-      <UiIcon name="chevron" small />
-      <span>指南</span>
-    </div>
     <div class="page-heading">
       <h1>快速开始</h1>
       <p>以最小化的 Vue 3 + Vite 项目为例，三步接入组件库。此页面按开发者实际使用顺序编排，不把教程拆成过多零碎页面。</p>
@@ -99,7 +94,7 @@ createApp(App).use(InspiraUI).mount('#app')
       若示例 API 与真实代码不一致，以源码为准修正文档。
     </div>
     <router-link to="/component/shimmer-button" class="btn primary">
-      前往第一个组件 <UiIcon name="arrow" small />
+      前往第一个组件
     </router-link>
   </DocsShell>
 </template>

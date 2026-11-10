@@ -30,7 +30,7 @@ function goShimmer() {
           灵感来自 Inspira UI 的精致动效，像使用 Element Plus 一样简单。npm 安装、按需引入，让每个交互细节更出彩。
         </p>
         <div class="hero-actions">
-          <router-link to="/guide" class="btn primary large">快速开始 <UiIcon name="arrow" small /></router-link>
+          <router-link to="/guide" class="btn primary large">快速开始</router-link>
           <router-link to="/components" class="btn large">浏览组件 <UiIcon name="grid" small /></router-link>
         </div>
         <div class="hero-metadata">
@@ -54,7 +54,7 @@ function goShimmer() {
           <div class="art-preview">
             <span class="art-badge">SHIMMER BUTTON</span>
             <!-- 真实组件：IuShimmerButton -->
-            <IuShimmerButton @click="goShimmer">立即体验 →</IuShimmerButton>
+            <IuShimmerButton @click="goShimmer">立即体验</IuShimmerButton>
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@ function goShimmer() {
           <h2>精选组件</h2>
           <p>先看效果，再决定如何使用。无需在满屏链接中寻找灵感。</p>
         </div>
-        <router-link to="/components">查看全部组件 <UiIcon name="arrow" small /></router-link>
+        <router-link to="/components">查看全部组件</router-link>
       </div>
       <div class="feature-grid">
         <router-link v-for="c in featured" :key="c.slug" class="feature-card" :to="`/component/${c.slug}`">
@@ -100,7 +100,7 @@ function goShimmer() {
             <CatalogPreview :kind="c.preview" />
           </div>
           <div class="feature-meta">
-            <h3>{{ c.name }} <UiIcon name="arrow" small /></h3>
+            <h3>{{ c.name }}</h3>
             <p>{{ c.zh }} · {{ c.desc }}</p>
           </div>
         </router-link>

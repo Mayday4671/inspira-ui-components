@@ -228,7 +228,7 @@ export const COMPONENTS: ComponentMeta[] = [
     desc: '流动渐变与聚焦反馈',
     slug: 'gradient-button',
     preview: 'gradient',
-    demoState: { ...BUTTON_DEMO_STATE, text: '渐变流光 →', variant: 'rainbow' },
+    demoState: { ...BUTTON_DEMO_STATE, text: '渐变流光', variant: 'rainbow' },
     controls: [
       BUTTON_CONTROLS[0],
       BUTTON_CONTROLS[1],
@@ -276,7 +276,7 @@ export const COMPONENTS: ComponentMeta[] = [
     desc: '点击触发水波扩散',
     slug: 'ripple-button',
     preview: 'ripple',
-    demoState: { ...BUTTON_DEMO_STATE, text: '点击试试 →' },
+    demoState: { ...BUTTON_DEMO_STATE, text: '点击试试' },
     controls: BUTTON_CONTROLS,
     demoCode: (s) => buttonCode('IuRippleButton', s),
     apiRows: [

@@ -44,11 +44,6 @@ const a11yCode = `@media (prefers-reduced-motion: reduce) {
 
 <template>
   <DocsShell active="themes" :toc-links="tocLinks">
-    <div class="crumbs">
-      <router-link to="/home">首页</router-link>
-      <UiIcon name="chevron" small />
-      <span>指南</span>
-    </div>
     <div class="page-heading">
       <h1>主题定制</h1>
       <p>遵循「内容优先、动效克制、交互清晰」的设计原则。所有示例均支持亮色与暗色模式，并遵守系统减少动效偏好。</p>
@@ -62,7 +57,7 @@ const a11yCode = `@media (prefers-reduced-motion: reduce) {
           <div style="font-size: 17px; font-weight: 800; margin-top: 10px">简洁、清晰、好阅读</div>
           <div class="theme-line"></div>
           <button class="btn primary sm" type="button" @click="apply('light')">
-            按钮示例 <UiIcon name="arrow" small />
+            按钮示例
           </button>
         </div>
         <div class="theme-choose">
@@ -81,7 +76,7 @@ const a11yCode = `@media (prefers-reduced-motion: reduce) {
             style="background: #8d82ef; border-color: #8d82ef; color: white"
             @click="apply('dark')"
           >
-            按钮示例 <UiIcon name="arrow" small />
+            按钮示例
           </button>
         </div>
         <div class="theme-choose">

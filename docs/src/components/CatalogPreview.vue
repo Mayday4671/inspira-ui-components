@@ -100,9 +100,9 @@ const auroraHeight = '128px'
 
     <IuRainbowButton v-else-if="kind === 'rainbow'" size="small">查看详情 ✦</IuRainbowButton>
 
-    <IuGradientButton v-else-if="kind === 'gradient'" variant="ocean" size="small">渐变流光 →</IuGradientButton>
+    <IuGradientButton v-else-if="kind === 'gradient'" variant="ocean" size="small">渐变流光</IuGradientButton>
 
-    <IuRippleButton v-else-if="kind === 'ripple'" size="small">点击试试 →</IuRippleButton>
+    <IuRippleButton v-else-if="kind === 'ripple'" size="small">点击试试</IuRippleButton>
 
     <div v-else-if="kind === 'card'" class="scaled-box" style="width: 210px; height: 132px">
       <IuCard3D title="3D Card" description="悬停时跟随鼠标倾斜" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%)" />

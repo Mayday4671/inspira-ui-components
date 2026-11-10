@@ -87,7 +87,7 @@ void COMPONENTS
     <div class="side-end">
       基于 Vue 3 · TypeScript<br />
       按需导入 · 轻量集成<br />
-      <router-link to="/guide">查看使用指南 <UiIcon name="arrow" small /></router-link>
+      <router-link to="/guide">查看使用指南</router-link>
     </div>
   </aside>
 </template>

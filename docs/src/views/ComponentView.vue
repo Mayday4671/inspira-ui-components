@@ -70,13 +70,6 @@ function onControlEnter(e: KeyboardEvent) {
 
 <template>
   <DocsShell active="components" :toc-links="tocLinks">
-    <div class="crumbs">
-      <router-link to="/home">首页</router-link>
-      <UiIcon name="chevron" small />
-      <router-link to="/components">组件文档</router-link>
-      <UiIcon name="chevron" small />
-      <span>{{ meta.category }}</span>
-    </div>
 
     <div class="component-title-row">
       <div class="component-symbol"><UiIcon :name="categoryIcon" /></div>
@@ -260,7 +253,7 @@ function onControlEnter(e: KeyboardEvent) {
         <UiIcon name="grid" small /> 返回组件总览
       </router-link>
       <router-link class="btn sm primary" :to="`/component/${nextComponent.slug}`">
-        下一个组件 <UiIcon name="arrow" small />
+        下一个组件
       </router-link>
     </div>
   </DocsShell>

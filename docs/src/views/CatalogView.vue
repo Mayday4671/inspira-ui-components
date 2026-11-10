@@ -26,11 +26,6 @@ function clearFilters() {
 
 <template>
   <DocsShell active="components">
-    <div class="crumbs">
-      <router-link to="/home">首页</router-link>
-      <UiIcon name="chevron" small />
-      <span>组件文档</span>
-    </div>
     <div class="page-heading">
       <h1>所有组件</h1>
       <p>快速预览动效与交互，按类别筛选或搜索。每个组件均可进入详情查看完整示例、可调参数与 API。</p>
@@ -79,7 +74,7 @@ function clearFilters() {
             <CatalogPreview :kind="c.preview" />
           </div>
           <div class="catalog-info">
-            <h3>{{ c.name }} <UiIcon name="arrow" small /></h3>
+            <h3>{{ c.name }}</h3>
             <p>{{ c.zh }} · {{ c.desc }}</p>
           </div>
         </router-link>
