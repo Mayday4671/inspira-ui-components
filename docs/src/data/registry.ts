@@ -133,6 +133,28 @@ function staticCode(template: string, importName: string): string {
   return full.split('%NAME%').join(importName)
 }
 
+
+/** 生成「数据定义在 script setup、模板只引用」的标准示例代码 */
+function scriptedCode(
+  name: string,
+  consts: Array<[string, string]>,
+  body: string,
+): string {
+  const constLines = consts.map(([k, v]) => `const ${k} = ${v}`).join('\n')
+  return `<template>\n${body}\n</template>\n\n<script setup lang="ts">\nimport { ${name} } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n\n${constLines}\n<\/script>`
+}
+
+const avatarFn = `function avatar(name: string, color: string) {
+  const initials = name
+    .split(' ')
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
+  const svg = \`<svg xmlns='http://www.w3.org/2000/svg' width='112' height='112'><rect width='100%25' height='100%25' fill='\${color}'/><text x='50%25' y='54%25' dy='.35em' text-anchor='middle' font-family='system-ui' font-size='42' fill='%23fff'>\${initials}</text></svg>\`
+  return \`data:image/svg+xml;utf8,\${encodeURIComponent(svg)}\`
+}`
+
 export const COMPONENTS: ComponentMeta[] = [
   {
     importName: 'IuShimmerButton',
@@ -301,11 +323,21 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'text', key: 'title', label: '标题 Title' },
       { kind: 'text', key: 'cta', label: '按钮文案 CTA' },
     ],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuCard3D\n    title="${s.title}"\n    description="悬停整卡跟随鼠标旋转，标题与背景沿 Z 轴分层浮起。"\n    cta="${s.cta}"\n  />\n</template>`,
-        'IuCard3D',
-      ),
+        demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['title', `'${s.title}'`],
+        ['description', `'悬停整卡跟随鼠标旋转，标题与背景沿 Z 轴分层浮起。'`],
+        ['cta', `'${s.cta}'`],
+      ]
+      const body = [
+        '  <IuCard3D',
+        '    :title="title"',
+        '    :description="description"',
+        '    :cta="cta"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuCard3D', consts, body)
+    },
     apiRows: [
       { prop: 'title', desc: '卡片标题', type: 'string', def: '—' },
       { prop: 'description', desc: '描述文字', type: 'string', def: '—' },
@@ -332,11 +364,21 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'text', key: 'title', label: '标题 Title' },
       { kind: 'number', key: 'gradientSize', label: '光斑半径 Gradient Size', step: 20 },
     ],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuCardSpotlight\n    title="${s.title}"\n    description="鼠标在卡片上移动，会有一道聚光灯跟随光斑。"\n    :gradient-size="${s.gradientSize}"\n  />\n</template>`,
-        'IuCardSpotlight',
-      ),
+        demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['title', `'${s.title}'`],
+        ['description', `'鼠标在卡片上移动，会有一道聚光灯跟随光斑。'`],
+        ['gradientSize', String(s.gradientSize)],
+      ]
+      const body = [
+        '  <IuCardSpotlight',
+        '    :title="title"',
+        '    :description="description"',
+        '    :gradient-size="gradientSize"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuCardSpotlight', consts, body)
+    },
     apiRows: [
       { prop: 'title', desc: '标题（有默认插槽时忽略）', type: 'string', def: '—' },
       { prop: 'description', desc: '描述文字', type: 'string', def: '—' },
@@ -371,11 +413,21 @@ export const COMPONENTS: ComponentMeta[] = [
       },
       { kind: 'text', key: 'backTitle', label: '背面标题 Back Title' },
     ],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuFlipCard rotate="${s.rotate}" back-title="${s.backTitle}" back-description="鼠标移开自动翻回正面。" />\n</template>`,
-        'IuFlipCard',
-      ),
+        demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['rotate', `'${s.rotate}'`],
+        ['backTitle', `'${s.backTitle}'`],
+        ['backDescription', `'鼠标移开自动翻回正面。'`],
+      ]
+      const body = [
+        '  <IuFlipCard',
+        '    :rotate="rotate"',
+        '    :back-title="backTitle"',
+        '    :back-description="backDescription"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuFlipCard', consts, body)
+    },
     apiRows: [
       { prop: 'rotate', desc: '翻转轴：x 上下 / y 左右', type: "'x' | 'y'", def: "'y'" },
       { prop: 'image', desc: '正面背景图地址', type: 'string', def: '—' },
@@ -402,11 +454,21 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'width', label: '宽度 Width（px）', step: 20 },
       { kind: 'number', key: 'radius', label: '圆角 Radius（px）', step: 4 },
     ],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuGlareCard :width="${s.width}" :radius="${s.radius}">\n    <div style="width: 100%; height: 100%">自定义内容</div>\n  </IuGlareCard>\n</template>`,
-        'IuGlareCard',
-      ),
+        demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['width', String(s.width)],
+        ['radius', String(s.radius)],
+      ]
+      const body = [
+        '  <IuGlareCard',
+        '    :width="width"',
+        '    :radius="radius"',
+        '  >',
+        '    <div style="width: 100%; height: 100%">自定义内容</div>',
+        '  </IuGlareCard>',
+      ].join('\n')
+      return scriptedCode('IuGlareCard', consts, body)
+    },
     apiRows: [
       { prop: 'image', desc: '内容图地址（自动铺满）', type: 'string', def: '—' },
       { prop: 'title', desc: '内容标题', type: 'string', def: '—' },
@@ -427,11 +489,15 @@ export const COMPONENTS: ComponentMeta[] = [
     preview: 'bento',
     demoState: {},
     controls: [],
-    demoCode: () =>
-      staticCode(
-        `<template>\n  <IuBentoGrid :items="[\n    { key: 'a', name: '20 个精选组件', description: '按钮 / 卡片 / 文本动画 / 交互 / 背景。' },\n    { key: 'b', name: 'npm 包直接调用', description: 'app.use() 全量注册或具名导入。' },\n    { key: 'c', name: 'CSS 变量主题', description: '覆盖 --iu-* 变量即可换肤。' },\n  ]" />\n</template>`,
-        'IuBentoGrid',
-      ),
+        demoCode: (s) => {
+      const items = `[
+    { key: 'a', name: '统一 API', description: '统一 Props、Events 与插槽体验。' },
+    { key: 'b', name: '按需引入', description: '具名导入，tree-shaking 友好。' },
+    { key: 'c', name: '类型完备', description: 'Vue 3 + TypeScript 全量类型。' },
+  ]`
+      const body = '  <IuBentoGrid :items="items" />'
+      return scriptedCode('IuBentoGrid', [['items', items]], body)
+    },
     apiRows: [
       { prop: 'items', desc: '快捷模式数据（默认插槽存在时忽略）', type: 'BentoGridDataItem[]', def: '—' },
       { prop: 'items[].name', desc: '模块标题', type: 'string', def: '必填' },
@@ -457,14 +523,22 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'text', key: 'suffix', label: '后缀 Suffix' },
       { kind: 'number', key: 'decimalPlaces', label: '小数位 Decimals', step: 1 },
     ],
-    demoCode: (s) => {
-      const attrs = [`:value="${s.value}"`, `:decimal-places="${s.decimalPlaces}"`]
-      if (s.prefix) attrs.push(`prefix="${s.prefix}"`)
-      if (s.suffix) attrs.push(`suffix="${s.suffix}"`)
-      return staticCode(
-        `<template>\n  <IuNumberTicker ${attrs.join(' ')} />\n</template>`,
-        'IuNumberTicker',
-      )
+        demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['value', String(s.value)],
+        ['decimalPlaces', String(s.decimalPlaces)],
+      ]
+      if (s.prefix) consts.push(['prefix', `'${s.prefix}'`])
+      if (s.suffix) consts.push(['suffix', `'${s.suffix}'`])
+      const body = [
+        '  <IuNumberTicker',
+        '    :value="value"',
+        '    :decimal-places="decimalPlaces"',
+        s.prefix ? '    :prefix="prefix"' : null,
+        s.suffix ? '    :suffix="suffix"' : null,
+        '  />',
+      ].filter(Boolean)
+      return scriptedCode('IuNumberTicker', consts, body.join('\n'))
     },
     apiRows: [
       { prop: 'value', desc: '目标数值（变化时重新滚动）', type: 'number', def: '0' },
@@ -491,11 +565,16 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'text', key: 'text', label: '文本 Text' },
       { kind: 'number', key: 'speed', label: '速度 Speed（毫秒/字符）', step: 10 },
     ],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuTypewriterText :text="${s.text}" :speed="${s.speed}" />\n</template>`,
+        demoCode: (s) => {
+      return scriptedCode(
         'IuTypewriterText',
-      ),
+        [
+          ['text', `'${s.text}'`],
+          ['speed', String(s.speed)],
+        ],
+        '  <IuTypewriterText :text="text" :speed="speed" />',
+      )
+    },
     apiRows: [
       { prop: 'text', desc: '要打出的文本；传数组则多段轮播', type: 'string | string[]', def: '必填' },
       { prop: 'as', desc: '渲染的标签', type: 'string', def: "'div'" },
@@ -521,14 +600,18 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'text', key: 'words', label: '词组 Words（英文逗号分隔）' },
       { kind: 'number', key: 'duration', label: '停留时长 Duration（毫秒）', step: 200 },
     ],
-    demoCode: (s) => {
-      const list = String(s.words)
+        demoCode: (s) => {
+      const words = String(s.words)
         .split(',')
         .map((w) => `'${w.trim()}'`)
         .join(', ')
-      return staticCode(
-        `<template>\n  <IuFlipWords :words="[${list}]" :duration="${s.duration}" />\n</template>`,
+      return scriptedCode(
         'IuFlipWords',
+        [
+          ['words', `[${words}]`],
+          ['duration', String(s.duration)],
+        ],
+        '  <IuFlipWords :words="words" :duration="duration" />',
       )
     },
     apiRows: [
@@ -551,11 +634,13 @@ export const COMPONENTS: ComponentMeta[] = [
     preview: 'text',
     demoState: { words: '让每一帧都有意义' },
     controls: [{ kind: 'text', key: 'words', label: '文本 Words' }],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuTextGenerateEffect words="${s.words}" />\n</template>`,
+        demoCode: (s) => {
+      return scriptedCode(
         'IuTextGenerateEffect',
-      ),
+        [['words', `'${s.words}'`]],
+        '  <IuTextGenerateEffect :words="words" />',
+      )
+    },
     apiRows: [
       { prop: 'words', desc: '要逐词显示的文本', type: 'string', def: '必填' },
       { prop: 'filter', desc: '是否启用模糊过渡', type: 'boolean', def: 'true' },
@@ -670,11 +755,17 @@ export const COMPONENTS: ComponentMeta[] = [
     preview: 'tooltip',
     demoState: {},
     controls: [],
-    demoCode: () =>
-      staticCode(
-        `<template>\n  <IuAnimatedTooltip :items="[\n    { id: 1, name: '张伟', designation: '前端工程师', image: avatarUrl },\n    { id: 2, name: '李娜', designation: 'UI 设计师', image: avatarUrl },\n  ]" />\n</template>`,
-        'IuAnimatedTooltip',
-      ),
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['items', `[
+    { id: 1, name: '张伟', designation: '前端工程师', image: avatar('Zhang Wei', '#6366f1') },
+    { id: 2, name: '李娜', designation: 'UI 设计师', image: avatar('Li Na', '#ec4899') },
+  ]`],
+        ['avatar', avatarFn],
+      ]
+      const body = '  <IuAnimatedTooltip :items="items" />'
+      return scriptedCode('IuAnimatedTooltip', consts, body)
+    },
     apiRows: [
       { prop: 'items', desc: '成员列表', type: 'AnimatedTooltipItem[]', def: '必填' },
       { prop: 'items[].name', desc: '名称（名片主标题）', type: 'string', def: '必填' },
@@ -696,13 +787,22 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'switch', key: 'reverse', label: 'reverse' },
       { kind: 'switch', key: 'pauseOnHover', label: 'pauseOnHover' },
     ],
-    demoCode: (s) => {
-      const attrs = [`:speed="${s.speed}"`]
-      if (s.reverse) attrs.push('reverse')
-      if (s.pauseOnHover) attrs.push('pause-on-hover')
-      return staticCode(
-        `<template>\n  <IuMarquee ${attrs.join(' ')} :items="['Vue 3', 'TypeScript', 'Motion']" />\n</template>`,
+        demoCode: (s) => {
+      const lines = [
+        '  <IuMarquee',
+        '    :speed="speed"',
+        s.pauseOnHover ? '    pause-on-hover' : null,
+        s.reverse ? '    reverse' : null,
+        '    :items="items"',
+        '  />',
+      ].filter(Boolean)
+      return scriptedCode(
         'IuMarquee',
+        [
+          ['items', `['Vue 3', 'TypeScript', 'Motion']`],
+          ['speed', String(s.speed)],
+        ],
+        lines.join('\n'),
       )
     },
     apiRows: [
@@ -731,11 +831,25 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'value', label: '数值 Value', step: 100 },
       { kind: 'number', key: 'trend', label: '涨跌幅 Trend（%）', step: 0.1 },
     ],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuStatistic\n    label="${s.label}"\n    :value="${s.value}"\n    suffix="${s.suffix}"\n    :trend="${s.trend}"\n    trend-label="较上月"\n  />\n</template>`,
-        'IuStatistic',
-      ),
+        demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['label', `'${s.label}'`],
+        ['value', String(s.value)],
+        ['suffix', `'${s.suffix}'`],
+        ['trend', String(s.trend)],
+        ['trendLabel', `'${s.trendLabel}'`],
+      ]
+      const body = [
+        '  <IuStatistic',
+        '    :label="label"',
+        '    :value="value"',
+        '    :suffix="suffix"',
+        '    :trend="trend"',
+        '    :trend-label="trendLabel"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuStatistic', consts, body)
+    },
     apiRows: [
       { prop: 'label', desc: '指标名称', type: 'string', def: '—' },
       { prop: 'value', desc: '指标数值（进入视口时滚动）', type: 'number', def: '必填' },
@@ -803,11 +917,21 @@ export const COMPONENTS: ComponentMeta[] = [
       },
       { kind: 'switch', key: 'animate', label: 'animate' },
     ],
-    demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuPatternBackground\n    variant="${s.variant}"\n    ${s.animate ? ':animate="true"' : ':animate="false"'}\n    direction="top"\n    :speed="25000"\n    style="height: 240px; border-radius: 14px"\n  >\n    <p>网格 / 圆点图案背景</p>\n  </IuPatternBackground>\n</template>`,
-        'IuPatternBackground',
-      ),
+        demoCode: (s) => {
+      const animateAttr = s.animate ? ':animate="true"' : ':animate="false"'
+      const body = [
+        '  <IuPatternBackground',
+        `    variant="${s.variant}"`,
+        `    ${animateAttr}`,
+        '    direction="top"',
+        '    :speed="12000"',
+        '    style="height: 240px; border-radius: 14px"',
+        '  >',
+        '    <p>网格 / 圆点图案背景</p>',
+        '  </IuPatternBackground>',
+      ].join('\n')
+      return scriptedCode('IuPatternBackground', [['variant', `'${s.variant}'`], ['animate', String(s.animate)]], body)
+    },
     apiRows: [
       { prop: 'variant', desc: '图案类型', type: "'grid' | 'dot' | 'big-dot'", def: "'grid'" },
       { prop: 'size', desc: '图案尺寸', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", def: "'md'" },
