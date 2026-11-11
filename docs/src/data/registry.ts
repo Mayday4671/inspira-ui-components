@@ -168,6 +168,23 @@ export type PreviewKind =
   | 'hincanvas'
   | 'trail'
   | 'pimg'
+  | 'bend'
+  | 'bub'
+  | 'neural'
+  | 'whirl'
+  | 'car3d'
+  | 'portal'
+  | 'gglobe'
+  | 'igrid'
+  | 'lsp'
+  | 'liqbg'
+  | 'rib'
+  | 'island'
+  | 'stoy'
+  | 'spl'
+  | 'tail'
+  | 'tetris'
+  | 'wmap'
 
 export interface ComponentMeta {
   /** 导出名（含 Iu 前缀） */
@@ -3731,6 +3748,360 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'gravity', desc: '重力', type: 'string', def: '—' },
       { prop: 'renderer', desc: '渲染器', type: "'default' | 'webgl'", def: "'default'" },
     ],
+  },
+
+
+  // ========= 批次 7b：WebGL 重型组件 =========
+  {
+    importName: 'IuBendingGallery', name: 'BendingGallery', zh: '弯折画廊',
+    category: '卡片', desc: '可拖拽弯折的弧形画廊', slug: 'bending-gallery', preview: 'bend',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const itemsConst = "[\n    { image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600', text: 'Mountains' },\n    { image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600', text: 'Ocean' },\n  ]"
+      const body = [
+        '  <IuBendingGallery',
+        '    :items="items"',
+        '    :bend="-3"',
+        '    text-color="#ffffff"',
+        '    class="h-96 rounded-xl border"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuBendingGallery', [['items', itemsConst]], body)
+    },
+    apiRows: [
+      { prop: 'items', desc: '画廊项（image / text）', type: '{ image: string; text: string }[]', def: '[]' },
+      { prop: 'bend', desc: '弯折程度（负值向上弯）', type: 'number', def: '0' },
+      { prop: 'textColor / borderRadius / font', desc: '文字样式', type: 'string / number', def: '—' },
+    ],
+    note: '基于 ogl WebGL，鼠标拖拽旋转画廊',
+  },
+  {
+    importName: 'IuBubblesBg', name: 'BubblesBg', zh: '气泡背景',
+    category: '背景', desc: 'three.js 上升气泡动画', slug: 'bg-bubbles', preview: 'bub',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuBubblesBg style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuBubblesBg', [], body)
+    },
+    apiRows: [
+      { prop: '（透传）', desc: '气泡密度 / 颜色等见源码默认', type: '—', def: '—' },
+    ],
+    note: '基于 three.js WebGL 渲染',
+  },
+  {
+    importName: 'IuNeuralBg', name: 'NeuralBg', zh: '神经网络背景',
+    category: '背景', desc: 'ogl 神经元网络流场', slug: 'bg-neural', preview: 'neural',
+    demoState: { hue: 260, saturation: 0.6, chroma: 0.2 },
+    controls: [
+      { kind: 'number', key: 'hue', label: '色相 Hue', step: 10 },
+      { kind: 'number', key: 'saturation', label: '饱和度 Saturation', step: 0.1 },
+      { kind: 'number', key: 'chroma', label: '色度 Chroma', step: 0.1 },
+    ],
+    demoCode: (s) => {
+      const consts = [['hue', String(s.hue)], ['saturation', String(s.saturation)], ['chroma', String(s.chroma)]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuNeuralBg :hue="hue" :saturation="saturation" :chroma="chroma" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuNeuralBg', consts, body)
+    },
+    apiRows: [
+      { prop: 'hue / saturation / chroma', desc: '网络颜色三要素', type: 'number', def: '—' },
+    ],
+    note: '基于 ogl WebGL 渲染',
+  },
+  {
+    importName: 'IuParticleWhirlpoolBg', name: 'ParticleWhirlpoolBg', zh: '粒子漩涡',
+    category: '背景', desc: 'three.js 后处理粒子漩涡', slug: 'bg-particle-whirlpool', preview: 'whirl',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '    <IuParticleWhirlpoolBg style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuParticleWhirlpoolBg', [], body)
+    },
+    apiRows: [
+      { prop: '（内置）', desc: 'EffectComposer + UnrealBloom 后处理', type: '—', def: '—' },
+    ],
+    note: '基于 three.js + OrbitControls，可拖拽旋转视角',
+  },
+  {
+    importName: 'IuCarousel3D', name: 'Carousel3D', zh: 'CSS3D 轮播',
+    category: '卡片', desc: 'three.js CSS3D 立体轮播', slug: 'carousel-3d', preview: 'car3d',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const itemsConst = "[\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600',\n    'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600',\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600&sat=-100',\n  ]"
+      const body = [
+        '  <IuCarousel3D',
+        '    :items="items"',
+        '    :width="360"',
+        '    :height="270"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuCarousel3D', [['items', itemsConst]], body)
+    },
+    apiRows: [
+      { prop: 'items', desc: '图片地址数组', type: 'unknown[]', def: '[]' },
+      { prop: 'width / height', desc: '单面尺寸（px）', type: 'number', def: '—' },
+    ],
+    note: '基于 three.js CSS3DRenderer',
+  },
+  {
+    importName: 'IuCosmicPortal', name: 'CosmicPortal', zh: '宇宙传送门',
+    category: '背景', desc: '后处理星云传送门', slug: 'cosmic-portal', preview: 'portal',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuCosmicPortal class="h-96 rounded-xl" />',
+      ].join('\n')
+      return scriptedCode('IuCosmicPortal', [], body)
+    },
+    apiRows: [
+      { prop: '（内置）', desc: 'EffectComposer + UnrealBloom + FXAA 全套后处理', type: '—', def: '—' },
+    ],
+    note: '基于 three.js，可拖拽旋转 / 滚轮缩放',
+  },
+  {
+    importName: 'IuGithubGlobe', name: 'GithubGlobe', zh: '贡献地球',
+    category: '数据', desc: 'three-globe 仓库贡献地球', slug: 'github-globe', preview: 'gglobe',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuGithubGlobe',
+        '    class="mx-auto aspect-square max-w-lg"',
+        '    :data="[{ order: 0, startLat: 39.9, startLng: 116.4, endLat: 35.6, endLng: 139.7, arcAlt: 0.3, color: \'#8B5CF6\' }]"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuGithubGlobe', [], body)
+    },
+    apiRows: [
+      { prop: 'globeConfig', desc: '地球配色 / 大气等配置', type: 'GlobeConfig', def: '—' },
+      { prop: 'data', desc: '弧线数据（起点/终点经纬度）', type: 'Position[]', def: '[]' },
+    ],
+    note: '基于 three-globe，内置世界 GeoJSON 数据',
+  },
+  {
+    importName: 'IuInfiniteGrid', name: 'InfiniteGrid', zh: '无限网格',
+    category: '特效', desc: '可拖拽缩放的 WebGL 图墙', slug: 'infinite-grid', preview: 'igrid',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const cardsConst = "[\n    { id: 'a', image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500' },\n    { id: 'b', image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500' },\n  ]"
+      const body = [
+        '  <IuInfiniteGrid',
+        '    :card-data="cards"',
+        '    :options="{ tileWidth: 300, tileHeight: 200 }"',
+        '    class="h-96 rounded-xl border"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuInfiniteGrid', [['cards', cardsConst]], body)
+    },
+    apiRows: [
+      { prop: 'cardData', desc: '卡片数据（id / image 等）', type: 'CardData[]', def: '必填' },
+      { prop: 'options', desc: '网格配置（tileWidth / tileHeight / buffer 等）', type: 'Partial<InfiniteGridOptions>', def: '—' },
+      { prop: 'onTilesLoaded', desc: '瓦片加载完成回调', type: '() => void', def: '—' },
+    ],
+    note: '基于 ogl + gsap InertiaPlugin，拖拽 / 滚轮缩放',
+  },
+  {
+    importName: 'IuLightSpeed', name: 'LightSpeed', zh: '光速隧道',
+    category: '特效', desc: 'three.js 光速穿越隧道', slug: 'light-speed', preview: 'lsp',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 320px">',
+        '    <IuLightSpeed style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuLightSpeed', [], body)
+    },
+    apiRows: [
+      { prop: '（内置）', desc: 'postprocessing 后处理管线 + 预设', type: '—', def: '—' },
+    ],
+    note: '基于 three.js + postprocessing，滚轮加速穿越',
+  },
+  {
+    importName: 'IuLiquidBackground', name: 'LiquidBackground', zh: '液态背景',
+    category: '背景', desc: 'ogl 流体液态渐变背景', slug: 'liquid-background', preview: 'liqbg',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuLiquidBackground style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuLiquidBackground', [], body)
+    },
+    apiRows: [
+      { prop: '（内置）', desc: '流场 uniforms 见源码', type: '—', def: '—' },
+    ],
+    note: '基于 ogl WebGL 流体模拟',
+  },
+  {
+    importName: 'IuRibbonBackground', name: 'RibbonBackground', zh: '缎带背景',
+    category: '背景', desc: '多彩缎带飘动背景', slug: 'ribbon-background', preview: 'rib',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuRibbonBackground',
+        '      :colors="[\'#4f46e5\', \'#0ea5e9\', \'#ec4899\']"',
+        '      :speed="0.5"',
+        '      style="position: absolute; inset: 0"',
+        '    />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuRibbonBackground', [], body)
+    },
+    apiRows: [
+      { prop: 'colors', desc: '缎带颜色数组', type: 'string[]', def: '—' },
+      { prop: 'backgroundColor', desc: '底色', type: 'string', def: '—' },
+      { prop: 'transparent', desc: '透明底', type: 'boolean', def: 'false' },
+      { prop: 'enableShadows', desc: '开启阴影', type: 'boolean', def: 'false' },
+      { prop: 'angle / offsetX / offsetY / speed', desc: '布局与速度', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuScrollIsland', name: 'ScrollIsland', zh: '滚动岛',
+    category: '特效', desc: '随滚动展开的灵动岛', slug: 'scroll-island', preview: 'island',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuScrollIsland title="滚动进度" :height="64" class="max-w-md" />',
+      ].join('\n')
+      return scriptedCode('IuScrollIsland', [], body)
+    },
+    apiRows: [
+      { prop: 'title', desc: '岛内标题', type: 'string', def: '—' },
+      { prop: 'height', desc: '岛高度（px）', type: 'number', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '岛内自定义内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuShaderToy', name: 'ShaderToy', zh: '着色器画布',
+    category: '特效', desc: '自定义 GLSL 全屏画布', slug: 'shader-toy', preview: 'stoy',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuShaderToy',
+        '    shader-code="void mainImage(out vec4 c, vec2 uv) { c = vec4(uv, abs(sin(uTime)), 1.0); }"',
+        '    :mouse-mode="\'hover\'"',
+        '    class="h-72 rounded-xl border"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuShaderToy', [], body)
+    },
+    apiRows: [
+      { prop: 'shaderCode', desc: 'GLSL 片元代码（mainImage 约定）', type: 'string', def: '必填' },
+      { prop: 'mouseMode', desc: '鼠标交互模式', type: 'MouseMode', def: '—' },
+      { prop: 'hue / saturation / brightness / speed', desc: '统一调节参数', type: 'number', def: '—' },
+      { prop: 'frameRate / damping / mouseSensitivity', desc: '画布参数', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuSpline', name: 'Spline', zh: 'Spline 场景',
+    category: '特效', desc: '嵌入 Spline 3D 场景', slug: 'spline', preview: 'spl',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuSpline',
+        '        scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"',
+        '    class="h-96 rounded-xl border"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuSpline', [], body)
+    },
+    apiRows: [
+      { prop: 'scene', desc: 'Spline 场景地址', type: 'string', def: '必填' },
+    ],
+    note: '依赖 @splinetool/runtime（较大，按需 tree-shaking）',
+  },
+  {
+    importName: 'IuTailedCursor', name: 'TailedCursor', zh: '拖尾光标',
+    category: '交互', desc: ' ogl 多彩缎带拖尾', slug: 'tailed-cursor', preview: 'tail',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative h-72 overflow-hidden rounded-xl border" style="cursor: none">',
+        '    <IuTailedCursor',
+        '      :colors="[\'#fe0c0c\', \'#b70cf e\', \'#0c46fe\']"',
+        '      :base-thickness="2"',
+        '    />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuTailedCursor', [], body)
+    },
+    apiRows: [
+      { prop: 'colors', desc: '拖尾颜色数组', type: 'string[]', def: '—' },
+      { prop: 'baseSpring / baseFriction / baseThickness', desc: '拖尾物理参数', type: 'number', def: '—' },
+      { prop: 'maxAge / pointCount / speedMultiplier', desc: '轨迹参数', type: 'number', def: '—' },
+      { prop: 'enableFade / enableShaderEffect', desc: '淡出 / 着色器特效', type: 'boolean', def: '—' },
+    ],
+    note: '基于 ogl WebGL，拖尾跟随鼠标',
+  },
+  {
+    importName: 'IuTetris', name: 'Tetris', zh: '俄罗斯方块',
+    category: '交互', desc: '内置可玩的俄罗斯方块', slug: 'tetris', preview: 'tetris',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuTetris',
+        '    square-color="#6366f1"',
+        '    :base="12"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuTetris', [], body)
+    },
+    apiRows: [
+      { prop: 'squareColor', desc: '方块主题色', type: 'string', def: '必填' },
+      { prop: 'base', desc: '棋盘列数', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuWorldMap', name: 'WorldMap', zh: '点阵世界地图',
+    category: '数据', desc: '点阵世界地图与连线动画', slug: 'world-map', preview: 'wmap',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const dotsConst = "[\n    order: 0, start: { lat: 39.9, lng: 116.4 }, end: { lat: 35.6, lng: 139.7 }, arcAlt: 0.3, color: '#8B5CF6',\n    { start: { lat: 40.7, lng: -73.9 }, end: { lat: 51.5, lng: -0.1 } },\n  ]"
+      const body = [
+        '  <IuWorldMap',
+        '        :dots="dots"',
+        '    map-color="#3B82F6"',
+        '    map-bg-color="#0a0a0a"',
+        '    line-color="#8B5CF6"',
+        '    class="h-96"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuWorldMap', [['dots', dotsConst]], body)
+    },
+    apiRows: [
+      { prop: 'dots', desc: '连线数组（start / end 经纬度）', type: 'Dot[]', def: '必填' },
+      { prop: 'mapColor / mapBgColor', desc: '地图点阵 / 底色', type: 'string', def: '必填' },
+      { prop: 'lineColor', desc: '连线颜色', type: 'string', def: '—' },
+    ],
+    note: '基于 dotted-map 生成点阵（已随库安装）',
   },
 
 

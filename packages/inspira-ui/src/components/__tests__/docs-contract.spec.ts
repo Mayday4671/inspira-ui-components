@@ -183,6 +183,24 @@ const EXPECTED_DOCS = [
   'IuHtmlInCanvas',
   'IuImageTrailCursor',
   'IuParticleImage',
+  // —— 批次 7b：WebGL 重型组件 ——
+  'IuBendingGallery',
+  'IuBubblesBg',
+  'IuNeuralBg',
+  'IuParticleWhirlpoolBg',
+  'IuCarousel3D',
+  'IuCosmicPortal',
+  'IuGithubGlobe',
+  'IuInfiniteGrid',
+  'IuLightSpeed',
+  'IuLiquidBackground',
+  'IuRibbonBackground',
+  'IuScrollIsland',
+  'IuShaderToy',
+  'IuSpline',
+  'IuTailedCursor',
+  'IuTetris',
+  'IuWorldMap',
 ].sort()
 
 describe('documentation information architecture (SPA redesign)', () => {

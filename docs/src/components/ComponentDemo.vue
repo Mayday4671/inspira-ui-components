@@ -19,16 +19,19 @@ import {
   IuAppleCarouselItem,
   IuAuroraBackground,
   IuBalanceSlider,
+  IuBendingGallery,
   IuBentoGrid,
   IuBlackHoleBackground,
   IuBook,
   IuBorderBeam,
   IuBoxReveal,
   IuBreathingText,
+  IuBubblesBg,
   IuCard3D,
   IuCardSpotlight,
   IuCardStack,
   IuCardStackItem,
+  IuCarousel3D,
   IuCircularGallery,
   IuColorPicker,
   IuColourfulText,
@@ -37,6 +40,7 @@ import {
   IuConfettiButton,
   IuContainerScroll,
   IuContainerTextFlip,
+  IuCosmicPortal,
   IuCubeCarousel,
   IuDesignTestimonials,
   IuDialog,
@@ -57,6 +61,7 @@ import {
   IuFloatingCard,
   IuFluidCursor,
   IuFocus,
+  IuGithubGlobe,
   IuGlareCard,
   IuGlobe,
   IuGlowBorder,
@@ -78,6 +83,7 @@ import {
   IuImagesBadge,
   IuImagesSlider,
   IuImageTrailCursor,
+  IuInfiniteGrid,
   IuInteractiveGridPattern,
   IuInteractiveHoverButton,
   IuIPhone15ProMockup,
@@ -85,8 +91,10 @@ import {
   IuLens,
   IuLetterPullup,
   IuLetterSwap,
+  IuLightSpeed,
   IuLineShadowText,
   IuLinkPreview,
+  IuLiquidBackground,
   IuLiquidGlass,
   IuLiquidLogo,
   IuLogoOrigami,
@@ -98,25 +106,30 @@ import {
   IuMorphingText,
   IuMultiStepLoader,
   IuNeonBorder,
+  IuNeuralBg,
   IuNumberTicker,
   IuOrbit,
   IuParallaxFloat,
   IuParallaxFloatElement,
   IuParticleImage,
   IuParticlesBg,
+  IuParticleWhirlpoolBg,
   IuPathMarquee,
   IuPatternBackground,
   IuPhotoGallery,
   IuProgressiveBlur,
   IuRadiantText,
   IuRainbowButton,
+  IuRibbonBackground,
   IuRipple,
   IuRippleButton,
   IuSafariMockup,
   IuScales,
   IuScratchToReveal,
   IuScrewText,
+  IuScrollIsland,
   IuScrollSwapText,
+  IuShaderToy,
   IuShimmerButton,
   IuSilkBackground,
   IuSingularityBackground,
@@ -126,13 +139,16 @@ import {
   IuSparkles,
   IuSparklesText,
   IuSpinningText,
+  IuSpline,
   IuSpringCalendar,
   IuStarsBackground,
   IuStaticLogoCloud,
   IuStatistic,
   IuStractiumBackground,
   IuSVGMask,
+  IuTailedCursor,
   IuTestimonialSlider,
+  IuTetris,
   IuText3d,
   IuTextGenerateEffect,
   IuTextGlitch,
@@ -154,6 +170,7 @@ import {
   IuVortex,
   IuWarpBackground,
   IuWavyBackground,
+  IuWorldMap,
 } from 'inspira-ui-components'
 import type { ComponentMeta } from '../data/registry'
 
@@ -1284,6 +1301,122 @@ const timelineItems = [
       :image-src="String(s.imageSrc)"
       :particle-size="String(s.particleSize)"
       mouse-force="30"
+      class="h-full"
+    />
+  </div>
+
+  <!-- ============ 批次 7b：WebGL 重型组件 ============ -->
+  <div v-else-if="meta.slug === 'bending-gallery'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuBendingGallery
+      :items="[
+        { image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600', text: 'Mountains' },
+        { image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600', text: 'Ocean' },
+      ]"
+      :bend="-3"
+      text-color="#ffffff"
+      class="h-full"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-bubbles'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuBubblesBg style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-neural'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuNeuralBg :hue="Number(s.hue) || 260" :saturation="Number(s.saturation) || 0.6" :chroma="Number(s.chroma) || 0.2" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-particle-whirlpool'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #000">
+    <IuParticleWhirlpoolBg style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'carousel-3d'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuCarousel3D
+      :items="[
+        'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600',
+        'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600',
+        'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600&sat=-100',
+      ]"
+      :width="320"
+      :height="240"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'cosmic-portal'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuCosmicPortal class="h-full" />
+  </div>
+
+  <div v-else-if="meta.slug === 'github-globe'" class="demo-fit" style="height: 340px">
+    <IuGithubGlobe
+      class="aspect-square"
+      style="height: 320px"
+      :data="[
+        { order: 0, startLat: 39.9, startLng: 116.4, endLat: 35.6, endLng: 139.7, arcAlt: 0.3, color: '#8B5CF6' },
+        { order: 1, startLat: 40.7, startLng: -73.9, endLat: 51.5, endLng: -0.1, arcAlt: 0.4, color: '#3B82F6' },
+      ]"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'infinite-grid'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuInfiniteGrid
+      :card-data="[
+         { title: '组件卡片', badge: 'NEW', tags: ['ogl'], date: '2025-11-11', image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500' },
+         { title: '第二张', badge: '', tags: [], date: '2025-11-11', image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500' },
+         { title: '第三张', badge: '', tags: [], date: '2025-11-11', image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500&sat=-100' },
+      ]"
+      :options="{ tileSize: 3, gridCols: 3 }"
+      class="h-full"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'light-speed'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #000">
+    <IuLightSpeed style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'liquid-background'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuLiquidBackground style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'ribbon-background'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuRibbonBackground :colors="['#4f46e5', '#0ea5e9', '#ec4899']" :speed="0.5" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'scroll-island'" class="demo-fit" style="height: 200px; width: 100%; max-width: 440px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px">
+    <div style="height: 400px; padding: 20px; box-sizing: border-box">
+      <IuScrollIsland title="滚动进度" :height="64" />
+    </div>
+  </div>
+
+  <div v-else-if="meta.slug === 'shader-toy'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuShaderToy
+      shader-code="void mainImage(out vec4 c, vec2 uv) { c = vec4(uv.x * abs(sin(uTime * 0.5)), uv.y, abs(sin(uTime)), 1.0); }"
+      :mouse-mode="'hover'"
+      class="h-full"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'spline'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuSpline scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" class="h-full" />
+  </div>
+
+  <div v-else-if="meta.slug === 'tailed-cursor'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative; cursor: none">
+    <IuTailedCursor :colors="['#fe0c0c', '#b70cfe', '#0c46fe']" :base-thickness="2" style="position: absolute; inset: 0" />
+    <p style="pointer-events: none; position: absolute; inset: 0; display: grid; place-items: center; font-size: 14px; opacity: 0.6; margin: 0">移动鼠标查看缎带拖尾</p>
+  </div>
+
+  <div v-else-if="meta.slug === 'tetris'" class="demo-fit" style="height: 460px; width: 100%; max-width: 420px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #0a0a0a">
+    <IuTetris square-color="#6366f1" :base="12" class="h-full" />
+  </div>
+
+  <div v-else-if="meta.slug === 'world-map'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuWorldMap
+      :dots="[
+        { start: { lat: 39.9, lng: 116.4 }, end: { lat: 35.6, lng: 139.7 } },
+        { start: { lat: 40.7, lng: -73.9 }, end: { lat: 51.5, lng: -0.1 } },
+      ]"
+      map-color="#3B82F6"
+      map-bg-color="#0a0a0a"
+      line-color="#8B5CF6"
       class="h-full"
     />
   </div>

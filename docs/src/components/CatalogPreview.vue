@@ -14,16 +14,19 @@ import {
   IuAnimateGrid,
   IuAuroraBackground,
   IuBalanceSlider,
+  IuBendingGallery,
   IuBentoGrid,
   IuBlackHoleBackground,
   IuBook,
   IuBorderBeam,
   IuBoxReveal,
   IuBreathingText,
+  IuBubblesBg,
   IuCard3D,
   IuCardSpotlight,
   IuCardStack,
   IuCardStackItem,
+  IuCarousel3D,
   IuCircularGallery,
   IuColorPicker,
   IuColourfulText,
@@ -31,6 +34,7 @@ import {
   IuConfetti,
   IuConfettiButton,
   IuContainerTextFlip,
+  IuCosmicPortal,
   IuCubeCarousel,
   IuDesignTestimonials,
   IuDialog,
@@ -50,6 +54,7 @@ import {
   IuFloatingCard,
   IuFluidCursor,
   IuFocus,
+  IuGithubGlobe,
   IuGlareCard,
   IuGlobe,
   IuGlowBorder,
@@ -71,6 +76,7 @@ import {
   IuImagesBadge,
   IuImagesSlider,
   IuImageTrailCursor,
+  IuInfiniteGrid,
   IuInteractiveGridPattern,
   IuInteractiveHoverButton,
   IuIPhone15ProMockup,
@@ -78,8 +84,10 @@ import {
   IuLens,
   IuLetterPullup,
   IuLetterSwap,
+  IuLightSpeed,
   IuLineShadowText,
   IuLinkPreview,
+  IuLiquidBackground,
   IuLiquidGlass,
   IuLiquidLogo,
   IuLogoOrigami,
@@ -91,25 +99,30 @@ import {
   IuMorphingText,
   IuMultiStepLoader,
   IuNeonBorder,
+  IuNeuralBg,
   IuNumberTicker,
   IuOrbit,
   IuParallaxFloat,
   IuParallaxFloatElement,
   IuParticleImage,
   IuParticlesBg,
+  IuParticleWhirlpoolBg,
   IuPathMarquee,
   IuPatternBackground,
   IuPhotoGallery,
   IuProgressiveBlur,
   IuRadiantText,
   IuRainbowButton,
+  IuRibbonBackground,
   IuRipple,
   IuRippleButton,
   IuSafariMockup,
   IuScales,
   IuScratchToReveal,
   IuScrewText,
+  IuScrollIsland,
   IuScrollSwapText,
+  IuShaderToy,
   IuShimmerButton,
   IuSilkBackground,
   IuSingularityBackground,
@@ -119,13 +132,16 @@ import {
   IuSparkles,
   IuSparklesText,
   IuSpinningText,
+  IuSpline,
   IuSpringCalendar,
   IuStarsBackground,
   IuStaticLogoCloud,
   IuStatistic,
   IuStractiumBackground,
   IuSVGMask,
+  IuTailedCursor,
   IuTestimonialSlider,
+  IuTetris,
   IuText3d,
   IuTextGenerateEffect,
   IuTextGlitch,
@@ -146,6 +162,7 @@ import {
   IuVortex,
   IuWarpBackground,
   IuWavyBackground,
+  IuWorldMap,
 } from 'inspira-ui-components'
 import { ref } from 'vue'
 import type { PreviewKind } from '../data/registry'
@@ -1006,6 +1023,77 @@ const auroraHeight = '128px'
 
     <div v-else-if="kind === 'pimg'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
       <IuParticleImage image-src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400" particle-size="2.2" mouse-force="30" class="h-full" style="pointer-events: none" />
+    </div>
+
+    <!-- ============ 批次 7b 预览 ============ -->
+    <div v-else-if="kind === 'bend'" class="scaled-box" style="width: 220px; height: 140px; border-radius: 10px; overflow: hidden">
+      <IuBendingGallery :items="[{ image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400', text: 'Mtn' }, { image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=400', text: 'Sea' }]" :bend="-3" text-color="#fff" class="h-full" />
+    </div>
+
+    <div v-else-if="kind === 'bub'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuBubblesBg style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'neural'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuNeuralBg style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'whirl'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; background: #000">
+      <IuParticleWhirlpoolBg style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'car3d'" class="scaled-box" style="width: 220px; height: 150px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuCarousel3D :items="['https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400', 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=400']" :width="150" :height="110" class="h-full" />
+    </div>
+
+    <div v-else-if="kind === 'portal'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden">
+      <IuCosmicPortal class="h-full" />
+    </div>
+
+    <div v-else-if="kind === 'gglobe'" class="scaled-box" style="width: 210px; height: 130px; display: grid; place-items: center; overflow: hidden">
+      <IuGithubGlobe class="aspect-square" style="height: 180px; pointer-events: none" />
+    </div>
+
+    <div v-else-if="kind === 'igrid'" class="scaled-box" style="width: 220px; height: 140px; border-radius: 10px; overflow: hidden">
+      <IuInfiniteGrid :card-data="[{ title: '组件卡片', badge: 'NEW', description: 'ogl 图墙瓦片', tags: ['ogl'], date: '2025-11-11', image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400' }, { title: '第二张', badge: '', tags: [], date: '2025-11-11', image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=400' }]" :options="{ tileSize: 3, gridCols: 3 }" class="h-full" />
+    </div>
+
+    <div v-else-if="kind === 'lsp'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; background: #000">
+      <IuLightSpeed style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'liqbg'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuLiquidBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'rib'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuRibbonBackground :colors="['#4f46e5', '#0ea5e9', '#ec4899']" :speed="0.5" style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'island'" class="scaled-box" style="width: 210px; height: 120px; border: 1px solid var(--border); border-radius: 10px; overflow-y: auto">
+      <div style="height: 240px; padding: 14px; box-sizing: border-box">
+        <IuScrollIsland title="进度" :height="56" />
+      </div>
+    </div>
+
+    <div v-else-if="kind === 'stoy'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden">
+      <IuShaderToy shader-code="void mainImage(out vec4 c, vec2 uv) { c = vec4(uv.x * abs(sin(uTime * 0.5)), uv.y, abs(sin(uTime)), 1.0); }" class="h-full" />
+    </div>
+
+    <div v-else-if="kind === 'spl'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden">
+      <IuSpline scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode" class="h-full" />
+    </div>
+
+    <div v-else-if="kind === 'tail'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border); cursor: none">
+      <IuTailedCursor :colors="['#fe0c0c', '#b70cfe', '#0c46fe']" :base-thickness="2" style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'tetris'" class="scaled-box" style="width: 210px; height: 140px; border-radius: 10px; overflow: hidden; background: #0a0a0a">
+      <IuTetris square-color="#6366f1" :base="10" class="h-full" style="pointer-events: none" />
+    </div>
+
+    <div v-else-if="kind === 'wmap'" class="scaled-box" style="width: 220px; height: 130px; border-radius: 10px; overflow: hidden">
+      <IuWorldMap :dots="[{ start: { lat: 39.9, lng: 116.4 }, end: { lat: 35.6, lng: 139.7 } }]" map-color="#3B82F6" map-bg-color="#0a0a0a" line-color="#8B5CF6" class="h-full" />
     </div>
 
     <!-- 真实 IuDialog：teleport 到 body，受预览容器控制 -->
