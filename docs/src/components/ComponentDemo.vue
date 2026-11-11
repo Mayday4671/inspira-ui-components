@@ -41,6 +41,7 @@ import {
   IuDesignTestimonials,
   IuDialog,
   IuDirectionAwareHover,
+  IuDitherShader,
   IuDock,
   IuDockIcon,
   IuDockSeparator,
@@ -54,6 +55,7 @@ import {
   IuFlipWords,
   IuFloat,
   IuFloatingCard,
+  IuFluidCursor,
   IuFocus,
   IuGlareCard,
   IuGlobe,
@@ -62,11 +64,20 @@ import {
   IuGradientButton,
   IuHaloSearch,
   IuHighlightText,
+  IuHtmlAscii,
+  IuHtmlBlaze,
+  IuHtmlChromatic,
+  IuHtmlCloth,
+  IuHtmlDrag,
+  IuHtmlInCanvas,
+  IuHtmlLiquid,
   IuHyperText,
+  IuIconCloud,
   IuIconLogoCloud,
   IuIInput,
   IuImagesBadge,
   IuImagesSlider,
+  IuImageTrailCursor,
   IuInteractiveGridPattern,
   IuInteractiveHoverButton,
   IuIPhone15ProMockup,
@@ -76,6 +87,8 @@ import {
   IuLetterSwap,
   IuLineShadowText,
   IuLinkPreview,
+  IuLiquidGlass,
+  IuLiquidLogo,
   IuLogoOrigami,
   IuLogoOrigamiItem,
   IuMarquee,
@@ -89,6 +102,8 @@ import {
   IuOrbit,
   IuParallaxFloat,
   IuParallaxFloatElement,
+  IuParticleImage,
+  IuParticlesBg,
   IuPathMarquee,
   IuPatternBackground,
   IuPhotoGallery,
@@ -1154,6 +1169,123 @@ const timelineItems = [
   <div v-else-if="meta.slug === 'sleek-line-cursor'" class="demo-fit" style="height: 220px; cursor: none">
     <IuSleekLineCursor />
     <span style="font-size: 14px; opacity: 0.7">移动鼠标查看拖尾细线</span>
+  </div>
+
+  <!-- ============ 批次 7a：自包含 canvas 组件 ============ -->
+  <div v-else-if="meta.slug === 'particles-bg'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #171717">
+    <IuParticlesBg :color="String(s.color)" :quantity="Number(s.quantity) || 100" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'icon-cloud'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px">
+    <IuIconCloud
+      :images="[
+        'https://cdn.simpleicons.org/vuedotjs/4FC08D',
+        'https://cdn.simpleicons.org/typescript/3178C6',
+        'https://cdn.simpleicons.org/vite/646CFF',
+        'https://cdn.simpleicons.org/pnpm/F9AD00',
+        'https://cdn.simpleicons.org/vitest/6E9F18',
+      ]"
+      class="h-full"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'dither-shader'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuDitherShader
+      :src="String(s.src)"
+      :grid-size="Number(s.gridSize) || 4"
+      dither-mode="bayer"
+      color-mode="original"
+      class="h-full"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'fluid-cursor'" class="demo-fit" style="height: 300px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative">
+    <IuFluidCursor :sim-resolution="128" :dye-resolution="512" :density-dissipation="97" :velocity-dissipation="2" :pressure="0.8" :curl="20" style="position: absolute; inset: 0" />
+    <p style="pointer-events: none; position: relative; z-index: 10; width: 100%; height: 100%; display: grid; place-items: center; font-size: 14px; opacity: 0.7; margin: 0">在区域内移动鼠标</p>
+  </div>
+
+  <div v-else-if="meta.slug === 'liquid-glass'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px">
+    <IuLiquidGlass :radius="80" :displace="0.5" :blur="11" style="width: 320px; height: 220px">
+      <div style="width: 100%; height: 100%; display: grid; place-items: center; font-size: 14px; font-weight: 600">Liquid Glass</div>
+    </IuLiquidGlass>
+  </div>
+
+  <div v-else-if="meta.slug === 'liquid-logo'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px; display: grid; place-items: center">
+    <IuLiquidLogo
+      image-url="https://cdn.simpleicons.org/vuedotjs/ffffff"
+      :speed="0.15"
+      :pattern-scale="2.7"
+      :liquid="1.35"
+      class="h-56 aspect-square"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'html-in-canvas'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuHtmlInCanvas
+      shader-code="void main() { vec4 c = texture2D(uTexture, vUv); gl_FragColor = vec4(c.r, c.g, c.b, 1.0); }"
+      :mouse-enabled="true"
+      class="h-full"
+    >
+      <div style="padding: 28px; font-size: 18px; font-weight: 700">这段 DOM 进入了 WebGL 画布</div>
+    </IuHtmlInCanvas>
+  </div>
+
+  <div v-else-if="meta.slug === 'html-ascii'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuHtmlAscii class="h-full" :cell-size="8">
+      <div style="padding: 28px; font-size: 18px; font-weight: 700">ASCII 化的内容</div>
+    </IuHtmlAscii>
+  </div>
+
+  <div v-else-if="meta.slug === 'html-blaze'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuHtmlBlaze class="h-full">
+      <div style="padding: 28px; font-size: 18px; font-weight: 700">燃烧的内容</div>
+    </IuHtmlBlaze>
+  </div>
+
+  <div v-else-if="meta.slug === 'html-chromatic'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuHtmlChromatic class="h-full">
+      <div style="padding: 28px; font-size: 18px; font-weight: 700">色差漂移的内容</div>
+    </IuHtmlChromatic>
+  </div>
+
+  <div v-else-if="meta.slug === 'html-cloth'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuHtmlCloth class="h-full">
+      <div style="padding: 28px; font-size: 18px; font-weight: 700">布料波动的内容</div>
+    </IuHtmlCloth>
+  </div>
+
+  <div v-else-if="meta.slug === 'html-drag'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuHtmlDrag class="h-full" :strength="0.6">
+      <div style="padding: 28px; font-size: 18px; font-weight: 700">拖拽扭曲的内容</div>
+    </IuHtmlDrag>
+  </div>
+
+  <div v-else-if="meta.slug === 'html-liquid'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuHtmlLiquid class="h-full">
+      <div style="padding: 28px; font-size: 18px; font-weight: 700">液态扭曲的内容</div>
+    </IuHtmlLiquid>
+  </div>
+
+  <div v-else-if="meta.slug === 'image-trail-cursor'" class="demo-fit" style="height: 300px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative">
+    <IuImageTrailCursor
+      :images="[
+        'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300',
+        'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300',
+        'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300&sat=-100',
+      ]"
+      :variant="('type4' as never)"
+      style="position: absolute; inset: 0"
+    />
+    <p style="pointer-events: none; position: absolute; inset: 0; display: grid; place-items: center; font-size: 14px; opacity: 0.6; margin: 0">移动鼠标产生图片拖尾</p>
+  </div>
+
+  <div v-else-if="meta.slug === 'particle-image'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuParticleImage
+      :image-src="String(s.imageSrc)"
+      :particle-size="String(s.particleSize)"
+      mouse-force="30"
+      class="h-full"
+    />
   </div>
 
   <!-- Dialog 详情页的真实弹窗实例 -->

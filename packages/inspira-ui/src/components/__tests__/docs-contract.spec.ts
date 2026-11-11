@@ -167,6 +167,22 @@ const EXPECTED_DOCS = [
   'IuParallaxFloat',
   'IuOrbit',
   'IuSleekLineCursor',
+  // —— 批次 7a：自包含 canvas 组件 ——
+  'IuParticlesBg',
+  'IuIconCloud',
+  'IuDitherShader',
+  'IuFluidCursor',
+  'IuLiquidGlass',
+  'IuLiquidLogo',
+  'IuHtmlAscii',
+  'IuHtmlBlaze',
+  'IuHtmlChromatic',
+  'IuHtmlCloth',
+  'IuHtmlDrag',
+  'IuHtmlLiquid',
+  'IuHtmlInCanvas',
+  'IuImageTrailCursor',
+  'IuParticleImage',
 ].sort()
 
 describe('documentation information architecture (SPA redesign)', () => {

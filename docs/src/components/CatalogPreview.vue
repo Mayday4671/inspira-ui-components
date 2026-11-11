@@ -35,6 +35,7 @@ import {
   IuDesignTestimonials,
   IuDialog,
   IuDirectionAwareHover,
+  IuDitherShader,
   IuDock,
   IuDockIcon,
   IuEncryptedText,
@@ -47,6 +48,7 @@ import {
   IuFlipWords,
   IuFloat,
   IuFloatingCard,
+  IuFluidCursor,
   IuFocus,
   IuGlareCard,
   IuGlobe,
@@ -55,11 +57,20 @@ import {
   IuGradientButton,
   IuHaloSearch,
   IuHighlightText,
+  IuHtmlAscii,
+  IuHtmlBlaze,
+  IuHtmlChromatic,
+  IuHtmlCloth,
+  IuHtmlDrag,
+  IuHtmlInCanvas,
+  IuHtmlLiquid,
   IuHyperText,
+  IuIconCloud,
   IuIconLogoCloud,
   IuIInput,
   IuImagesBadge,
   IuImagesSlider,
+  IuImageTrailCursor,
   IuInteractiveGridPattern,
   IuInteractiveHoverButton,
   IuIPhone15ProMockup,
@@ -69,6 +80,8 @@ import {
   IuLetterSwap,
   IuLineShadowText,
   IuLinkPreview,
+  IuLiquidGlass,
+  IuLiquidLogo,
   IuLogoOrigami,
   IuLogoOrigamiItem,
   IuMarquee,
@@ -82,6 +95,8 @@ import {
   IuOrbit,
   IuParallaxFloat,
   IuParallaxFloatElement,
+  IuParticleImage,
+  IuParticlesBg,
   IuPathMarquee,
   IuPatternBackground,
   IuPhotoGallery,
@@ -907,6 +922,90 @@ const auroraHeight = '128px'
     <div v-else-if="kind === 'slcursor'" class="scaled-box" style="width: 210px; height: 110px; cursor: none; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px">
       <IuSleekLineCursor />
       <span style="font-size: 11px; opacity: 0.7">移动鼠标</span>
+    </div>
+
+    <!-- ============ 批次 7a 预览 ============ -->
+    <div v-else-if="kind === 'pbg'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; background: #171717">
+      <IuParticlesBg :quantity="60" style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'icloud'" class="scaled-box" style="width: 210px; height: 130px; display: grid; place-items: center; overflow: hidden">
+      <IuIconCloud
+        :images="['https://cdn.simpleicons.org/vuedotjs/4FC08D', 'https://cdn.simpleicons.org/typescript/3178C6', 'https://cdn.simpleicons.org/vite/646CFF']"
+        style="height: 170px; pointer-events: none"
+      />
+    </div>
+
+    <div v-else-if="kind === 'dither'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden">
+      <IuDitherShader src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400" :grid-size="4" dither-mode="bayer" color-mode="original" class="h-full" />
+    </div>
+
+    <div v-else-if="kind === 'fluid'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border)">
+      <IuFluidCursor style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'lglass'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center">
+      <IuLiquidGlass :radius="40" :displace="0.5" :blur="11" style="width: 180px; height: 100px">
+        <div style="width: 100%; height: 100%; display: grid; place-items: center; font-size: 11px; font-weight: 600">Glass</div>
+      </IuLiquidGlass>
+    </div>
+
+    <div v-else-if="kind === 'llogo'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center">
+      <IuLiquidLogo image-url="https://cdn.simpleicons.org/vuedotjs/ffffff" :speed="0.15" :pattern-scale="2.7" :liquid="1.35" style="height: 110px; aspect-ratio: 1" />
+    </div>
+
+    <div v-else-if="kind === 'hincanvas'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuHtmlInCanvas shader-code="void main() { vec4 c = texture2D(uTexture, vUv); gl_FragColor = vec4(c.r, c.g, c.b, 1.0); }" class="h-full">
+        <div style="padding: 14px; font-size: 13px; font-weight: 700">WebGL 化内容</div>
+      </IuHtmlInCanvas>
+    </div>
+
+    <div v-else-if="kind === 'hinascii'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuHtmlAscii class="h-full" :cell-size="8">
+        <div style="padding: 14px; font-size: 13px; font-weight: 700">ASCII 化</div>
+      </IuHtmlAscii>
+    </div>
+
+    <div v-else-if="kind === 'hinblaze'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuHtmlBlaze class="h-full">
+        <div style="padding: 14px; font-size: 13px; font-weight: 700">燃烧效果</div>
+      </IuHtmlBlaze>
+    </div>
+
+    <div v-else-if="kind === 'hinchrom'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuHtmlChromatic class="h-full">
+        <div style="padding: 14px; font-size: 13px; font-weight: 700">色差漂移</div>
+      </IuHtmlChromatic>
+    </div>
+
+    <div v-else-if="kind === 'hincloth'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuHtmlCloth class="h-full">
+        <div style="padding: 14px; font-size: 13px; font-weight: 700">布料波动</div>
+      </IuHtmlCloth>
+    </div>
+
+    <div v-else-if="kind === 'hindrag'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuHtmlDrag class="h-full" :strength="0.6">
+        <div style="padding: 14px; font-size: 13px; font-weight: 700">拖拽扭曲</div>
+      </IuHtmlDrag>
+    </div>
+
+    <div v-else-if="kind === 'hinliquid'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuHtmlLiquid class="h-full">
+        <div style="padding: 14px; font-size: 13px; font-weight: 700">液态扭曲</div>
+      </IuHtmlLiquid>
+    </div>
+
+    <div v-else-if="kind === 'trail'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border)">
+      <IuImageTrailCursor
+        :images="['https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=240', 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=240']"
+        :variant="('type4' as never)"
+        style="position: absolute; inset: 0"
+      />
+    </div>
+
+    <div v-else-if="kind === 'pimg'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
+      <IuParticleImage image-src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400" particle-size="2.2" mouse-force="30" class="h-full" style="pointer-events: none" />
     </div>
 
     <!-- 真实 IuDialog：teleport 到 body，受预览容器控制 -->

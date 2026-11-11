@@ -153,6 +153,21 @@ export type PreviewKind =
   | 'pfloat'
   | 'orbitp'
   | 'slcursor'
+  | 'pbg'
+  | 'icloud'
+  | 'dither'
+  | 'fluid'
+  | 'lglass'
+  | 'llogo'
+  | 'hinascii'
+  | 'hinblaze'
+  | 'hinchrom'
+  | 'hincloth'
+  | 'hindrag'
+  | 'hinliquid'
+  | 'hincanvas'
+  | 'trail'
+  | 'pimg'
 
 export interface ComponentMeta {
   /** 导出名（含 Iu 前缀） */
@@ -3385,6 +3400,338 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
   },
 
+
+
+  // ========= 批次 7a：自包含 canvas 组件 =========
+  {
+    importName: 'IuParticlesBg', name: 'ParticlesBg', zh: '交互粒子',
+    category: '背景', desc: '鼠标互动的漂浮粒子', slug: 'particles-bg', preview: 'pbg',
+    demoState: { color: '#FFFFFF', quantity: 100 },
+    controls: [
+      { kind: 'text', key: 'color', label: '粒子颜色 Color' },
+      { kind: 'number', key: 'quantity', label: '数量 Quantity', step: 10 },
+    ],
+    demoCode: (s) => {
+      const consts = [['color', "'" + s.color + "'"], ['quantity', String(s.quantity)]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border bg-neutral-900" style="height: 280px">',
+        '    <IuParticlesBg :color="color" :quantity="quantity" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuParticlesBg', consts, body)
+    },
+    apiRows: [
+      { prop: 'color', desc: '粒子颜色', type: 'string', def: '—' },
+      { prop: 'quantity', desc: '粒子数量', type: 'number', def: '—' },
+      { prop: 'staticity / ease', desc: '静态度 / 缓动', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuIconCloud', name: 'IconCloud', zh: '3D 图标云',
+    category: '特效', desc: '球面分布旋转的图标云', slug: 'icon-cloud', preview: 'icloud',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuIconCloud :images="images" class="h-72" />',
+      ].join('\n')
+      const imgsConst = "[\n    'https://cdn.simpleicons.org/vuedotjs/4FC08D',\n    'https://cdn.simpleicons.org/typescript/3178C6',\n    'https://cdn.simpleicons.org/vite/646CFF',\n    'https://cdn.simpleicons.org/pnpm/F9AD00',\n  ]"
+      return scriptedCode('IuIconCloud', [['images', imgsConst]], body)
+    },
+    apiRows: [
+      { prop: 'images', desc: '图标地址数组（球面均匀分布）', type: 'string[]', def: '[]' },
+    ],
+  },
+  {
+    importName: 'IuDitherShader', name: 'DitherShader', zh: '抖动着色器',
+    category: '特效', desc: '图片像素抖动风格化', slug: 'dither-shader', preview: 'dither',
+    demoState: { src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600', gridSize: 4 },
+    controls: [
+      { kind: 'number', key: 'gridSize', label: '网格尺寸 Grid Size', step: 1 },
+    ],
+    demoCode: (s) => {
+      const consts = [['src', "'" + s.src + "'"], ['gridSize', String(s.gridSize)]]
+      const body = [
+        '  <IuDitherShader',
+        '    :src="src"',
+        '    :grid-size="gridSize"',
+        '    dither-mode="bayer"',
+        '    color-mode="original"',
+        '    class="h-72 rounded-xl"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuDitherShader', consts, body)
+    },
+    apiRows: [
+      { prop: 'src', desc: '源图片地址', type: 'string', def: '必填' },
+      { prop: 'gridSize', desc: '抖动网格尺寸', type: 'number', def: '4' },
+      { prop: 'ditherMode', desc: '抖动图案', type: 'DitheringMode', def: '—' },
+      { prop: 'colorMode', desc: '颜色模式', type: 'ColorMode', def: '—' },
+      { prop: 'invert', desc: '反转颜色', type: 'boolean', def: 'false' },
+    ],
+  },
+  {
+    importName: 'IuFluidCursor', name: 'FluidCursor', zh: '流体光标',
+    category: '交互', desc: '鼠标划过产生流体扰动', slug: 'fluid-cursor', preview: 'fluid',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative h-72 overflow-hidden rounded-xl border">',
+        '    <IuFluidCursor',
+        '      sim-resolution="128"',
+        '      dye-resolution="512"',
+        '      :density-dissipation="97"',
+        '      :velocity-dissipation="2"',
+        '      :pressure="0.8"',
+        '      :curl="20"',
+        '    />',
+        '    <p class="pointer-events-none relative z-10 grid h-full place-items-center text-sm opacity-70">在区域内移动鼠标</p>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuFluidCursor', [], body)
+    },
+    apiRows: [
+      { prop: 'simResolution / dyeResolution', desc: '模拟/染色分辨率', type: 'number', def: '—' },
+      { prop: 'densityDissipation / velocityDissipation', desc: '密度/速度耗散', type: 'number', def: '—' },
+      { prop: 'pressure / curl / splatRadius', desc: '压力/涡量/泼溅半径', type: 'number', def: '—' },
+      { prop: 'captureResolution', desc: '截屏分辨率', type: 'number', def: '—' },
+    ],
+    note: '鼠标在组件区域内滑动会产生流体涟漪（内联 WebGL 模拟）',
+  },
+  {
+    importName: 'IuLiquidGlass', name: 'LiquidGlass', zh: '液态玻璃',
+    category: '特效', desc: '折射液态玻璃效果卡片', slug: 'liquid-glass', preview: 'lglass',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuLiquidGlass',
+        '    :radius="80"',
+        '    :displace="0.5"',
+        '    :blur="11"',
+        '  >',
+        '    <div class="grid size-full place-items-center text-sm font-medium">Liquid Glass</div>',
+        '  </IuLiquidGlass>',
+      ].join('\n')
+      return scriptedCode('IuLiquidGlass', [], body)
+    },
+    apiRows: [
+      { prop: 'radius / border', desc: '圆角 / 边框宽度（px）', type: 'number', def: '—' },
+      { prop: 'displace / lightness / alpha', desc: '折射位移 / 亮度 / 透明度', type: 'number', def: '—' },
+      { prop: 'blur', desc: '背景模糊（px）', type: 'number', def: '—' },
+      { prop: 'xChannel / yChannel', desc: '位移采样通道', type: "'R' | 'G' | 'B'", def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '玻璃面内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuLiquidLogo', name: 'LiquidLogo', zh: '液态 Logo',
+    category: '特效', desc: '粘性液态折射的 Logo', slug: 'liquid-logo', preview: 'llogo',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuLiquidLogo',
+        '    image-url="/logo.svg"',
+        '    :speed="0.15"',
+        '    :pattern-scale="2.7"',
+        '    :liquid="1.35"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuLiquidLogo', [], body)
+    },
+    apiRows: [
+      { prop: 'imageUrl', desc: 'Logo 图片（黑底白图）', type: 'string', def: '必填' },
+      { prop: 'speed / liquid', desc: '流动速度 / 液态强度', type: 'number', def: '—' },
+      { prop: 'patternScale / patternBlur', desc: '图案缩放 / 模糊', type: 'number', def: '—' },
+      { prop: 'refraction / edge', desc: '折射率 / 边缘', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuHtmlInCanvas', name: 'HtmlInCanvas', zh: '网页渲染画布',
+    category: '特效', desc: '把 DOM 渲染进 WebGL 画布', slug: 'html-in-canvas', preview: 'hincanvas',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const fragConst = "'void main() { … }' // 自定义片元着色器"
+      const body = [
+        '  <IuHtmlInCanvas',
+        '    :shader-code="shaderCode"',
+        '    :mouse-enabled="true"',
+        '    class="h-72 rounded-xl border"',
+        '  >',
+        '    <div class="p-8 text-lg font-bold">这里的内容会进入 WebGL</div>',
+        '  </IuHtmlInCanvas>',
+      ].join('\n')
+      return scriptedCode('IuHtmlInCanvas', [['shaderCode', fragConst]], body)
+    },
+    apiRows: [
+      { prop: 'shaderCode', desc: '片元着色器（处理 DOM 截屏纹理）', type: 'string', def: '必填' },
+      { prop: 'vertexShaderCode / uniforms', desc: '顶点着色器 / uniform 注入', type: 'string / object', def: '—' },
+      { prop: 'frameRate / pixelRatio', desc: '帧率 / 像素比', type: 'number', def: '—' },
+      { prop: 'paused / autoPause', desc: '手动暂停 / 无人交互自动暂停', type: 'boolean', def: '—' },
+      { prop: 'mouseEnabled / mouseDamping', desc: '鼠标注入与阻尼', type: 'boolean / number', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被渲染进画布的 DOM', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuHtmlAscii', name: 'HtmlAscii', zh: 'ASCII 化画布',
+    category: '特效', desc: 'DOM 内容 ASCII 字符画化', slug: 'html-ascii', preview: 'hinascii',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuHtmlAscii class="h-72 rounded-xl border" :cell-size="8">',
+        '    <div class="p-8 text-lg font-bold">ASCII 化的内容</div>',
+        '  </IuHtmlAscii>',
+      ].join('\n')
+      return scriptedCode('IuHtmlAscii', [], body)
+    },
+    apiRows: [
+      { prop: 'cellSize', desc: 'ASCII 单元格尺寸（px）', type: 'number', def: '8' },
+      { prop: 'frameRate / pixelRatio', desc: '帧率 / 像素比', type: 'number', def: '—' },
+      { prop: 'paused / autoPause', desc: '暂停控制', type: 'boolean', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被 ASCII 化的 DOM', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuHtmlBlaze', name: 'HtmlBlaze', zh: '燃烧画布',
+    category: '特效', desc: 'DOM 内容燃烧置换效果', slug: 'html-blaze', preview: 'hinblaze',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuHtmlBlaze class="h-72 rounded-xl border">',
+        '    <div class="p-8 text-lg font-bold">燃烧的内容</div>',
+        '  </IuHtmlBlaze>',
+      ].join('\n')
+      return scriptedCode('IuHtmlBlaze', [], body)
+    },
+    apiRows: [
+      { prop: 'shaderCode', desc: '自定义片元着色器（透传画布）', type: 'string', def: '内置燃烧' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被燃烧置换的 DOM', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuHtmlChromatic', name: 'HtmlChromatic', zh: '色差画布',
+    category: '特效', desc: 'RGB 色差漂移效果', slug: 'html-chromatic', preview: 'hinchrom',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuHtmlChromatic class="h-72 rounded-xl border">',
+        '    <div class="p-8 text-lg font-bold">色差漂移的内容</div>',
+        '  </IuHtmlChromatic>',
+      ].join('\n')
+      return scriptedCode('IuHtmlChromatic', [], body)
+    },
+    apiRows: [
+      { prop: 'shaderCode', desc: '自定义片元着色器', type: 'string', def: '内置色差' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被处理的 DOM', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuHtmlCloth', name: 'HtmlCloth', zh: '布料画布',
+    category: '特效', desc: '布料仿真波动效果', slug: 'html-cloth', preview: 'hincloth',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuHtmlCloth class="h-72 rounded-xl border">',
+        '    <div class="p-8 text-lg font-bold">布料波动的内容</div>',
+        '  </IuHtmlCloth>',
+      ].join('\n')
+      return scriptedCode('IuHtmlCloth', [], body)
+    },
+    apiRows: [
+      { prop: 'shaderCode', desc: '自定义片元着色器', type: 'string', def: '内置布料' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被波动的 DOM', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuHtmlDrag', name: 'HtmlDrag', zh: '拖拽画布',
+    category: '特效', desc: '鼠标拖拽扭曲内容', slug: 'html-drag', preview: 'hindrag',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuHtmlDrag class="h-72 rounded-xl border" :strength="0.6">',
+        '    <div class="p-8 text-lg font-bold">可拖拽扭曲的内容</div>',
+        '  </IuHtmlDrag>',
+      ].join('\n')
+      return scriptedCode('IuHtmlDrag', [], body)
+    },
+    apiRows: [
+      { prop: 'strength', desc: '扭曲强度', type: 'number', def: '—' },
+      { prop: 'mouseEnabled / mouseDamping', desc: '鼠标注入与阻尼', type: 'boolean / number', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被扭曲的 DOM', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuHtmlLiquid', name: 'HtmlLiquid', zh: '液态画布',
+    category: '特效', desc: '液态流动扭曲效果', slug: 'html-liquid', preview: 'hinliquid',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuHtmlLiquid class="h-72 rounded-xl border">',
+        '    <div class="p-8 text-lg font-bold">液态扭曲的内容</div>',
+        '  </IuHtmlLiquid>',
+      ].join('\n')
+      return scriptedCode('IuHtmlLiquid', [], body)
+    },
+    apiRows: [
+      { prop: 'shaderCode', desc: '自定义片元着色器', type: 'string', def: '内置液态' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被扭曲的 DOM', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuImageTrailCursor', name: 'ImageTrailCursor', zh: '图片拖尾',
+    category: '交互', desc: '鼠标划过留下图片拖尾', slug: 'image-trail-cursor', preview: 'trail',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const imgsConst = "[\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300',\n    'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300',\n  ]"
+      const body = [
+        '  <div class="relative h-72 overflow-hidden rounded-xl border">',
+        '    <IuImageTrailCursor :images="images" :variant="4" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuImageTrailCursor', [['images', imgsConst]], body)
+    },
+    apiRows: [
+      { prop: 'images', desc: '拖尾图片数组', type: 'string[]', def: '—' },
+      { prop: 'variant', desc: '拖尾动画变体（1-16）', type: 'VariantType', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuParticleImage', name: 'ParticleImage', zh: '图片粒子化',
+    category: '特效', desc: '图片拆解为可交互粒子', slug: 'particle-image', preview: 'pimg',
+    demoState: { imageSrc: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400', particleSize: '2.2' },
+    controls: [
+      { kind: 'text', key: 'imageSrc', label: '图片地址 Image Src' },
+      { kind: 'number', key: 'particleSize', label: '粒子尺寸 Particle Size', step: 0.2 },
+    ],
+    demoCode: (s) => {
+      const consts = [['imageSrc', "'" + s.imageSrc + "'"], ['particleSize', String(s.particleSize)]]
+      const body = [
+        '  <IuParticleImage',
+        '    :image-src="imageSrc"',
+        '    :particle-size="particleSize"',
+        '    mouse-force="30"',
+        '    class="h-72 rounded-xl border"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuParticleImage', consts, body)
+    },
+    apiRows: [
+      { prop: 'imageSrc', desc: '源图片地址', type: 'string', def: '必填' },
+      { prop: 'particleSize / particleGap', desc: '粒子尺寸 / 间距', type: 'string', def: '—' },
+      { prop: 'mouseForce', desc: '鼠标斥力', type: 'string', def: '—' },
+      { prop: 'gravity', desc: '重力', type: 'string', def: '—' },
+      { prop: 'renderer', desc: '渲染器', type: "'default' | 'webgl'", def: "'default'" },
+    ],
+  },
 
 
 ]
