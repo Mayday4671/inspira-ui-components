@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { MaybeComputedElementRef } from "@vueuse/core";
-import type { HTMLAttributes, MaybeRef } from "vue";
+import type {HTMLAttributes, MaybeRef, VNode } from "vue";
 
 export type ScrollSwapTextOffset = [string, string];
 
@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   springConfig: () => ({ stiffness: 200, damping: 30 }),
 });
 
-const slots = useSlots();
+const slots = useSlots() as unknown as { default?: () => VNode[] };
 const targetRef = ref<HTMLElement | null>(null);
 
 function extractText(value: unknown): string {

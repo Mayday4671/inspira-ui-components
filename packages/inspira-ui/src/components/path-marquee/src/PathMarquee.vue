@@ -122,7 +122,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const numericPrefix = /^[+-]?(?:\d+\.?\d*|\.\d+)/;
 
-const slots = useSlots();
+const slots = useSlots() as unknown as { default?: () => VNode[] };
 const generatedId = useId();
 const containerRef = ref<HTMLElement | null>(null);
 const marqueeContainerRef = ref<HTMLElement | null>(null);
