@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import UiIcon from './UiIcon.vue'
 import { CATEGORIES, componentCount, COMPONENTS } from '../data/registry'
@@ -9,12 +9,25 @@ const route = useRoute()
 const props = defineProps<{ open: boolean }>()
 const emit = defineEmits<{ (e: 'close'): void }>()
 
-const collapsed = reactive<Record<string, boolean>>({})
-const ready = ref(false)
-
 const categories = CATEGORIES.filter((c) => c !== '全部')
 
+// 默认仅展开第一个分类，其余收起
+const collapsed = reactive<Record<string, boolean>>(
+  Object.fromEntries(categories.slice(1).map((c) => [c, true])),
+)
+const ready = ref(true)
+
 const activeSlug = computed(() => (route.name === 'component' ? (route.params.slug as string) : ''))
+
+// 进入组件详情时自动展开所属分类，保证当前项可见
+watch(
+  () => route.params.slug,
+  (slug) => {
+    const cat = COMPONENTS.find((c) => c.slug === slug)?.category
+    if (cat && collapsed[cat]) collapsed[cat] = false
+  },
+  { immediate: true },
+)
 
 function toggle(cat: string) {
   collapsed[cat] = !collapsed[cat]
