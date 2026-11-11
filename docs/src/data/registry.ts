@@ -126,6 +126,33 @@ export type PreviewKind =
   | 'smask'
   | 'scscale'
   | 't3d'
+  | 'abeam'
+  | 'acard'
+  | 'ccube'
+  | 'dttest'
+  | 'fey'
+  | 'fupload'
+  | 'origami'
+  | 'scal'
+  | 'warp'
+  | 'globe'
+  | 'cpick'
+  | 'tslide'
+  | 'mtabs'
+  | 'lcloud-a'
+  | 'lcloud-i'
+  | 'lcloud-s'
+  | 'pgal'
+  | 'egal'
+  | 'cgal'
+  | 'safari'
+  | 'trcard'
+  | 'tsrev'
+  | 'vidtext'
+  | 'hsearch'
+  | 'pfloat'
+  | 'orbitp'
+  | 'slcursor'
 
 export interface ComponentMeta {
   /** 导出名（含 Iu 前缀） */
@@ -2791,6 +2818,571 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'animationDuration', desc: '动画时长（毫秒）', type: 'number', def: '1500' },
     ],
     slotRows: [{ prop: 'default', desc: '文字内容', type: '—', def: '—' }],
+  },
+
+
+
+  // ========= 批次 6：扩展组件 =========
+  {
+    importName: 'IuAnimatedBeam', name: 'AnimatedBeam', zh: '节点光束',
+    category: '特效', desc: '两个元素间的流动光束连线', slug: 'animated-beam', preview: 'abeam',
+    demoState: { curvature: 200, pathColor: 'rgba(255,255,255,0.2)', gradientStartColor: '#6EE7B7', gradientStopColor: '#3B82F6' },
+    controls: [
+      { kind: 'number', key: 'curvature', label: '弯曲度 Curvature', step: 50 },
+      { kind: 'text', key: 'gradientStartColor', label: '渐变起 Gradient Start' },
+      { kind: 'text', key: 'gradientStopColor', label: '渐变止 Gradient Stop' },
+    ],
+    demoCode: (s) => {
+      const body = [
+        '  <div ref="container" class="relative flex h-56 w-full max-w-md items-center justify-between rounded-xl border p-4">',
+        '    <div ref="from" class="size-14 rounded-xl border bg-slate-900" />',
+        '    <div ref="to" class="size-14 rounded-xl border bg-slate-900" />',
+        '    <IuAnimatedBeam',
+        '      :container-ref="container"',
+        '      :from-ref="from"',
+        '      :to-ref="to"',
+        '      :curvature="curvature"',
+        '      :gradient-start-color="gradientStartColor"',
+        '      :gradient-stop-color="gradientStopColor"',
+        '    />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuAnimatedBeam', [['container', 'useTemplateRef(\'container\')'], ['from', 'useTemplateRef(\'from\')'], ['to', 'useTemplateRef(\'to\')'], ['curvature', String(s.curvature)], ['gradientStartColor', String(s.gradientStartColor)], ['gradientStopColor', String(s.gradientStopColor)]], body)
+    },
+    apiRows: [
+      { prop: 'containerRef / fromRef / toRef', desc: '容器与两个端点元素（useTemplateRef）', type: 'HTMLElement', def: '必填' },
+      { prop: 'curvature', desc: '光束弯曲度', type: 'number', def: '200' },
+      { prop: 'pathColor / pathWidth / pathOpacity', desc: '轨道样式', type: 'string / number', def: '—' },
+      { prop: 'gradientStartColor / gradientStopColor', desc: '光束渐变双色', type: 'string', def: '—' },
+      { prop: 'delay / duration', desc: '流光节奏', type: 'number', def: '—' },
+      { prop: 'reverse', desc: '反向流动', type: 'boolean', def: 'false' },
+    ],
+  },
+  {
+    importName: 'IuAppleCardCarousel', name: 'AppleCardCarousel', zh: '苹果卡片流',
+    category: '卡片', desc: '仿 Apple 官网的横向卡片流', slug: 'apple-card-carousel', preview: 'acard',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuAppleCardCarousel>',
+        '    <IuAppleCarouselItem v-for="(card, i) in cards" :key="i" :index="i" @card-close="onClose">',
+        '      <IuAppleCard :card="card" :index="i" />',
+        '    </IuAppleCarouselItem>',
+        '  </IuAppleCardCarousel>',
+      ].join('\n')
+      const cardsConst = "[\n    { src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800', title: '第一张' },\n    { src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800', title: '第二张' },\n  ]"
+      return scriptedCode('IuAppleCardCarousel', [['cards', cardsConst], ['onClose', '() => {}']], body)
+    },
+    apiRows: [
+      { prop: 'initialScroll', desc: '初始滚动位置', type: 'number', def: '0' },
+    ],
+    slotRows: [
+      { prop: 'default', desc: 'IuAppleCarouselItem 列表（内放 IuAppleCard）', type: '—', def: '—' },
+    ],
+    note: '配套子组件：IuAppleCarouselItem / IuAppleCard / IuAppleBlurImage',
+  },
+  {
+    importName: 'IuCubeCarousel', name: 'CubeCarousel', zh: '立方轮播',
+    category: '卡片', desc: '可拖拽旋转的 3D 立方轮播', slug: 'cube-carousel', preview: 'ccube',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const itemsConst = "[\n    { id: 'a', type: 'image', src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600' },\n    { id: 'b', type: 'image', src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600' },\n  ]"
+      const body = [
+        '  <IuCubeCarousel',
+        '    :items="items"',
+        '    :width="360"',
+        '    :height="360"',
+        '    :auto-play="true"',
+        '    :auto-play-interval="4000"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuCubeCarousel', [['items', itemsConst]], body)
+    },
+    apiRows: [
+      { prop: 'items', desc: '轮播项（id / type / src / poster）', type: 'CubeCarouselItem[]', def: '必填' },
+      { prop: 'width / height', desc: '立方体尺寸（px）', type: 'number', def: '必填' },
+      { prop: 'autoPlay / autoPlayInterval', desc: '自动轮播与间隔', type: 'boolean / number', def: 'false' },
+      { prop: 'perspective', desc: '透视距离', type: 'number', def: '—' },
+      { prop: 'dragSpring', desc: '拖拽回弹弹簧', type: 'object', def: '—' },
+    ],
+    eventRows: [{ prop: 'onIndexChange', desc: '当前索引变化', type: '(index: number)', def: '—' }],
+  },
+  {
+    importName: 'IuDesignTestimonials', name: 'DesignTestimonials', zh: '设计见证',
+    category: '数据', desc: '三栏交错的设计感见证墙', slug: 'design-testimonials', preview: 'dttest',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const tConst = "[\n    { quote: '交付速度提升三倍。', author: '张伟', role: '前端负责人', company: '某科技' },\n    { quote: '类型完备，暗色开箱即用。', author: '李娜', role: 'UI 设计师', company: '某工作室' },\n  ]"
+      const body = '  <IuDesignTestimonials :testimonials="testimonials" title="团队评价" />'
+      return scriptedCode('IuDesignTestimonials', [['testimonials', tConst]], body)
+    },
+    apiRows: [
+      { prop: 'testimonials', desc: '评价数组（quote / author / role / company）', type: 'TestimonialItem[]', def: '必填' },
+      { prop: 'title', desc: '区块标题', type: 'string', def: '—' },
+      { prop: 'duration', desc: '列滚动周期（秒）', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuFeyCards', name: 'FeyCards', zh: '集换卡堆',
+    category: '卡片', desc: '悬停换位的卡牌堆叠', slug: 'fey-cards', preview: 'fey',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuFeyCards',
+        '    img-src="..."',
+        '    main-img="..."',
+        '    idle-img="..."',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuFeyCards', [['imgSrc', '["https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500", "https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500"]'], ['mainImg', "'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500'"], ['idleImg', "'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500'"]], body)
+    },
+    apiRows: [
+      { prop: 'imgSrc', desc: '卡牌图片数组', type: 'string[]', def: '—' },
+      { prop: 'mainImg / idleImg', desc: '主图 / 空闲图', type: 'string', def: '—' },
+      { prop: 'cardSpacing', desc: '卡牌间距', type: 'number', def: '—' },
+      { prop: 'shiftDistance / swapDuration', desc: '换位距离 / 时长', type: 'number', def: '—' },
+      { prop: 'entranceStagger', desc: '入场交错（秒）', type: 'number', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '卡牌上的内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuFileUpload', name: 'FileUpload', zh: '文件上传',
+    category: '交互', desc: '拖拽或点选的上传区', slug: 'file-upload', preview: 'fupload',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuFileUpload',
+        '    class="max-w-md"',
+        '    @change="onFilesChange"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuFileUpload', [['onFilesChange', '(files: File[]) => console.log(files)']], body)
+    },
+    apiRows: [
+      { prop: 'class', desc: '容器样式', type: 'string', def: '—' },
+    ],
+    eventRows: [{ prop: 'change', desc: '选择的文件变化', type: '(files: File[])', def: '—' }],
+    note: '配套子组件 IuFileUploadGrid 用于展示已选文件',
+  },
+  {
+    importName: 'IuLogoOrigami', name: 'LogoOrigami', zh: '折纸 Logo',
+    category: '特效', desc: '折纸翻转切换的 Logo 墙', slug: 'logo-origami', preview: 'origami',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuLogoOrigami :duration="1.5" :delay="2.5">',
+        '    <IuLogoOrigamiItem v-for="img in logos" :key="img">',
+        '      <img :src="img" alt="logo" class="size-full object-contain" />',
+        '    </IuLogoOrigamiItem>',
+        '  </IuLogoOrigami>',
+      ].join('\n')
+      return scriptedCode('IuLogoOrigami', [['logos', "['/logo-1.svg', '/logo-2.svg', '/logo-3.svg', '/logo-4.svg']"]], body)
+    },
+    apiRows: [
+      { prop: 'duration', desc: '翻转时长（秒）', type: 'number', def: '1.5' },
+      { prop: 'delay', desc: '翻转间隔（秒）', type: 'number', def: '2.5' },
+    ],
+    slotRows: [{ prop: 'default', desc: 'IuLogoOrigamiItem 列表', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuSpringCalendar', name: 'SpringCalendar', zh: '弹簧日历',
+    category: '数据', desc: '弹簧驱动的日程横滑卡', slug: 'spring-calendar', preview: 'scal',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const dataConst = "[\n    { month: '11月', date: 11, day: '周二', events: [{ title: '发布 v1.0', time: '10:00' }] },\n    { month: '11月', date: 12, day: '周三' },\n    { month: '11月', date: 13, day: '周四', events: [{ title: '评审会', time: '15:00' }] },\n  ]"
+      const body = [
+        '  <IuSpringCalendar',
+        '    :calendar-data="calendarData"',
+        '    :initial-index="0"',
+        '    @update:active-index="onSlide"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuSpringCalendar', [['calendarData', dataConst], ['onSlide', '(i: number) => console.log(i)']], body)
+    },
+    apiRows: [
+      { prop: 'calendarData', desc: '日程数组（month / date / day / events）', type: 'CalendarDay[]', def: '必填' },
+      { prop: 'initialIndex', desc: '初始选中天', type: 'number', def: '0' },
+    ],
+    eventRows: [{ prop: 'update:activeIndex', desc: '选中天变化', type: '(index: number)', def: '—' }],
+  },
+  {
+    importName: 'IuWarpBackground', name: 'WarpBackground', zh: '扭曲背景',
+    category: '背景', desc: '透视网格与穿梭光束', slug: 'warp-background', preview: 'warp',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuWarpBackground style="position: absolute; inset: 0" />',
+        '    <p class="relative z-10 grid h-full place-items-center text-sm">Warp Background</p>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuWarpBackground', [], body)
+    },
+    apiRows: [
+      { prop: 'perspective', desc: '网格透视距离', type: 'number', def: '100' },
+      { prop: 'beamsPerSide', desc: '每侧光束数', type: 'number', def: '3' },
+      { prop: 'beamSize', desc: '光束宽度', type: 'number', def: '5' },
+      { prop: 'beamDelayMax / beamDelayMin', desc: '光束延迟范围', type: 'number', def: '—' },
+      { prop: 'beamDuration', desc: '光束穿越时长（秒）', type: 'number', def: '—' },
+      { prop: 'gridColor', desc: '网格颜色', type: 'string', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuGlobe', name: 'Globe', zh: '线框地球',
+    category: '背景', desc: 'cobe 驱动的暗色地球仪', slug: 'globe', preview: 'globe',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuGlobe',
+        '    class="mx-auto aspect-square max-w-md"',
+        '    :globe-color="[0.2, 0.2, 0.2]"',
+        '    :marker-color="[1, 0.5, 0]"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuGlobe', [], body)
+    },
+    apiRows: [
+      { prop: 'config', desc: 'cobe 配置（baseOffset / marker 数组等）', type: 'Partial<COBEOptions>', def: '—' },
+      { prop: 'mass / tension / friction', desc: '旋转跟随弹簧', type: 'number', def: '—' },
+    ],
+    note: '基于 cobe（~2KB WebGL），无 three.js 依赖',
+  },
+  {
+    importName: 'IuColorPicker', name: 'ColorPicker', zh: '取色器',
+    category: '交互', desc: '多格式取色与对比度检查', slug: 'color-picker', preview: 'cpick',
+    demoState: { color: '#6366f1', type: 'hex' },
+    controls: [
+      { kind: 'text', key: 'color', label: '颜色 Value' },
+      { kind: 'select', key: 'type', label: '格式 Type', options: [{ label: 'hex', value: 'hex' }, { label: 'rgb', value: 'rgb' }, { label: 'hsl', value: 'hsl' }] },
+    ],
+    demoCode: (s) => {
+      const body = [
+        '  <IuColorPicker',
+        '    v-model:value="color"',
+        '    :type="type"',
+        '    :swatches="[' + "'#6366f1', '#ec4899', '#f59e0b'" + ']"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuColorPicker', [['color', "'" + s.color + "'"], ['type', "'" + s.type + "'"], ['swatches', "['#6366f1', '#ec4899', '#f59e0b']"]], body)
+    },
+    apiRows: [
+      { prop: 'value / v-model:value', desc: '当前颜色', type: 'string | HsvaColor | RgbaColor …', def: '—' },
+      { prop: 'type', desc: '展示格式', type: "'hsl' | 'hsla' | 'rgb' | 'rgba' | 'hex'", def: '—' },
+      { prop: 'swatches', desc: '预设色板', type: 'HexColor[]', def: '—' },
+      { prop: 'hideContrastRatio', desc: '隐藏对比度检查', type: 'boolean', def: 'false' },
+      { prop: 'open', desc: '受控展开状态', type: 'boolean', def: '—' },
+    ],
+    note: '配套子组件 IuContrastRatio / IuObjectColorInput',
+  },
+  {
+    importName: 'IuTestimonialSlider', name: 'TestimonialSlider', zh: '见证滑块',
+    category: '数据', desc: '上下滑动的用户评价', slug: 'testimonial-slider', preview: 'tslide',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const tConst = "[\n    { img: '/a.png', quote: '交付速度提升三倍。', name: '张伟', role: '前端负责人' },\n    { img: '/b.png', quote: '暗色模式开箱即用。', name: '李娜', role: 'UI 设计师' },\n  ]"
+      const body = '  <IuTestimonialSlider :testimonials="testimonials" :auto-rotate="true" :duration="4000" />'
+      return scriptedCode('IuTestimonialSlider', [['testimonials', tConst]], body)
+    },
+    apiRows: [
+      { prop: 'testimonials', desc: '评价数组（img / quote / name / role）', type: 'Testimonial[]', def: '[]' },
+      { prop: 'autoRotate', desc: '自动轮换', type: 'boolean', def: '—' },
+      { prop: 'duration', desc: '停留时长（毫秒）', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuMorphingTabs', name: 'MorphingTabs', zh: '形变标签',
+    category: '交互', desc: '液态形变的标签切换', slug: 'morphing-tabs', preview: 'mtabs',
+    demoState: { activeTab: 'home' },
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuMorphingTabs',
+        '    :tabs="[\'home\', \'search\', \'settings\']"',
+        '    :active-tab="activeTab"',
+        '    @click="activeTab = $event"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuMorphingTabs', [['tabs', "['home', 'search', 'settings']"], ['activeTab', "'" + s.activeTab + "'"]], body)
+    },
+    apiRows: [
+      { prop: 'tabs', desc: '标签名数组', type: 'string[]', def: '必填' },
+      { prop: 'activeTab', desc: '当前标签', type: 'string', def: '必填' },
+      { prop: 'margin', desc: '标签间距', type: 'number', def: '—' },
+      { prop: 'blurStdDeviation', desc: '背景模糊强度', type: 'number', def: '—' },
+    ],
+    eventRows: [{ prop: 'click', desc: '标签点击', type: '(tab: string)', def: '—' }],
+  },
+  {
+    importName: 'IuAnimatedLogoCloud', name: 'AnimatedLogoCloud', zh: '动画 Logo 云',
+    category: '特效', desc: '无限滚动的 Logo 墙', slug: 'logo-cloud-animated', preview: 'lcloud-a',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuAnimatedLogoCloud title="受团队信任" :logos="logos" />',
+      ].join('\n')
+      return scriptedCode('IuAnimatedLogoCloud', [['logos', "[{ name: 'Vue', path: '/vue.svg' }, { name: 'Vite', path: '/vite.svg' }, { name: 'TS', path: '/ts.svg' }]"]], body)
+    },
+    apiRows: [
+      { prop: 'logos', desc: 'Logo 数组（name / path）', type: 'Logo[]', def: '内置默认' },
+      { prop: 'title', desc: '顶部标题', type: 'string', def: '—' },
+    ],
+    note: '另有 IuIconLogoCloud（图标云）与 IuStaticLogoCloud（静态云）',
+  },
+  {
+    importName: 'IuIconLogoCloud', name: 'IconLogoCloud', zh: '图标 Logo 云',
+    category: '特效', desc: '图标网格 Logo 云', slug: 'logo-cloud-icon', preview: 'lcloud-i',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = '  <IuIconLogoCloud :logos="logos" />'
+      return scriptedCode('IuIconLogoCloud', [['logos', "[{ name: 'Vue', path: '/vue.svg' }, { name: 'Vite', path: '/vite.svg' }]"]], body)
+    },
+    apiRows: [
+      { prop: 'logos', desc: 'Logo 数组', type: 'Logo[]', def: '内置默认' },
+    ],
+  },
+  {
+    importName: 'IuStaticLogoCloud', name: 'StaticLogoCloud', zh: '静态 Logo 云',
+    category: '特效', desc: '静态排布的 Logo 墙', slug: 'logo-cloud-static', preview: 'lcloud-s',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = '  <IuStaticLogoCloud :logos="logos" />'
+      return scriptedCode('IuStaticLogoCloud', [['logos', "[{ name: 'Vue', path: '/vue.svg' }]"]], body)
+    },
+    apiRows: [
+      { prop: 'logos', desc: 'Logo 数组', type: 'Logo[]', def: '内置默认' },
+    ],
+  },
+  {
+    importName: 'IuPhotoGallery', name: 'PhotoGallery', zh: '照片墙',
+    category: '卡片', desc: '点击放大的照片画廊', slug: 'photo-gallery', preview: 'pgal',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const itemsConst = "[\n    { src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800' },\n    { src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800' },\n  ]"
+      const body = '  <IuPhotoGallery :items="items" class="max-w-lg" />'
+      return scriptedCode('IuPhotoGallery', [['items', itemsConst]], body)
+    },
+    apiRows: [
+      { prop: 'items', desc: '照片数组（src）', type: '{ src: string }[]', def: '必填' },
+    ],
+  },
+  {
+    importName: 'IuExpandableGallery', name: 'ExpandableGallery', zh: '展开画廊',
+    category: '卡片', desc: '点击展开成排的图片墙', slug: 'expandable-gallery', preview: 'egal',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const imgsConst = "[\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600',\n    'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600',\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600&sat=-100',\n  ]"
+      const body = '  <IuExpandableGallery :images="images" />'
+      return scriptedCode('IuExpandableGallery', [['images', imgsConst]], body)
+    },
+    apiRows: [
+      { prop: 'images', desc: '图片地址数组', type: 'string[]', def: '必填' },
+    ],
+  },
+  {
+    importName: 'IuCircularGallery', name: 'CircularGallery', zh: '环形画廊',
+    category: '卡片', desc: '可拖拽旋转的弧形画廊', slug: 'circular-gallery', preview: 'cgal',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuCircularGallery',
+        '    text="Inspira UI"',
+        '    text-color="#ffffff"',
+        '    class="h-96 rounded-xl border"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuCircularGallery', [], body)
+    },
+    apiRows: [
+      { prop: 'radius', desc: '弧形半径', type: 'number', def: '100' },
+      { prop: 'duration / easing', desc: '拖拽回弹', type: 'number / string', def: '—' },
+      { prop: 'direction', desc: '排列方向', type: "'normal' | 'reverse'", def: "'normal'" },
+      { prop: 'pauseOnHover', desc: '悬停暂停', type: 'boolean', def: 'false' },
+    ],
+  },
+  {
+    importName: 'IuSafariMockup', name: 'SafariMockup', zh: 'Safari 样机',
+    category: '特效', desc: 'Safari 浏览器窗口样机', slug: 'safari-mockup', preview: 'safari',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuSafariMockup',
+        '        url="https://inspira-ui.com"',
+        '        src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=1200"',
+        '    :width="1200"',
+        '    :height="720"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuSafariMockup', [], body)
+    },
+    apiRows: [
+      { prop: 'url', desc: '地址栏显示的网址', type: 'string', def: '—' },
+      { prop: 'src', desc: '页面截图地址', type: 'string', def: '—' },
+      { prop: 'width / height', desc: '视口尺寸', type: 'number', def: '1203 / 753' },
+    ],
+  },
+  {
+    importName: 'IuTextRevealCard', name: 'TextRevealCard', zh: '星幕揭字卡',
+    category: '特效', desc: '鼠标划过星幕揭示文字', slug: 'text-reveal-card', preview: 'trcard',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuTextRevealCard',
+        '      text="把鼠标移过来"',
+        '      reveal-text="星光为你揭示答案"',
+        '    :stars-count="80"',
+        '  >',
+        '    <template #subtitle>✦</template>',
+        '  </IuTextRevealCard>',
+      ].join('\n')
+      return scriptedCode('IuTextRevealCard', [], body)
+    },
+    apiRows: [
+      { prop: 'text / revealText', desc: '前/后两段文字', type: 'string', def: '—' },
+      { prop: 'starsCount', desc: '星星数量', type: 'number', def: '—' },
+    ],
+    slotRows: [
+      { prop: '#header / #text / #revealText', desc: '自定义卡面内容', type: '—', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuTextScrollReveal', name: 'TextScrollReveal', zh: '滚动显字',
+    category: '文本', desc: '滚动到位置逐字显现', slug: 'text-scroll-reveal', preview: 'tsrev',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="h-48 overflow-auto rounded-xl border p-6">',
+        '    <IuTextScrollReveal text="滚动这段文字试试" style="font-size: 20px; font-weight: 700" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuTextScrollReveal', [], body)
+    },
+    apiRows: [
+      { prop: 'text', desc: '目标文本', type: 'string', def: '必填' },
+    ],
+  },
+  {
+    importName: 'IuVideoText', name: 'VideoText', zh: '视频文字',
+    category: '特效', desc: '文字内嵌视频画面', slug: 'video-text', preview: 'vidtext',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuVideoText',
+        '    src="https://example.com/hero.mp4"',
+        '    font-size="18vw"',
+        '    font-weight="900"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuVideoText', [], body)
+    },
+    apiRows: [
+      { prop: 'src', desc: '视频地址', type: 'string', def: '必填' },
+      { prop: 'fontSize / fontWeight', desc: '文字大小 / 字重', type: 'string | number', def: '—' },
+      { prop: 'autoPlay / muted / loop', desc: '播放参数', type: 'boolean', def: 'true' },
+      { prop: 'preload', desc: '预加载策略', type: "'auto' | 'metadata' | 'none'", def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '视频上方的文字', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuHaloSearch', name: 'HaloSearch', zh: '光环搜索',
+    category: '交互', desc: '焦点时泛起光环的搜索框', slug: 'halo-search', preview: 'hsearch',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuHaloSearch',
+        '    class="max-w-md"',
+        '    placeholder="搜索组件…"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuHaloSearch', [], body)
+    },
+    apiRows: [
+      { prop: 'placeholder', desc: '占位文案（透传 input）', type: 'string', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '搜索框下方内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuParallaxFloat', name: 'ParallaxFloat', zh: '视差浮动',
+    category: '交互', desc: '元素分层视差跟随鼠标', slug: 'parallax-float', preview: 'pfloat',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuParallaxFloat class="h-72 rounded-xl border" :sensitivity="0.2">',
+        '    <IuParallaxFloatElement :sensitivity="0.3" class="p-4 text-lg font-bold">前景层</IuParallaxFloatElement>',
+        '    <IuParallaxFloatElement :sensitivity="0.1" class="p-4 opacity-60">背景层</IuParallaxFloatElement>',
+        '  </IuParallaxFloat>',
+      ].join('\n')
+      return scriptedCode('IuParallaxFloat', [], body)
+    },
+    apiRows: [
+      { prop: 'sensitivity', desc: '整体视差灵敏度', type: 'number', def: '—' },
+      { prop: 'easingFactor', desc: '缓动系数', type: 'number', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: 'IuParallaxFloatElement 分层元素', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuOrbit', name: 'Orbit', zh: '轨道环绕',
+    category: '特效', desc: '元素沿轨道绕中心旋转', slug: 'orbit', preview: 'orbitp',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuOrbit class="size-64" :duration="20" :radius="80" reverse>',
+        '    <span class="size-4 rounded-full bg-emerald-500" />',
+        '    <span class="size-3 rounded-full bg-sky-500" />',
+        '  </IuOrbit>',
+      ].join('\n')
+      return scriptedCode('IuOrbit', [], body)
+    },
+    apiRows: [
+      { prop: 'direction', desc: '旋转方向', type: 'OrbitDirection（normal / reverse）', def: 'Clockwise' },
+      { prop: 'duration', desc: '一圈时长（秒）', type: 'number', def: '20' },
+      { prop: 'delay', desc: '多卫星错开延迟（秒）', type: 'number', def: '10' },
+      { prop: 'radius', desc: '轨道半径（%）', type: 'number', def: '50' },
+      { prop: 'path', desc: '显示轨道环', type: 'boolean', def: 'false' },
+    ],
+    slotRows: [{ prop: 'default', desc: '轨道上的卫星元素', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuSleekLineCursor', name: 'SleekLineCursor', zh: '细线光标',
+    category: '交互', desc: '拖尾细线的自定义光标', slug: 'sleek-line-cursor', preview: 'slcursor',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div style="cursor: none" class="grid h-40 place-items-center rounded-xl border">',
+        '    <IuSleekLineCursor />',
+        '    <span class="text-sm opacity-70">移动鼠标查看拖尾</span>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuSleekLineCursor', [], body)
+    },
+    apiRows: [
+      { prop: 'friction / dampening / tension', desc: '拖尾物理参数', type: 'number', def: '—' },
+      { prop: 'trails', desc: '拖尾层数', type: 'number', def: '—' },
+      { prop: 'size', desc: '线宽', type: 'number', def: '50' },
+    ],
   },
 
 

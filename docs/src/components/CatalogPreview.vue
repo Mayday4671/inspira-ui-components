@@ -6,6 +6,7 @@
  */
 import { computed } from 'vue'
 import {
+  IuAnimatedBeam,
   IuAnimatedCircularProgressBar,
   IuAnimatedTabs,
   IuAnimatedTestimonials,
@@ -23,17 +24,24 @@ import {
   IuCardSpotlight,
   IuCardStack,
   IuCardStackItem,
+  IuCircularGallery,
+  IuColorPicker,
   IuColourfulText,
   IuCompare,
   IuConfetti,
   IuConfettiButton,
   IuContainerTextFlip,
+  IuCubeCarousel,
+  IuDesignTestimonials,
   IuDialog,
   IuDirectionAwareHover,
   IuDock,
   IuDockIcon,
   IuEncryptedText,
+  IuExpandableGallery,
   IuFallingStarsBg,
+  IuFeyCards,
+  IuFileUpload,
   IuFlickeringGrid,
   IuFlipCard,
   IuFlipWords,
@@ -41,11 +49,14 @@ import {
   IuFloatingCard,
   IuFocus,
   IuGlareCard,
+  IuGlobe,
   IuGlowBorder,
   IuGlowingEffect,
   IuGradientButton,
+  IuHaloSearch,
   IuHighlightText,
   IuHyperText,
+  IuIconLogoCloud,
   IuIInput,
   IuImagesBadge,
   IuImagesSlider,
@@ -58,20 +69,28 @@ import {
   IuLetterSwap,
   IuLineShadowText,
   IuLinkPreview,
+  IuLogoOrigami,
+  IuLogoOrigamiItem,
   IuMarquee,
   IuMediaText,
   IuMeteors,
+  IuMorphingTabs,
   IuMorphingText,
   IuMultiStepLoader,
   IuNeonBorder,
   IuNumberTicker,
+  IuOrbit,
+  IuParallaxFloat,
+  IuParallaxFloatElement,
   IuPathMarquee,
   IuPatternBackground,
+  IuPhotoGallery,
   IuProgressiveBlur,
   IuRadiantText,
   IuRainbowButton,
   IuRipple,
   IuRippleButton,
+  IuSafariMockup,
   IuScales,
   IuScratchToReveal,
   IuScrewText,
@@ -79,21 +98,27 @@ import {
   IuShimmerButton,
   IuSilkBackground,
   IuSingularityBackground,
+  IuSleekLineCursor,
   IuSmoothCursor,
   IuSnowfallBg,
   IuSparkles,
   IuSparklesText,
   IuSpinningText,
+  IuSpringCalendar,
   IuStarsBackground,
+  IuStaticLogoCloud,
   IuStatistic,
   IuStractiumBackground,
   IuSVGMask,
+  IuTestimonialSlider,
   IuText3d,
   IuTextGenerateEffect,
   IuTextGlitch,
   IuTextHighlight,
   IuTextHoverEffect,
   IuTextReveal,
+  IuTextRevealCard,
+  IuTextScrollReveal,
   IuThunderstormBackground,
   IuTimeline,
   IuTracingBeam,
@@ -102,7 +127,9 @@ import {
   IuUnderlineText,
   IuVanishingInput,
   IuVariableLetterText,
+  IuVideoText,
   IuVortex,
+  IuWarpBackground,
   IuWavyBackground,
 } from 'inspira-ui-components'
 import { ref } from 'vue'
@@ -112,6 +139,9 @@ const props = defineProps<{ kind: PreviewKind }>()
 
 const dialogOpen = ref(false)
 const sswapBox = ref<HTMLElement | null>(null)
+const b6Container = ref<HTMLElement | null>(null)
+const b6From = ref<HTMLElement | null>(null)
+const b6To = ref<HTMLElement | null>(null)
 const mloadOpen = ref(false)
 
 /** 各预览的视觉缩放（真实组件按原始尺寸渲染，仅缩放呈现） */
@@ -717,6 +747,167 @@ const auroraHeight = '128px'
     <span v-else-if="kind === 't3d'" style="font-size: 22px; font-weight: 900">
       <IuText3d text-color="#FFFFFF" stroke-color="#000000" shadow-color="#6366F1">3D</IuText3d>
     </span>
+
+    <!-- ============ 批次 6 预览 ============ -->
+    <div v-else-if="kind === 'abeam'" class="scaled-box" style="width: 210px; height: 110px; border: 1px solid var(--border); border-radius: 10px; position: relative; display: flex; align-items: center; justify-content: space-between; padding: 14px" ref="b6Container">
+      <span class="scaled-box" style="width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 8px" ref="b6From" />
+      <span class="scaled-box" style="width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 8px" ref="b6To" />
+      <IuAnimatedBeam v-if="b6Container && b6From && b6To" :container-ref="b6Container" :from-ref="b6From" :to-ref="b6To" :gradient-start-color="'#6EE7B7'" :gradient-stop-color="'#3B82F6'" />
+    </div>
+
+    <div v-else-if="kind === 'acard'" class="scaled-box" style="width: 220px; height: 130px; display: flex; gap: 8px; overflow: hidden; align-items: center">
+      <img src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300" alt="" style="width: 100px; height: 120px; object-fit: cover; border-radius: 10px">
+      <img src="https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300" alt="" style="width: 100px; height: 120px; object-fit: cover; border-radius: 10px">
+    </div>
+
+    <div v-else-if="kind === 'ccube'" class="scaled-box" style="width: 210px; height: 130px; display: grid; place-items: center">
+      <IuCubeCarousel
+        :items="[{ id: 'a', type: 'image', src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300' }, { id: 'b', type: 'image', src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300' }]"
+        :width="110"
+        :height="110"
+        :auto-play="true"
+        :auto-play-interval="2600"
+      />
+    </div>
+
+    <div v-else-if="kind === 'dttest'" class="scaled-box" style="width: 220px; height: 140px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; padding: 10px; box-sizing: border-box">
+      <IuDesignTestimonials
+        :testimonials="[{ quote: '交付提速三倍。', author: '张伟', role: '前端负责人', company: '某科技' }]"
+        :duration="14"
+        style="pointer-events: none"
+      />
+    </div>
+
+    <div v-else-if="kind === 'fey'" class="scaled-box" style="width: 220px; height: 140px; display: grid; place-items: center">
+      <IuFeyCards
+        :img-src="['https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300', 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300']"
+        main-img="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300"
+        idle-img="https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300"
+        style="pointer-events: none; height: 100%"
+      />
+    </div>
+
+    <div v-else-if="kind === 'fupload'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center">
+      <IuFileUpload style="width: 190px; pointer-events: none" />
+    </div>
+
+    <div v-else-if="kind === 'origami'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center">
+      <IuLogoOrigami :duration="1.2" :delay="1.2" style="pointer-events: none">
+        <IuLogoOrigamiItem><span style="font-size: 22px">◆</span></IuLogoOrigamiItem>
+        <IuLogoOrigamiItem><span style="font-size: 22px">✦</span></IuLogoOrigamiItem>
+        <IuLogoOrigamiItem><span style="font-size: 22px">●</span></IuLogoOrigamiItem>
+        <IuLogoOrigamiItem><span style="font-size: 22px">▲</span></IuLogoOrigamiItem>
+      </IuLogoOrigami>
+    </div>
+
+    <div v-else-if="kind === 'scal'" class="scaled-box" style="width: 220px; height: 140px; display: grid; place-items: center; overflow: hidden">
+      <IuSpringCalendar
+        :calendar-data="[{ month: '11月', date: 11, day: '周二', events: [{ day: '周二', title: '发布', time: '10:00' }] }, { month: '11月', date: 12, day: '周三' }]"
+        :initial-index="0"
+        style="pointer-events: none; scale: 0.72"
+      />
+    </div>
+
+    <div v-else-if="kind === 'warp'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuWarpBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'globe'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center; overflow: hidden">
+      <IuGlobe class="aspect-square" style="height: 190px; pointer-events: none" />
+    </div>
+
+    <div v-else-if="kind === 'cpick'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center">
+      <IuColorPicker model-value="#6366f1" :open="true" :swatches="['#6366f1', '#ec4899']" style="pointer-events: none" />
+    </div>
+
+    <div v-else-if="kind === 'tslide'" class="scaled-box" style="width: 210px; height: 130px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; padding: 8px; box-sizing: border-box">
+      <IuTestimonialSlider
+        :testimonials="[{ img: '', quote: '交付提速三倍。', name: '张伟', role: '前端负责人' }]"
+        style="pointer-events: none"
+      />
+    </div>
+
+    <div v-else-if="kind === 'mtabs'" class="scaled-box" style="width: 210px; height: 100px; display: grid; place-items: center">
+      <IuMorphingTabs :tabs="['home', 'search']" active-tab="home" style="pointer-events: none" />
+    </div>
+
+    <div v-else-if="kind === 'lcloud-a'" class="scaled-box" style="width: 220px; height: 120px; display: grid; place-items: center; overflow: hidden">
+      <IuAnimatedLogoCloud :logos="[{ name: '◆', path: '' }, { name: '✦', path: '' }, { name: '●', path: '' }]" style="pointer-events: none; scale: 0.7" />
+    </div>
+
+    <div v-else-if="kind === 'lcloud-i'" class="scaled-box" style="width: 220px; height: 120px; display: grid; place-items: center; overflow: hidden">
+      <IuIconLogoCloud :logos="[{ name: '◆', path: '' }, { name: '✦', path: '' }]" style="pointer-events: none; scale: 0.7" />
+    </div>
+
+    <div v-else-if="kind === 'lcloud-s'" class="scaled-box" style="width: 220px; height: 120px; display: grid; place-items: center; overflow: hidden">
+      <IuStaticLogoCloud :logos="[{ name: '◆', path: '' }, { name: '✦', path: '' }]" style="pointer-events: none; scale: 0.7" />
+    </div>
+
+    <div v-else-if="kind === 'pgal'" class="scaled-box" style="width: 220px; height: 140px; overflow: hidden">
+      <IuPhotoGallery
+        :items="[{ src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300' }, { src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300' }]"
+        style="pointer-events: none; scale: 0.8"
+      />
+    </div>
+
+    <div v-else-if="kind === 'egal'" class="scaled-box" style="width: 220px; height: 120px; display: grid; place-items: center; overflow: hidden">
+      <IuExpandableGallery
+        :images="['https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=240', 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=240']"
+        style="pointer-events: none"
+      />
+    </div>
+
+    <div v-else-if="kind === 'cgal'" class="scaled-box" style="width: 220px; height: 140px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuCircularGallery :radius="120" text="GALLERY" text-color="#6366f1" style="position: absolute; inset: 0; pointer-events: none" />
+    </div>
+
+    <div v-else-if="kind === 'safari'" class="scaled-box" style="width: 220px; height: 140px; overflow: hidden">
+      <IuSafariMockup
+        url="inspira-ui.com"
+        src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600"
+        :width="600"
+        :height="380"
+        style="scale: 0.36; transform-origin: top left"
+      />
+    </div>
+
+    <div v-else-if="kind === 'trcard'" class="scaled-box" style="width: 220px; height: 140px">
+      <IuTextRevealCard text="移过来" reveal-text="✦ 星幕揭示" :stars-count="40" style="pointer-events: none; scale: 0.8" />
+    </div>
+
+    <div v-else-if="kind === 'tsrev'" class="scaled-box" style="width: 220px; height: 120px; border: 1px solid var(--border); border-radius: 10px; overflow-y: auto">
+      <div style="height: 200px; padding: 14px; box-sizing: border-box">
+        <IuTextScrollReveal text="滚动显字" style="font-size: 16px; font-weight: 700" />
+      </div>
+    </div>
+
+    <div v-else-if="kind === 'vidtext'" class="scaled-box" style="width: 220px; height: 120px; display: grid; place-items: center; overflow: hidden">
+      <IuVideoText src="https://cdn.pixabay.com/video/2023/10/08/184118-874843721_tiny.mp4" font-size="60px" style="pointer-events: none">
+        VIDEO
+      </IuVideoText>
+    </div>
+
+    <div v-else-if="kind === 'hsearch'" class="scaled-box" style="width: 210px; display: grid; place-items: center">
+      <IuHaloSearch placeholder="搜索…" style="width: 190px" />
+    </div>
+
+    <div v-else-if="kind === 'pfloat'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px">
+      <IuParallaxFloat style="height: 100%; width: 100%; display: grid; place-items: center">
+        <IuParallaxFloatElement :sensitivity="0.3" style="font-size: 12px; font-weight: 700">视差层</IuParallaxFloatElement>
+      </IuParallaxFloat>
+    </div>
+
+    <div v-else-if="kind === 'orbitp'" class="scaled-box" style="width: 210px; height: 130px; display: grid; place-items: center">
+      <IuOrbit class="size-32" :duration="12" :radius="42" reverse>
+        <span class="rounded-full bg-emerald-500" style="width: 10px; height: 10px" />
+        <span class="rounded-full bg-sky-500" style="width: 8px; height: 8px" />
+      </IuOrbit>
+    </div>
+
+    <div v-else-if="kind === 'slcursor'" class="scaled-box" style="width: 210px; height: 110px; cursor: none; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px">
+      <IuSleekLineCursor />
+      <span style="font-size: 11px; opacity: 0.7">移动鼠标</span>
+    </div>
 
     <!-- 真实 IuDialog：teleport 到 body，受预览容器控制 -->
     <Teleport to="body">

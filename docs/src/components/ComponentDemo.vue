@@ -5,6 +5,7 @@
  */
 import { computed, ref } from 'vue'
 import {
+  IuAnimatedBeam,
   IuAnimatedCircularProgressBar,
   IuAnimatedModal,
   IuAnimatedModalBody,
@@ -14,6 +15,8 @@ import {
   IuAnimatedTestimonials,
   IuAnimatedTooltip,
   IuAnimateGrid,
+  IuAppleCardCarousel,
+  IuAppleCarouselItem,
   IuAuroraBackground,
   IuBalanceSlider,
   IuBentoGrid,
@@ -26,19 +29,26 @@ import {
   IuCardSpotlight,
   IuCardStack,
   IuCardStackItem,
+  IuCircularGallery,
+  IuColorPicker,
   IuColourfulText,
   IuCompare,
   IuConfetti,
   IuConfettiButton,
   IuContainerScroll,
   IuContainerTextFlip,
+  IuCubeCarousel,
+  IuDesignTestimonials,
   IuDialog,
   IuDirectionAwareHover,
   IuDock,
   IuDockIcon,
   IuDockSeparator,
   IuEncryptedText,
+  IuExpandableGallery,
   IuFallingStarsBg,
+  IuFeyCards,
+  IuFileUpload,
   IuFlickeringGrid,
   IuFlipCard,
   IuFlipWords,
@@ -46,11 +56,14 @@ import {
   IuFloatingCard,
   IuFocus,
   IuGlareCard,
+  IuGlobe,
   IuGlowBorder,
   IuGlowingEffect,
   IuGradientButton,
+  IuHaloSearch,
   IuHighlightText,
   IuHyperText,
+  IuIconLogoCloud,
   IuIInput,
   IuImagesBadge,
   IuImagesSlider,
@@ -63,20 +76,28 @@ import {
   IuLetterSwap,
   IuLineShadowText,
   IuLinkPreview,
+  IuLogoOrigami,
+  IuLogoOrigamiItem,
   IuMarquee,
   IuMediaText,
   IuMeteors,
+  IuMorphingTabs,
   IuMorphingText,
   IuMultiStepLoader,
   IuNeonBorder,
   IuNumberTicker,
+  IuOrbit,
+  IuParallaxFloat,
+  IuParallaxFloatElement,
   IuPathMarquee,
   IuPatternBackground,
+  IuPhotoGallery,
   IuProgressiveBlur,
   IuRadiantText,
   IuRainbowButton,
   IuRipple,
   IuRippleButton,
+  IuSafariMockup,
   IuScales,
   IuScratchToReveal,
   IuScrewText,
@@ -84,21 +105,27 @@ import {
   IuShimmerButton,
   IuSilkBackground,
   IuSingularityBackground,
+  IuSleekLineCursor,
   IuSmoothCursor,
   IuSnowfallBg,
   IuSparkles,
   IuSparklesText,
   IuSpinningText,
+  IuSpringCalendar,
   IuStarsBackground,
+  IuStaticLogoCloud,
   IuStatistic,
   IuStractiumBackground,
   IuSVGMask,
+  IuTestimonialSlider,
   IuText3d,
   IuTextGenerateEffect,
   IuTextGlitch,
   IuTextHighlight,
   IuTextHoverEffect,
   IuTextReveal,
+  IuTextRevealCard,
+  IuTextScrollReveal,
   IuThunderstormBackground,
   IuTimeline,
   IuTracingBeam,
@@ -108,7 +135,9 @@ import {
   IuVanishingInput,
   IuVariableLetterText,
   IuVariableText,
+  IuVideoText,
   IuVortex,
+  IuWarpBackground,
   IuWavyBackground,
 } from 'inspira-ui-components'
 import type { ComponentMeta } from '../data/registry'
@@ -211,6 +240,9 @@ const testimonialData = [
   { quote: '类型完备，暗色模式开箱即用。', name: '李娜', designation: 'UI 设计师', image: avatar('Li Na', '#ec4899') },
 ]
 
+const beamContainer = ref<HTMLElement | null>(null)
+const beamFrom = ref<HTMLElement | null>(null)
+const beamTo = ref<HTMLElement | null>(null)
 const vtextContainer = ref<HTMLElement | null>(null)
 const sswapContainer = ref<HTMLElement | null>(null)
 
@@ -939,6 +971,189 @@ const timelineItems = [
     >
       3D TEXT
     </IuText3d>
+  </div>
+
+  <!-- ============ 批次 6：扩展组件 ============ -->
+  <div v-else-if="meta.slug === 'animated-beam'" class="demo-fit" style="height: 240px; width: 100%; max-width: 520px">
+    <div ref="beamContainer" style="position: relative; width: 100%; height: 100%; border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; padding: 20px; box-sizing: border-box">
+      <span ref="beamFrom" style="width: 56px; height: 56px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface)" />
+      <span ref="beamTo" style="width: 56px; height: 56px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface)" />
+      <IuAnimatedBeam
+        v-if="beamContainer && beamFrom && beamTo"
+        :container-ref="beamContainer"
+        :from-ref="beamFrom"
+        :to-ref="beamTo"
+        :curvature="Number(s.curvature) || 200"
+        :gradient-start-color="String(s.gradientStartColor)"
+        :gradient-stop-color="String(s.gradientStopColor)"
+      />
+    </div>
+  </div>
+
+  <div v-else-if="meta.slug === 'apple-card-carousel'" class="demo-fit" style="height: 340px; width: 100%; max-width: 640px; overflow: hidden">
+    <IuAppleCardCarousel>
+      <IuAppleCarouselItem v-for="(img, i) in sliderImages" :key="i" :index="i">
+        <img :src="img" alt="" style="width: 320px; height: 300px; object-fit: cover; border-radius: 14px">
+      </IuAppleCarouselItem>
+    </IuAppleCardCarousel>
+  </div>
+
+  <div v-else-if="meta.slug === 'cube-carousel'" class="demo-fit" style="height: 360px; width: 100%; max-width: 520px">
+    <IuCubeCarousel
+      :items="[
+        { id: 'a', type: 'image', src: sliderImages[0] },
+        { id: 'b', type: 'image', src: sliderImages[1] },
+      ]"
+      :width="300"
+      :height="300"
+      :auto-play="true"
+      :auto-play-interval="4000"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'design-testimonials'" class="demo-fit" style="height: 360px; width: 100%; max-width: 560px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden">
+    <IuDesignTestimonials
+      :testimonials="[
+        { quote: '交付速度提升三倍。', author: '张伟', role: '前端负责人', company: '某科技' },
+        { quote: '类型完备，暗色开箱即用。', author: '李娜', role: 'UI 设计师', company: '某工作室' },
+        { quote: '动效细腻，体验极佳。', author: '王强', role: '产品经理', company: '某团队' },
+      ]"
+      title="团队评价"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'fey-cards'" class="demo-fit" style="height: 320px; width: 100%; max-width: 520px">
+    <IuFeyCards
+      :img-src="sliderImages"
+      :main-img="sliderImages[0]"
+      :idle-img="sliderImages[1]"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'file-upload'" class="demo-fit" style="width: 100%; max-width: 480px">
+    <IuFileUpload @change="(files: File[]) => undefined" />
+  </div>
+
+  <div v-else-if="meta.slug === 'logo-origami'" class="demo-fit" style="height: 180px; width: 100%; max-width: 520px">
+    <IuLogoOrigami :duration="1.5" :delay="2">
+      <IuLogoOrigamiItem><span style="font-size: 30px">◆</span></IuLogoOrigamiItem>
+      <IuLogoOrigamiItem><span style="font-size: 30px">✦</span></IuLogoOrigamiItem>
+      <IuLogoOrigamiItem><span style="font-size: 30px">●</span></IuLogoOrigamiItem>
+      <IuLogoOrigamiItem><span style="font-size: 30px">▲</span></IuLogoOrigamiItem>
+    </IuLogoOrigami>
+  </div>
+
+  <div v-else-if="meta.slug === 'spring-calendar'" class="demo-fit" style="height: 260px; width: 100%; max-width: 560px; overflow: hidden">
+    <IuSpringCalendar
+      :calendar-data="[
+        { month: '11月', date: 11, day: '周二', events: [{ day: '周二', title: '发布 v1.0', time: '10:00' }] },
+        { month: '11月', date: 12, day: '周三' },
+        { month: '11月', date: 13, day: '周四', events: [{ day: '周四', title: '评审会', time: '15:00' }] },
+      ]"
+      :initial-index="0"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'warp-background'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative">
+    <IuWarpBackground style="position: absolute; inset: 0" />
+    <p style="position: relative; z-index: 10; width: 100%; height: 100%; display: grid; place-items: center; font-size: 14px; margin: 0">Warp Background</p>
+  </div>
+
+  <div v-else-if="meta.slug === 'globe'" class="demo-fit" style="height: 340px">
+    <IuGlobe class="aspect-square" style="height: 320px" />
+  </div>
+
+  <div v-else-if="meta.slug === 'color-picker'" class="demo-fit" style="height: 220px; width: 100%; max-width: 420px; display: grid; place-items: center">
+    <IuColorPicker :model-value="String(s.color)" :type="(s.type as 'hex')" :swatches="['#6366f1', '#ec4899', '#f59e0b']" />
+  </div>
+
+  <div v-else-if="meta.slug === 'testimonial-slider'" class="demo-fit" style="height: 320px; width: 100%; max-width: 520px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden">
+    <IuTestimonialSlider
+      :testimonials="testimonialData.map((t) => ({ img: t.image, quote: t.quote, name: t.name, role: t.designation }))"
+      :auto-rotate="true"
+      :duration="4000"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'morphing-tabs'" class="demo-fit" style="height: 140px">
+    <IuMorphingTabs :tabs="['home', 'search', 'settings']" :active-tab="String(s.activeTab)" @click="s.activeTab = $event" />
+  </div>
+
+  <div v-else-if="meta.slug === 'logo-cloud-animated'" class="demo-fit" style="height: 180px; width: 100%; max-width: 560px; overflow: hidden">
+    <IuAnimatedLogoCloud title="受团队信任" :logos="[{ name: '◆', path: '' }, { name: '✦', path: '' }, { name: '●', path: '' }, { name: '▲', path: '' }]" />
+  </div>
+
+  <div v-else-if="meta.slug === 'logo-cloud-icon'" class="demo-fit" style="height: 180px; width: 100%; max-width: 560px; overflow: hidden">
+    <IuIconLogoCloud :logos="[{ name: '◆', path: '' }, { name: '✦', path: '' }, { name: '●', path: '' }]" />
+  </div>
+
+  <div v-else-if="meta.slug === 'logo-cloud-static'" class="demo-fit" style="height: 180px; width: 100%; max-width: 560px; overflow: hidden">
+    <IuStaticLogoCloud :logos="[{ name: '◆', path: '' }, { name: '✦', path: '' }]" />
+  </div>
+
+  <div v-else-if="meta.slug === 'photo-gallery'" class="demo-fit" style="width: 100%; max-width: 560px">
+    <IuPhotoGallery :items="sliderImages.map((src) => ({ src }))" />
+  </div>
+
+  <div v-else-if="meta.slug === 'expandable-gallery'" class="demo-fit" style="height: 220px; width: 100%; max-width: 560px">
+    <IuExpandableGallery :images="sliderImages" />
+  </div>
+
+  <div v-else-if="meta.slug === 'circular-gallery'" class="demo-fit" style="height: 300px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuCircularGallery text="GALLERY" text-color="#6366f1" class="h-full" />
+  </div>
+
+  <div v-else-if="meta.slug === 'safari-mockup'" class="demo-fit" style="height: 360px; width: 100%; max-width: 640px">
+    <IuSafariMockup
+      url="https://inspira-ui.com"
+      src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=1200"
+      :width="1200"
+      :height="750"
+      class="w-full"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'text-reveal-card'" class="demo-fit" style="height: 220px; width: 100%; max-width: 480px">
+    <IuTextRevealCard text="把鼠标移过来" reveal-text="✦ 星光为你揭示答案" :stars-count="80" />
+  </div>
+
+  <div v-else-if="meta.slug === 'text-scroll-reveal'" class="demo-fit" style="height: 200px; width: 100%; max-width: 440px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px">
+    <div style="height: 320px; padding: 24px; box-sizing: border-box">
+      <IuTextScrollReveal text="滚动这段文字试试" style="font-size: 20px; font-weight: 700" />
+    </div>
+  </div>
+
+  <div v-else-if="meta.slug === 'video-text'" class="demo-fit" style="height: 240px; width: 100%; max-width: 560px; overflow: hidden">
+    <IuVideoText
+      src="https://cdn.pixabay.com/video/2023/10/08/184118-874843721_tiny.mp4"
+      font-size="90px"
+      font-weight="900"
+    >
+      VIDEO
+    </IuVideoText>
+  </div>
+
+  <div v-else-if="meta.slug === 'halo-search'" class="demo-fit" style="width: 100%; max-width: 440px">
+    <IuHaloSearch placeholder="搜索组件…" />
+  </div>
+
+  <div v-else-if="meta.slug === 'parallax-float'" class="demo-fit" style="height: 280px; width: 100%; max-width: 520px">
+    <IuParallaxFloat class="h-full w-full rounded-xl border" :sensitivity="0.2" style="display: grid; place-items: center">
+      <IuParallaxFloatElement :sensitivity="0.35" style="font-size: 18px; font-weight: 700">前景层</IuParallaxFloatElement>
+      <IuParallaxFloatElement :sensitivity="0.12" style="font-size: 13px; opacity: 0.6">背景层</IuParallaxFloatElement>
+    </IuParallaxFloat>
+  </div>
+
+  <div v-else-if="meta.slug === 'orbit'" class="demo-fit" style="height: 280px">
+    <IuOrbit class="size-56" :duration="16" :radius="46" reverse>
+      <span class="rounded-full bg-emerald-500" style="width: 14px; height: 14px" />
+      <span class="rounded-full bg-sky-500" style="width: 10px; height: 10px" />
+    </IuOrbit>
+  </div>
+
+  <div v-else-if="meta.slug === 'sleek-line-cursor'" class="demo-fit" style="height: 220px; cursor: none">
+    <IuSleekLineCursor />
+    <span style="font-size: 14px; opacity: 0.7">移动鼠标查看拖尾细线</span>
   </div>
 
   <!-- Dialog 详情页的真实弹窗实例 -->
