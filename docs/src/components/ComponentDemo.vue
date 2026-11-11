@@ -14,20 +14,27 @@ import {
   IuBentoGrid,
   IuBorderBeam,
   IuBoxReveal,
+  IuBreathingText,
   IuCard3D,
   IuCardSpotlight,
   IuColourfulText,
   IuCompare,
+  IuContainerTextFlip,
   IuDialog,
+  IuDirectionAwareHover,
   IuEncryptedText,
   IuFlickeringGrid,
+  IuFloat,
+  IuFloatingCard,
   IuFlipCard,
   IuFlipWords,
   IuFocus,
   IuGlareCard,
   IuGradientButton,
   IuHyperText,
+  IuInteractiveGridPattern,
   IuInteractiveHoverButton,
+  IuIInput,
   IuLens,
   IuLetterPullup,
   IuLetterSwap,
@@ -35,15 +42,27 @@ import {
   IuMarquee,
   IuMeteors,
   IuMorphingText,
+  IuMultiStepLoader,
+  IuNeonBorder,
   IuNumberTicker,
   IuPatternBackground,
+  IuProgressiveBlur,
+  IuRadiantText,
   IuRainbowButton,
+  IuRipple,
   IuRippleButton,
   IuShimmerButton,
+  IuSparkles,
+  IuSparklesText,
   IuSpinningText,
   IuStatistic,
   IuTextGenerateEffect,
+  IuTextGlitch,
   IuTextHighlight,
+  IuTextHoverEffect,
+  IuTextReveal,
+  IuTimeline,
+  IuTracingBeam,
   IuTypewriterText,
   IuUnderlineText,
 } from 'inspira-ui-components'
@@ -93,6 +112,28 @@ const wordsList = computed(() =>
 )
 
 const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流畅'])
+
+const ctfWords = computed(() =>
+  String(s.value.words ?? '更好,现代,漂亮,出色')
+    .split(',')
+    .map((w) => w.trim())
+    .filter(Boolean),
+)
+
+const inputValue = ref('')
+
+const mslLoading = ref(false)
+const mslSteps = [
+  { text: '连接数据库', afterText: '数据库已连接' },
+  { text: '初始化模型', afterText: '模型就绪' },
+  { text: '启动服务', afterText: '服务运行中' },
+]
+
+const timelineItems = [
+  { id: 'start', label: '2024' },
+  { id: 'growth', label: '2025' },
+  { id: 'now', label: '2026' },
+]
 </script>
 
 <template>
@@ -426,6 +467,131 @@ const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流
     </IuAnimatedList>
   </div>
 
+  <!-- ============ 批次 3：扩展组件 ============ -->
+  <div v-else-if="meta.slug === 'float'" class="demo-fit" style="height: 220px; perspective: 900px">
+    <IuFloat>
+      <div style="padding: 24px 32px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); font-size: 14px; font-weight: 600">漂浮的内容</div>
+    </IuFloat>
+  </div>
+
+  <div v-else-if="meta.slug === 'sparkles'" class="demo-fit" style="height: 240px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden">
+    <IuSparkles
+      :particle-color="String(s.particleColor)"
+      :min-size="Number(s.minSize) || 1"
+      :max-size="Number(s.maxSize) || 2"
+      :particle-density="120"
+      style="position: absolute; inset: 0"
+    />
+  </div>
+
+  <span v-else-if="meta.slug === 'sparkles-text'" style="font-size: 28px; font-weight: 700">
+    <IuSparklesText :text="String(s.text)" :sparkles-count="Number(s.sparklesCount) || 10" />
+  </span>
+
+  <span v-else-if="meta.slug === 'text-glitch'" style="font-size: 32px; font-weight: 800; display: inline-block">
+    <IuTextGlitch :text="String(s.text)" :speed="Number(s.speed) || 0.5" :enable-shadows="Boolean(s.enableShadows)" :enable-on-hover="Boolean(s.enableOnHover)" />
+  </span>
+
+  <div v-else-if="meta.slug === 'text-hover-effect'" class="demo-fit" style="height: 160px; width: 100%; max-width: 560px">
+    <IuTextHoverEffect :text="String(s.text)" :stroke-width="Number(s.strokeWidth) || 0.75" />
+  </div>
+
+  <div v-else-if="meta.slug === 'text-reveal'" class="demo-fit" style="height: 140px; width: 100%; max-width: 560px">
+    <IuTextReveal :duration="0.6" :delay="0.2" :stagger="0.1" :key="resetKey">
+      <h3 style="margin: 0; font-size: 26px; font-weight: 700">文字逐词揭示入场</h3>
+    </IuTextReveal>
+  </div>
+
+  <span v-else-if="meta.slug === 'radiant-text'" style="font-size: 26px; font-weight: 600">
+    <IuRadiantText :duration="Number(s.duration) || 6" :radiant-width="Number(s.radiantWidth) || 100">Radiant Text</IuRadiantText>
+  </span>
+
+  <span v-else-if="meta.slug === 'breathing-text'" style="font-size: 32px">
+    <IuBreathingText from-font-variation-settings='"wght" 100, "slnt" 0' to-font-variation-settings='"wght" 900, "slnt" 8'>Breathing</IuBreathingText>
+  </span>
+
+  <div v-else-if="meta.slug === 'ripple'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuRipple :number-of-circles="Number(s.numberOfCircles) || 7" :wave-speed="Number(s.waveSpeed) || 80" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'interactive-grid-pattern'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuInteractiveGridPattern :width="Number(s.width) || 40" :height="Number(s.height) || 40" :squares="[24, 24]" />
+  </div>
+
+  <div v-else-if="meta.slug === 'progressive-blur'" class="demo-fit" style="height: 240px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); position: relative">
+    <p style="margin: 0; padding: 24px; font-size: 14px; line-height: 2; opacity: 0.8">底部内容逐渐模糊 —— 用于把次要信息压进渐隐层，常用于卡片底部与图片说明。</p>
+    <IuProgressiveBlur class="absolute bottom-0 left-0 right-0 h-3/5" />
+  </div>
+
+  <button v-else-if="meta.slug === 'multi-step-loader'" class="btn" type="button" @click="mslLoading = true">
+    启动加载流程
+  </button>
+
+  <div v-else-if="meta.slug === 'direction-aware-hover'" class="demo-fit" style="height: 300px; width: 100%; max-width: 520px">
+    <IuDirectionAwareHover image-url="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600" class="h-72 w-full">
+      <div style="padding: 24px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end">
+        <h4 style="margin: 0; font-size: 18px; font-weight: 700">Direction Aware</h4>
+        <p style="margin: 8px 0 0; font-size: 13px; opacity: 0.85">内容从鼠标进入的方向滑入。</p>
+      </div>
+    </IuDirectionAwareHover>
+  </div>
+
+  <div v-else-if="meta.slug === 'neon-border'" class="demo-fit" style="height: 180px; width: 100%; max-width: 520px">
+    <IuNeonBorder :color1="String(s.color1)" :color2="String(s.color2)" :duration="Number(s.duration) || 6" class="w-full rounded-xl p-10 text-center">
+      <p style="margin: 0; font-size: 14px; font-weight: 600">Neon Border 内容</p>
+    </IuNeonBorder>
+  </div>
+
+  <div v-else-if="meta.slug === 'floating-card'" class="demo-fit" style="height: 240px; width: 100%; max-width: 520px">
+    <IuFloatingCard class="w-full max-w-sm">
+      <div style="padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px">
+        <h4 style="margin: 0; font-size: 18px; font-weight: 700">Floating Card</h4>
+        <p style="margin: 10px 0 0; font-size: 13px; opacity: 0.7">鼠标悬停时卡片 3D 倾斜并出现眩光。</p>
+      </div>
+    </IuFloatingCard>
+  </div>
+
+  <span v-else-if="meta.slug === 'container-text-flip'" style="font-size: 24px; font-weight: 700">
+    打造<IuContainerTextFlip :words="ctfWords" :interval="Number(s.interval) || 3000" />的界面
+  </span>
+
+  <div v-else-if="meta.slug === 'input'" class="demo-fit" style="width: 100%; max-width: 360px">
+    <IuIInput v-model="inputValue" :placeholder="String(s.placeholder)" />
+  </div>
+
+  <div v-else-if="meta.slug === 'timeline'" style="width: 100%; max-width: 640px; max-height: 480px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px">
+    <IuTimeline :items="timelineItems" title="项目大事记" description="滚动查看进度线填充。">
+      <template #start>
+        <div style="padding: 0 24px 80px 0"><h4 style="margin: 0 0 8px; font-size: 16px; font-weight: 700">项目启动</h4><p style="margin: 0; font-size: 13px; opacity: 0.7">完成核心组件 20 个。</p></div>
+      </template>
+      <template #growth>
+        <div style="padding: 0 24px 80px 0"><h4 style="margin: 0 0 8px; font-size: 16px; font-weight: 700">生态扩展</h4><p style="margin: 0; font-size: 13px; opacity: 0.7">组件库规模翻倍，覆盖全部类别。</p></div>
+      </template>
+      <template #now>
+        <div style="padding: 0 24px 80px 0"><h4 style="margin: 0 0 8px; font-size: 16px; font-weight: 700">持续演进</h4><p style="margin: 0; font-size: 13px; opacity: 0.7">全量对齐上游，逐批移植。</p></div>
+      </template>
+    </IuTimeline>
+  </div>
+
+  <div v-else-if="meta.slug === 'tracing-beam'" style="width: 100%; max-width: 640px; border: 1px solid var(--border); border-radius: 12px">
+    <IuTracingBeam>
+      <div style="padding: 24px 24px 24px 40px; display: flex; flex-direction: column; gap: 56px">
+        <div>
+          <h4 style="margin: 0 0 8px; font-size: 16px; font-weight: 700">滚动追踪光束</h4>
+          <p style="margin: 0; font-size: 13px; line-height: 1.8; opacity: 0.7">光束随页面滚动逐渐点亮，顶部节点随之变色。</p>
+        </div>
+        <div>
+          <h4 style="margin: 0 0 8px; font-size: 16px; font-weight: 700">任意长内容</h4>
+          <p style="margin: 0; font-size: 13px; line-height: 1.8; opacity: 0.7">把长文、博客正文或文档章节放进默认插槽，光束会持续追踪阅读位置。</p>
+        </div>
+        <div>
+          <h4 style="margin: 0 0 8px; font-size: 16px; font-weight: 700">纯装饰</h4>
+          <p style="margin: 0; font-size: 13px; line-height: 1.8; opacity: 0.7">不影响内容布局，仅在左侧绘制 SVG 光束。</p>
+        </div>
+      </div>
+    </IuTracingBeam>
+  </div>
+
   <!-- Dialog 详情页的真实弹窗实例 -->
   <Teleport to="body">
     <IuDialog
@@ -446,6 +612,16 @@ const flipList = computed(() => wordsList.value.length ? wordsList.value : ['流
       </div>
     </IuDialog>
   </Teleport>
+
+  <!-- MultiStepLoader 详情页的真实全屏加载层（fixed 遮罩） -->
+  <IuMultiStepLoader
+    v-if="meta.slug === 'multi-step-loader'"
+    :steps="mslSteps"
+    :loading="mslLoading"
+    :prevent-close="Boolean(s.preventClose)"
+    @close="mslLoading = false"
+    @complete="mslLoading = false"
+  />
 </template>
 
 <style scoped>

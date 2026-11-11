@@ -76,6 +76,26 @@ const EXPECTED_DOCS = [
   'IuCompare',
   'IuLens',
   'IuAnimatedList',
+  // —— 批次 3：扩展组件 ——
+  'IuFloat',
+  'IuSparkles',
+  'IuSparklesText',
+  'IuTextGlitch',
+  'IuTextHoverEffect',
+  'IuTextReveal',
+  'IuRadiantText',
+  'IuBreathingText',
+  'IuRipple',
+  'IuInteractiveGridPattern',
+  'IuProgressiveBlur',
+  'IuMultiStepLoader',
+  'IuDirectionAwareHover',
+  'IuNeonBorder',
+  'IuFloatingCard',
+  'IuContainerTextFlip',
+  'IuIInput',
+  'IuTimeline',
+  'IuTracingBeam',
 ].sort()
 
 describe('documentation information architecture (SPA redesign)', () => {

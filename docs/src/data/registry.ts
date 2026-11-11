@@ -66,6 +66,25 @@ export type PreviewKind =
   | 'lswap'
   | 'thl'
   | 'uline'
+  | 'float'
+  | 'spk'
+  | 'stx'
+  | 'tglitch'
+  | 'thover'
+  | 'treveal'
+  | 'radiant'
+  | 'breath'
+  | 'rip'
+  | 'igp'
+  | 'pblur'
+  | 'mload'
+  | 'dah'
+  | 'neon'
+  | 'fcard'
+  | 'ctf'
+  | 'inp'
+  | 'tl'
+  | 'tbm'
 
 export interface ComponentMeta {
   /** 导出名（含 Iu 前缀） */
@@ -1307,6 +1326,469 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'delay', desc: '子元素入场间隔（毫秒）', type: 'number', def: '1000' },
     ],
     slotRows: [{ prop: 'default', desc: '列表子元素', type: '—', def: '—' }],
+  },
+  // ========= 批次 3：扩展组件 =========
+  {
+    importName: 'IuFloat', name: 'Float', zh: '漂浮容器',
+    category: '特效', desc: '内容持续上下漂浮并轻微旋转', slug: 'float', preview: 'float',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div style="perspective: 900px">',
+        '    <IuFloat>',
+        '      <div style="padding: 24px 32px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); font-size: 14px; font-weight: 600">',
+        '        漂浮的内容',
+        '      </div>',
+        '    </IuFloat>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuFloat', [], body)
+    },
+    apiRows: [
+      { prop: 'speed', desc: '漂浮速度', type: 'number', def: '0.5' },
+      { prop: 'amplitude', desc: 'X/Y/Z 漂浮幅度（px）', type: '[number, number, number]', def: '[10, 30, 30]' },
+      { prop: 'rotationRange', desc: '三轴旋转幅度（度）', type: '[number, number, number]', def: '[15, 15, 7.5]' },
+      { prop: 'timeOffset', desc: '时间偏移（多实例错开相位）', type: 'number', def: '0' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被漂浮容器包裹的内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuSparkles', name: 'Sparkles', zh: '星星粒子',
+    category: '背景', desc: 'Canvas 绘制的闪烁粒子背景', slug: 'sparkles', preview: 'spk',
+    demoState: { particleColor: '#ffffff', minSize: 1, maxSize: 2 },
+    controls: [
+      { kind: 'text', key: 'particleColor', label: '粒子颜色 Particle Color' },
+      { kind: 'number', key: 'minSize', label: '最小尺寸 Min Size', step: 0.5 },
+      { kind: 'number', key: 'maxSize', label: '最大尺寸 Max Size', step: 0.5 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['particleColor', `'${s.particleColor}'`],
+        ['minSize', String(s.minSize)],
+        ['maxSize', String(s.maxSize)],
+      ]
+      const body = [
+        '  <div style="position: relative; height: 240px; border-radius: 12px; overflow: hidden">',
+        '    <IuSparkles',
+        '      :particle-color="particleColor"',
+        '      :min-size="minSize"',
+        '      :max-size="maxSize"',
+        '      :particle-density="120"',
+        '      style="position: absolute; inset: 0"',
+        '    />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuSparkles', consts, body)
+    },
+    apiRows: [
+      { prop: 'background', desc: '画布背景色', type: 'string', def: "'#0d47a1'" },
+      { prop: 'particleColor', desc: '粒子颜色', type: 'string', def: "'#ffffff'" },
+      { prop: 'minSize / maxSize', desc: '粒子尺寸范围（px）', type: 'number', def: '1 / 3' },
+      { prop: 'particleDensity', desc: '粒子密度', type: 'number', def: '120' },
+      { prop: 'speed', desc: '粒子移动速度', type: 'number', def: '1' },
+    ],
+  },
+  {
+    importName: 'IuSparklesText', name: 'SparklesText', zh: '星星文字',
+    category: '文本', desc: '文字周围随机闪烁星星', slug: 'sparkles-text', preview: 'stx',
+    demoState: { text: 'Sparkles', sparklesCount: 10 },
+    controls: [
+      { kind: 'text', key: 'text', label: '文本 Text' },
+      { kind: 'number', key: 'sparklesCount', label: '星星数量 Sparkles Count', step: 1 },
+    ],
+    demoCode: (s) => {
+      return scriptedCode('IuSparklesText', [['text', `'${s.text}'`], ['sparklesCount', String(s.sparklesCount)]],
+        '  <IuSparklesText :text="text" :sparkles-count="sparklesCount" />')
+    },
+    apiRows: [
+      { prop: 'text', desc: '文本内容', type: 'string', def: '必填' },
+      { prop: 'sparklesCount', desc: '同时存在的星星数量', type: 'number', def: '10' },
+      { prop: 'colors', desc: '星星双色', type: '{ first: string; second: string }', def: "'#9E7AFF' / '#FE8BBB'" },
+    ],
+  },
+  {
+    importName: 'IuTextGlitch', name: 'TextGlitch', zh: '故障文字',
+    category: '文本', desc: '赛博朋克故障抖动效果', slug: 'text-glitch', preview: 'tglitch',
+    demoState: { text: 'GLITCH', speed: 0.5, enableShadows: true, enableOnHover: false },
+    controls: [
+      { kind: 'text', key: 'text', label: '文本 Text' },
+      { kind: 'number', key: 'speed', label: '速度 Speed', step: 0.1 },
+      { kind: 'switch', key: 'enableShadows', label: '红蓝色差 shadows' },
+      { kind: 'switch', key: 'enableOnHover', label: '仅悬停触发 onHover' },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [['text', `'${s.text}'`], ['speed', String(s.speed)]]
+      const body = s.enableOnHover
+        ? '  <IuTextGlitch :text="text" :speed="speed" enable-on-hover />'
+        : '  <IuTextGlitch :text="text" :speed="speed" />'
+      return scriptedCode('IuTextGlitch', consts, body)
+    },
+    apiRows: [
+      { prop: 'text', desc: '故障文本', type: 'string', def: '必填' },
+      { prop: 'speed', desc: '故障动画速度', type: 'number', def: '0.5' },
+      { prop: 'enableShadows', desc: '红/蓝色差阴影', type: 'boolean', def: 'true' },
+      { prop: 'enableOnHover', desc: '仅悬停时触发', type: 'boolean', def: 'false' },
+    ],
+  },
+  {
+    importName: 'IuTextHoverEffect', name: 'TextHoverEffect', zh: '描边文字',
+    category: '文本', desc: '描边文字跟随光标上色', slug: 'text-hover-effect', preview: 'thover',
+    demoState: { text: 'Inspira', strokeWidth: 0.75 },
+    controls: [
+      { kind: 'text', key: 'text', label: '文本 Text' },
+      { kind: 'number', key: 'strokeWidth', label: '描边宽度 Stroke Width', step: 0.25 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [['text', `'${s.text}'`], ['strokeWidth', String(s.strokeWidth)]]
+      const body = [
+        '  <div style="width: 100%; max-width: 560px">',
+        '    <IuTextHoverEffect :text="text" :stroke-width="strokeWidth" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuTextHoverEffect', consts, body)
+    },
+    apiRows: [
+      { prop: 'text', desc: '描边文本（光标附近渐显彩色）', type: 'string', def: '必填' },
+      { prop: 'strokeWidth', desc: '描边宽度', type: 'number', def: '0.75' },
+      { prop: 'duration', desc: '光斑过渡时长', type: 'number', def: '200' },
+      { prop: 'opacity', desc: '描边基础透明度', type: 'number', def: '0.75' },
+    ],
+  },
+  {
+    importName: 'IuTextReveal', name: 'TextReveal', zh: '逐词揭示',
+    category: '文本', desc: '文字逐词渐入揭示', slug: 'text-reveal', preview: 'treveal',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuTextReveal>',
+        '    <h3 style="font-size: 28px; font-weight: 700">文字逐词揭示入场</h3>',
+        '  </IuTextReveal>',
+      ].join('\n')
+      return scriptedCode('IuTextReveal', [], body)
+    },
+    apiRows: [
+      { prop: 'duration', desc: '单词入场时长（秒）', type: 'number', def: '0.6' },
+      { prop: 'delay', desc: '整体延迟（秒）', type: 'number', def: '0.2' },
+      { prop: 'stagger', desc: '单词间隔（秒）', type: 'number', def: '0.1' },
+    ],
+    slotRows: [{ prop: 'default', desc: '要揭示的富文本内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuRadiantText', name: 'RadiantText', zh: '光带文字',
+    category: '文本', desc: '光带循环扫过文字', slug: 'radiant-text', preview: 'radiant',
+    demoState: { duration: 6, radiantWidth: 100 },
+    controls: [
+      { kind: 'number', key: 'duration', label: '周期 Duration（秒）', step: 1 },
+      { kind: 'number', key: 'radiantWidth', label: '光带宽度 Radiant Width', step: 20 },
+    ],
+    demoCode: (s) => {
+      const body = [
+        '  <IuRadiantText :duration="duration" :radiant-width="radiantWidth" style="font-size: 24px; font-weight: 600">',
+        '    Radiant Text',
+        '  </IuRadiantText>',
+      ].join('\n')
+      return scriptedCode('IuRadiantText', [['duration', String(s.duration)], ['radiantWidth', String(s.radiantWidth)]], body)
+    },
+    apiRows: [
+      { prop: 'duration', desc: '光带扫过周期（秒）', type: 'number', def: '10' },
+      { prop: 'radiantWidth', desc: '光带宽度（px）', type: 'number', def: '100' },
+    ],
+    slotRows: [{ prop: 'default', desc: '文字内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuBreathingText', name: 'BreathingText', zh: '呼吸文字',
+    category: '文本', desc: '可变字重呼吸动画', slug: 'breathing-text', preview: 'breath',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        `  <IuBreathingText from-font-variation-settings='"wght" 100, "slnt" 0' to-font-variation-settings='"wght" 900, "slnt" 8' style="font-size: 32px">`,
+        '    Breathing',
+        '  </IuBreathingText>',
+      ].join('\n')
+      return scriptedCode('IuBreathingText', [], body)
+    },
+    apiRows: [
+      { prop: 'fromFontVariationSettings', desc: '起始可变字体设置', type: 'string', def: '必填' },
+      { prop: 'toFontVariationSettings', desc: '峰值可变字体设置', type: 'string', def: '必填' },
+      { prop: 'staggerDuration', desc: '字母交错延迟（秒）', type: 'number', def: '0.1' },
+      { prop: 'staggerFrom', desc: '交错起点', type: "'first' | 'last' | 'center' | number", def: "'first'" },
+      { prop: 'repeatDelay', desc: '重复间隔（秒）', type: 'number', def: '0.1' },
+    ],
+    slotRows: [{ prop: 'default', desc: '文字内容（也可用 text prop）', type: '—', def: '—' }],
+    note: '需要可变字体（variable font）才能看到字重呼吸效果',
+  },
+  {
+    importName: 'IuRipple', name: 'Ripple', zh: '涟漪圆环',
+    category: '背景', desc: '同心圆环向外扩散动画', slug: 'ripple', preview: 'rip',
+    demoState: { numberOfCircles: 7, waveSpeed: 80 },
+    controls: [
+      { kind: 'number', key: 'numberOfCircles', label: '圆环数量 Circles', step: 1 },
+      { kind: 'number', key: 'waveSpeed', label: '波动速度 Wave Speed', step: 10 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['numberOfCircles', String(s.numberOfCircles)],
+        ['waveSpeed', String(s.waveSpeed)],
+      ]
+      const body = [
+        '  <div style="position: relative; height: 300px; display: grid; place-items: center; overflow: hidden; border-radius: 12px">',
+        '    <IuRipple :number-of-circles="numberOfCircles" :wave-speed="waveSpeed" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuRipple', consts, body)
+    },
+    apiRows: [
+      { prop: 'baseCircleSize', desc: '基础圆环尺寸（px）', type: 'number', def: '210' },
+      { prop: 'numberOfCircles', desc: '圆环数量', type: 'number', def: '7' },
+      { prop: 'spaceBetweenCircle', desc: '圆环间距（px）', type: 'number', def: '70' },
+      { prop: 'waveSpeed', desc: '波动速度（毫秒/周期）', type: 'number', def: '80' },
+      { prop: 'baseCircleOpacity', desc: '基础透明度', type: 'number', def: '0.24' },
+      { prop: 'circleOpacityDowngradeRatio', desc: '逐环透明度衰减比例', type: 'number', def: '0.03' },
+      { prop: 'circleClass', desc: '圆环自定义 class', type: 'string', def: '—' },
+    ],
+    note: '组件自身铺满定位容器（absolute inset-0），请放在 relative 容器内使用',
+  },
+  {
+    importName: 'IuInteractiveGridPattern', name: 'InteractiveGridPattern', zh: '互动网格图案',
+    category: '背景', desc: '悬停点亮的网格图案', slug: 'interactive-grid-pattern', preview: 'igp',
+    demoState: { width: 40, height: 40 },
+    controls: [
+      { kind: 'number', key: 'width', label: '格子宽 Cell Width', step: 10 },
+      { kind: 'number', key: 'height', label: '格子高 Cell Height', step: 10 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [['width', String(s.width)], ['height', String(s.height)]]
+      const body = [
+        '  <div style="display: grid; place-items: center; height: 300px; border-radius: 12px; overflow: hidden">',
+        '    <IuInteractiveGridPattern :width="width" :height="height" :squares="[24, 24]" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuInteractiveGridPattern', consts, body)
+    },
+    apiRows: [
+      { prop: 'width / height', desc: '单个格子尺寸（px）', type: 'number', def: '40' },
+      { prop: 'squares', desc: '横向与纵向格子数', type: '[number, number]', def: '[24, 24]' },
+    ],
+  },
+  {
+    importName: 'IuProgressiveBlur', name: 'ProgressiveBlur', zh: '渐进模糊',
+    category: '特效', desc: '方向性渐变模糊层', slug: 'progressive-blur', preview: 'pblur',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div style="position: relative; height: 240px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">',
+        '    <p style="padding: 24px; font-size: 14px; line-height: 2">底部内容逐渐模糊 — Progressive Blur</p>',
+        '    <IuProgressiveBlur class="absolute bottom-0 left-0 right-0 h-3/5" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuProgressiveBlur', [], body)
+    },
+    apiRows: [
+      { prop: 'direction', desc: '模糊渐变方向', type: "'top' | 'bottom' | 'left' | 'right'", def: "'bottom'" },
+      { prop: 'blurLayers', desc: '渐进层数', type: 'number', def: '8' },
+      { prop: 'blurIntensity', desc: '每层模糊强度', type: 'number', def: '0.25' },
+    ],
+  },
+  {
+    importName: 'IuMultiStepLoader', name: 'MultiStepLoader', zh: '多步加载',
+    category: '数据', desc: '分步执行的全屏加载流程', slug: 'multi-step-loader', preview: 'mload',
+    demoState: { preventClose: false },
+    controls: [{ kind: 'switch', key: 'preventClose', label: '禁止手动关闭 preventClose' }],
+    demoCode: (s) => {
+      const stepsConst = "[\n    { text: '连接数据库', afterText: '数据库已连接' },\n    { text: '初始化模型', afterText: '模型就绪' },\n    { text: '启动服务', afterText: '服务运行中' },\n  ]"
+      const body = [
+        '  <IuMultiStepLoader :steps="steps" :loading="loading" :prevent-close="preventClose" @close="loading = false" />',
+        '  <button @click="loading = true">启动加载流程</button>',
+      ].join('\n')
+      return scriptedCode('IuMultiStepLoader', [['loading', 'false'], ['preventClose', s.preventClose ? 'true' : 'false'], ['steps', stepsConst]], body)
+    },
+    apiRows: [
+      { prop: 'steps', desc: '步骤数组（text / afterText / duration / action）', type: 'Step[]', def: '必填' },
+      { prop: 'loading', desc: '是否显示加载层', type: 'boolean', def: 'false' },
+      { prop: 'defaultDuration', desc: '默认步骤时长（毫秒）', type: 'number', def: '1500' },
+      { prop: 'preventClose', desc: '禁止手动关闭', type: 'boolean', def: 'false' },
+    ],
+    eventRows: [
+      { prop: 'state-change', desc: '当前步骤索引变化', type: '(index: number)', def: '—' },
+      { prop: 'complete', desc: '全部步骤完成', type: '—', def: '—' },
+      { prop: 'close', desc: '点击关闭按钮', type: '—', def: '—' },
+    ],
+    note: '加载层为 fixed 全屏遮罩（z-100 + 背景模糊）',
+  },
+  {
+    importName: 'IuDirectionAwareHover', name: 'DirectionAwareHover', zh: '方向感知悬停',
+    category: '交互', desc: '内容从鼠标进入的方向滑入', slug: 'direction-aware-hover', preview: 'dah',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuDirectionAwareHover',
+        '    image-url="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600"',
+        '    class="h-72 max-w-md"',
+        '  >',
+        '    <div class="p-6">',
+        '      <h3>Direction Aware</h3>',
+        '      <p>内容从鼠标进入的方向滑入。</p>',
+        '    </div>',
+        '  </IuDirectionAwareHover>',
+      ].join('\n')
+      return scriptedCode('IuDirectionAwareHover', [], body)
+    },
+    apiRows: [
+      { prop: 'imageUrl', desc: '背景图片地址', type: 'string', def: '必填' },
+      { prop: 'childrenClass', desc: '内容层样式（默认左下角白字）', type: 'string', def: '—' },
+      { prop: 'imageClass', desc: '图片样式', type: 'string', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '悬停时滑入的内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuNeonBorder', name: 'NeonBorder', zh: '霓虹边框',
+    category: '特效', desc: '双色霓虹扫光边框', slug: 'neon-border', preview: 'neon',
+    demoState: { color1: '#0496ff', color2: '#ff0a54', duration: 6 },
+    controls: [
+      { kind: 'text', key: 'color1', label: '颜色一 Color 1' },
+      { kind: 'text', key: 'color2', label: '颜色二 Color 2' },
+      { kind: 'number', key: 'duration', label: '周期 Duration（秒）', step: 1 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['color1', `'${s.color1}'`],
+        ['color2', `'${s.color2}'`],
+        ['duration', String(s.duration)],
+      ]
+      const body = [
+        '  <IuNeonBorder :color1="color1" :color2="color2" :duration="duration" class="rounded-xl p-8 text-center">',
+        '    <p class="m-0 text-sm font-medium">Neon Border 内容</p>',
+        '  </IuNeonBorder>',
+      ].join('\n')
+      return scriptedCode('IuNeonBorder', consts, body)
+    },
+    apiRows: [
+      { prop: 'color1 / color2', desc: '霓虹渐变双色', type: 'string', def: "'#0496ff' / '#ff0a54'" },
+      { prop: 'animationType', desc: '扫光模式', type: "'none' | 'half' | 'full'", def: "'half'" },
+      { prop: 'duration', desc: '扫光周期（秒）', type: 'number', def: '6' },
+    ],
+    slotRows: [{ prop: 'default', desc: '边框内内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuFloatingCard', name: 'FloatingCard', zh: '悬浮卡片',
+    category: '卡片', desc: '3D 倾斜 + 眩光跟随卡片', slug: 'floating-card', preview: 'fcard',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuFloatingCard class="max-w-sm">',
+        '    <div class="p-6">',
+        '      <h3 class="m-0 text-lg font-bold">Floating Card</h3>',
+        '      <p class="mt-2 mb-0 text-sm opacity-70">鼠标悬停时卡片 3D 倾斜并出现眩光。</p>',
+        '    </div>',
+        '  </IuFloatingCard>',
+      ].join('\n')
+      return scriptedCode('IuFloatingCard', [], body)
+    },
+    apiRows: [
+      { prop: 'rotateDepth', desc: '旋转幅度（度）', type: 'number', def: '17.5' },
+      { prop: 'translateDepth', desc: 'Z 轴位移深度', type: 'number', def: '20' },
+    ],
+    slotRows: [{ prop: 'default', desc: '卡片内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuContainerTextFlip', name: 'ContainerTextFlip', zh: '容器文字翻转',
+    category: '文本', desc: '词组翻转轮换容器', slug: 'container-text-flip', preview: 'ctf',
+    demoState: { words: '更好,现代,漂亮,出色', interval: 3000 },
+    controls: [
+      { kind: 'text', key: 'words', label: '轮换词（逗号分隔） Words' },
+      { kind: 'number', key: 'interval', label: '切换间隔 Interval（毫秒）', step: 500 },
+    ],
+    demoCode: (s) => {
+      const words = `[${String(s.words)
+        .split(',')
+        .map((w) => `'${w.trim()}'`)
+        .filter((w) => w !== "''")
+        .join(', ')}]`
+      const body = '  <span style="font-size: 24px; font-weight: 700">打造<IuContainerTextFlip :words="words" :interval="interval" />的界面</span>'
+      return scriptedCode('IuContainerTextFlip', [['words', words], ['interval', String(s.interval)]], body)
+    },
+    apiRows: [
+      { prop: 'words', desc: '轮换词数组', type: 'string[]', def: '["better", "modern", "beautiful", "awesome"]' },
+      { prop: 'interval', desc: '切换间隔（毫秒）', type: 'number', def: '3000' },
+      { prop: 'animationDuration', desc: '翻转动画时长（毫秒）', type: 'number', def: '700' },
+    ],
+  },
+  {
+    importName: 'IuIInput', name: 'IInput', zh: '输入框',
+    category: '交互', desc: '悬停出现光斑的输入框', slug: 'input', preview: 'inp',
+    demoState: { placeholder: '请输入邮箱地址' },
+    controls: [{ kind: 'text', key: 'placeholder', label: '占位符 Placeholder' }],
+    demoCode: (s) => {
+      const body = '  <IuIInput :placeholder="placeholder" style="width: 320px" />'
+      return scriptedCode('IuIInput', [['placeholder', `'${s.placeholder}'`]], body)
+    },
+    apiRows: [
+      { prop: 'modelValue / v-model', desc: '输入值', type: 'string | number', def: '—' },
+      { prop: 'defaultValue', desc: '非受控默认值', type: 'string | number', def: '—' },
+      { prop: 'containerClass', desc: '外层容器样式', type: 'string', def: '—' },
+    ],
+    eventRows: [
+      { prop: 'update:modelValue', desc: '输入值变化', type: '(value: string | number)', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuTimeline', name: 'Timeline', zh: '时间轴',
+    category: '交互', desc: '滚动进度驱动的渐变时间轴', slug: 'timeline', preview: 'tl',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const itemsConst = "[\n    { id: 'start', label: '2024' },\n    { id: 'growth', label: '2025' },\n    { id: 'now', label: '2026' },\n  ]"
+      const body = [
+        '  <IuTimeline :items="items" title="项目大事记" description="滚动页面查看进度线。">',
+        '    <template #start>',
+        '      <div class="pb-20"><h4>项目启动</h4><p>完成核心组件 20 个。</p></div>',
+        '    </template>',
+        '    <template #growth>',
+        '      <div class="pb-20"><h4>生态扩展</h4><p>组件库规模翻倍。</p></div>',
+        '    </template>',
+        '    <template #now>',
+        '      <div class="pb-20"><h4>持续演进</h4><p>全量对齐上游。</p></div>',
+        '    </template>',
+        '  </IuTimeline>',
+      ].join('\n')
+      return scriptedCode('IuTimeline', [['items', itemsConst]], body)
+    },
+    apiRows: [
+      { prop: 'items', desc: '时间轴节点数组', type: '{ id: string; label: string }[]', def: '[]' },
+      { prop: 'title', desc: '标题', type: 'string', def: '—' },
+      { prop: 'description', desc: '描述文字', type: 'string', def: '—' },
+    ],
+    slotRows: [
+      { prop: '#<id>', desc: '每个节点的内容插槽（以 items 中的 id 命名）', type: '—', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuTracingBeam', name: 'TracingBeam', zh: '追踪光束',
+    category: '特效', desc: '随滚动点亮的光束装饰', slug: 'tracing-beam', preview: 'tbm',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuTracingBeam>',
+        '    <div class="p-6 space-y-6">',
+        '      <h3>滚动追踪光束</h3>',
+        '      <p>光束随页面滚动逐渐点亮，顶部节点随之变色。</p>',
+        '      <p>把任意长内容放进默认插槽即可。</p>',
+        '    </div>',
+        '  </IuTracingBeam>',
+      ].join('\n')
+      return scriptedCode('IuTracingBeam', [], body)
+    },
+    apiRows: [
+      { prop: 'class', desc: '容器样式（默认 max-w-4xl 居中）', type: 'string', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '长文本内容（滚动时被光束追踪）', type: '—', def: '—' }],
   },
 
 ]
