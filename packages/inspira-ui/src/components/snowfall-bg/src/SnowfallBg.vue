@@ -21,7 +21,6 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
-import { h } from 'vue'
 import { useDevicePixelRatio } from "@vueuse/core";
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 

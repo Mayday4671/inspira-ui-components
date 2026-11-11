@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h } from 'vue'
+import {  } from 'vue'
 import { cn } from '../../../utils';
 import { createNoise3D } from "simplex-noise";
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";

@@ -5,20 +5,20 @@
  */
 import { computed, ref } from 'vue'
 import {
-  IuAnimateGrid,
   IuAnimatedCircularProgressBar,
   IuAnimatedModal,
   IuAnimatedModalBody,
+  IuAnimatedModalContent,
+  IuAnimatedModalTrigger,
   IuAnimatedTabs,
   IuAnimatedTestimonials,
-  IuBalanceSlider,
-  IuBook,
-
-  IuAnimatedModalContent,
   IuAnimatedTooltip,
-  IuAnimatedModalTrigger,
+  IuAnimateGrid,
   IuAuroraBackground,
+  IuBalanceSlider,
   IuBentoGrid,
+  IuBlackHoleBackground,
+  IuBook,
   IuBorderBeam,
   IuBoxReveal,
   IuBreathingText,
@@ -38,57 +38,78 @@ import {
   IuDockIcon,
   IuDockSeparator,
   IuEncryptedText,
+  IuFallingStarsBg,
   IuFlickeringGrid,
-  IuFloat,
-  IuFloatingCard,
   IuFlipCard,
   IuFlipWords,
+  IuFloat,
+  IuFloatingCard,
   IuFocus,
   IuGlareCard,
-  IuGradientButton,
   IuGlowBorder,
   IuGlowingEffect,
+  IuGradientButton,
   IuHighlightText,
   IuHyperText,
-  IuInteractiveGridPattern,
-  IuIPhone15ProMockup,
+  IuIInput,
   IuImagesBadge,
   IuImagesSlider,
+  IuInteractiveGridPattern,
   IuInteractiveHoverButton,
-  IuIInput,
-  IuLens,
+  IuIPhone15ProMockup,
   IuLampEffect,
+  IuLens,
   IuLetterPullup,
   IuLetterSwap,
-  IuLinkPreview,
   IuLineShadowText,
+  IuLinkPreview,
   IuMarquee,
+  IuMediaText,
   IuMeteors,
   IuMorphingText,
   IuMultiStepLoader,
   IuNeonBorder,
   IuNumberTicker,
+  IuPathMarquee,
   IuPatternBackground,
   IuProgressiveBlur,
   IuRadiantText,
   IuRainbowButton,
   IuRipple,
   IuRippleButton,
+  IuScales,
+  IuScratchToReveal,
+  IuScrewText,
+  IuScrollSwapText,
   IuShimmerButton,
+  IuSilkBackground,
+  IuSingularityBackground,
+  IuSmoothCursor,
+  IuSnowfallBg,
   IuSparkles,
   IuSparklesText,
   IuSpinningText,
+  IuStarsBackground,
   IuStatistic,
+  IuStractiumBackground,
+  IuSVGMask,
+  IuText3d,
   IuTextGenerateEffect,
   IuTextGlitch,
   IuTextHighlight,
   IuTextHoverEffect,
-  IuTree,
   IuTextReveal,
+  IuThunderstormBackground,
   IuTimeline,
   IuTracingBeam,
+  IuTree,
   IuTypewriterText,
   IuUnderlineText,
+  IuVanishingInput,
+  IuVariableLetterText,
+  IuVariableText,
+  IuVortex,
+  IuWavyBackground,
 } from 'inspira-ui-components'
 import type { ComponentMeta } from '../data/registry'
 
@@ -189,6 +210,9 @@ const testimonialData = [
   { quote: '这套组件库让我们的动效页面交付速度快了三倍。', name: '张伟', designation: '前端负责人', image: avatar('Zhang Wei', '#6366f1') },
   { quote: '类型完备，暗色模式开箱即用。', name: '李娜', designation: 'UI 设计师', image: avatar('Li Na', '#ec4899') },
 ]
+
+const vtextContainer = ref<HTMLElement | null>(null)
+const sswapContainer = ref<HTMLElement | null>(null)
 
 const timelineItems = [
   { id: 'start', label: '2024' },
@@ -791,6 +815,130 @@ const timelineItems = [
 
   <div v-else-if="meta.slug === 'animate-grid'" class="demo-fit" style="height: 420px; width: 100%; max-width: 560px">
     <IuAnimateGrid :cards="gridCards" style="width: 100%" />
+  </div>
+
+  <!-- ============ 批次 5：扩展组件 ============ -->
+  <div v-else-if="meta.slug === 'smooth-cursor'" class="demo-fit" style="height: 200px; cursor: none">
+    <IuSmoothCursor />
+    <span style="font-size: 14px; opacity: 0.7">移动鼠标，弹簧光标跟随</span>
+  </div>
+
+  <div v-else-if="meta.slug === 'wavy-background'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuWavyBackground :wave-width="Number(s.waveWidth) || 50" :blur="Number(s.blur) || 10" :wave-opacity="Number(s.waveOpacity) || 0.5" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'vortex'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuVortex :base-hue="220" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-stars'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #000">
+    <IuStarsBackground :factor="Number(s.factor) || 0.05" :speed="Number(s.speed) || 0.8" :star-color="String(s.starColor)" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-black-hole'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #000">
+    <IuBlackHoleBackground style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-falling-stars'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #020205">
+    <IuFallingStarsBg :color="String(s.color)" :count="Number(s.count) || 200" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-silk'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuSilkBackground :hue="Number(s.hue) || 300" :saturation="Number(s.saturation) || 0.5" :brightness="Number(s.brightness) || 1" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-singularity'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuSingularityBackground :hue="Number(s.hue) || 260" :saturation="Number(s.saturation) || 0.6" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-thunderstorm'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuThunderstormBackground style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'bg-stractium'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuStractiumBackground style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'snowfall-bg'" class="demo-fit" style="height: 280px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #0f172a">
+    <IuSnowfallBg :color="String(s.color)" :quantity="Number(s.quantity) || 120" :speed="Number(s.speed) || 1" style="position: absolute; inset: 0" />
+  </div>
+
+  <span v-else-if="meta.slug === 'screw-text'" style="font-size: 34px; font-weight: 800">
+    <IuScrewText :label="String(s.label)" :rotate-direction="(s.rotateDirection as 'right' | 'left')" />
+  </span>
+
+  <div v-else-if="meta.slug === 'variable-text'" class="demo-fit" style="height: 200px" ref="vtextContainer">
+    <IuVariableText
+      label="VARIABLE WEIGHT"
+      :container-ref="vtextContainer"
+      from-font-variation-settings="'wght' 100, 'slnt' 0"
+      to-font-variation-settings="'wght' 900, 'slnt' 8"
+      :radius="130"
+      style="font-size: 32px"
+    />
+  </div>
+
+  <span v-else-if="meta.slug === 'variable-letter-text'" style="font-size: 30px">
+    <IuVariableLetterText label="LETTER WEIGHT" />
+  </span>
+
+  <div v-else-if="meta.slug === 'scroll-swap-text'" class="demo-fit" style="height: 220px; width: 100%; max-width: 480px" ref="sswapContainer">
+    <IuScrollSwapText :container-ref="sswapContainer" text="向下滚动" style="font-size: 28px; font-weight: 700" />
+  </div>
+
+  <div v-else-if="meta.slug === 'scratch-to-reveal'" class="demo-fit" style="height: 260px">
+    <IuScratchToReveal :width="Number(s.width) || 280" :height="Number(s.height) || 180" :min-scratch-percentage="Number(s.minScratchPercentage) || 50">
+      <div style="width: 100%; height: 100%; display: grid; place-items: center; font-size: 18px; font-weight: 700">🎉 恭喜中奖</div>
+    </IuScratchToReveal>
+  </div>
+
+  <div v-else-if="meta.slug === 'media-text'" class="demo-fit" style="width: 100%; max-width: 560px; padding: 16px 0">
+    <IuMediaText
+      first-text="灵感闪现的瞬间"
+      second-text="画面随之展开"
+      media-url="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600"
+      media-type="image"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'path-marquee'" class="demo-fit" style="height: 200px; width: 100%; max-width: 640px">
+    <IuPathMarquee
+      path="M 20 100 C 200 10, 400 190, 620 100"
+      text="Inspira UI · 动效组件 · Inspira UI · 动效组件"
+      :base-velocity="2"
+      :show-path="false"
+      style="width: 100%"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'vanishing-input'" class="demo-fit" style="width: 100%; max-width: 480px">
+    <IuVanishingInput :placeholders="['输入点什么…', '按下回车见证消失']" />
+  </div>
+
+  <div v-else-if="meta.slug === 'svg-mask'" class="demo-fit" style="height: 320px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuSVGMask class="h-full" :size="40" :reveal-size="600" style="height: 100%">
+      <img
+        src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800"
+        alt="mask"
+        style="width: 100%; height: 100%; object-fit: cover"
+      >
+    </IuSVGMask>
+  </div>
+
+  <div v-else-if="meta.slug === 'scales'" class="demo-fit" style="height: 240px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
+    <IuScales :size="Number(s.size) || 10" :orientation="(s.orientation as 'horizontal' | 'vertical' | 'diagonal')" style="position: absolute; inset: 0" />
+  </div>
+
+  <div v-else-if="meta.slug === 'text-3d'" class="demo-fit" style="height: 180px">
+    <IuText3d
+      :text-color="String(s.textColor)"
+      :stroke-color="String(s.strokeColor)"
+      :shadow-color="String(s.shadowColor)"
+      :animate="Boolean(s.animate)"
+      style="font-size: 48px; font-weight: 900"
+    >
+      3D TEXT
+    </IuText3d>
   </div>
 
   <!-- Dialog 详情页的真实弹窗实例 -->

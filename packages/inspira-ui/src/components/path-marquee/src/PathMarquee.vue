@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { HTMLAttributes, VNode } from "vue";
+import type { ComponentPublicInstance, HTMLAttributes, VNode } from "vue";
 
 export type PreserveAspectRatioAlign =
   | "none"
@@ -174,7 +174,7 @@ function wrap(min: number, max: number, value: number) {
   return ((((value - min) % range) + range) % range) + min;
 }
 
-function setItemRef(key: string, element: Element | null) {
+function setItemRef(key: string, element: Element | ComponentPublicInstance | null) {
   if (element instanceof HTMLElement) {
     itemElements.set(key, element);
     element.style.setProperty("offset-path", `path('${props.path}')`);

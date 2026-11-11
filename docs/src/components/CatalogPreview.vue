@@ -6,15 +6,16 @@
  */
 import { computed } from 'vue'
 import {
-  IuAnimateGrid,
   IuAnimatedCircularProgressBar,
   IuAnimatedTabs,
   IuAnimatedTestimonials,
   IuAnimatedTooltip,
+  IuAnimateGrid,
   IuAuroraBackground,
   IuBalanceSlider,
-  IuBook,
   IuBentoGrid,
+  IuBlackHoleBackground,
+  IuBook,
   IuBorderBeam,
   IuBoxReveal,
   IuBreathingText,
@@ -32,57 +33,77 @@ import {
   IuDock,
   IuDockIcon,
   IuEncryptedText,
+  IuFallingStarsBg,
   IuFlickeringGrid,
-  IuFloat,
-  IuFloatingCard,
   IuFlipCard,
   IuFlipWords,
+  IuFloat,
+  IuFloatingCard,
   IuFocus,
   IuGlareCard,
-  IuGradientButton,
   IuGlowBorder,
   IuGlowingEffect,
+  IuGradientButton,
   IuHighlightText,
   IuHyperText,
-  IuInteractiveGridPattern,
-  IuIPhone15ProMockup,
+  IuIInput,
   IuImagesBadge,
   IuImagesSlider,
+  IuInteractiveGridPattern,
   IuInteractiveHoverButton,
-  IuIInput,
-  IuLens,
+  IuIPhone15ProMockup,
   IuLampEffect,
+  IuLens,
   IuLetterPullup,
   IuLetterSwap,
-  IuLinkPreview,
   IuLineShadowText,
+  IuLinkPreview,
   IuMarquee,
+  IuMediaText,
   IuMeteors,
   IuMorphingText,
   IuMultiStepLoader,
   IuNeonBorder,
   IuNumberTicker,
+  IuPathMarquee,
   IuPatternBackground,
   IuProgressiveBlur,
   IuRadiantText,
   IuRainbowButton,
   IuRipple,
   IuRippleButton,
+  IuScales,
+  IuScratchToReveal,
+  IuScrewText,
+  IuScrollSwapText,
   IuShimmerButton,
+  IuSilkBackground,
+  IuSingularityBackground,
+  IuSmoothCursor,
+  IuSnowfallBg,
   IuSparkles,
   IuSparklesText,
   IuSpinningText,
+  IuStarsBackground,
   IuStatistic,
+  IuStractiumBackground,
+  IuSVGMask,
+  IuText3d,
   IuTextGenerateEffect,
   IuTextGlitch,
   IuTextHighlight,
   IuTextHoverEffect,
-  IuTree,
   IuTextReveal,
+  IuThunderstormBackground,
   IuTimeline,
   IuTracingBeam,
+  IuTree,
   IuTypewriterText,
   IuUnderlineText,
+  IuVanishingInput,
+  IuVariableLetterText,
+  IuVortex,
+  IuWavyBackground,
 } from 'inspira-ui-components'
 import { ref } from 'vue'
 import type { PreviewKind } from '../data/registry'
@@ -90,6 +111,7 @@ import type { PreviewKind } from '../data/registry'
 const props = defineProps<{ kind: PreviewKind }>()
 
 const dialogOpen = ref(false)
+const sswapBox = ref<HTMLElement | null>(null)
 const mloadOpen = ref(false)
 
 /** 各预览的视觉缩放（真实组件按原始尺寸渲染，仅缩放呈现） */
@@ -593,6 +615,108 @@ const auroraHeight = '128px'
       />
     </div>
 
+
+    <!-- ============ 批次 5 预览 ============ -->
+    <div v-else-if="kind === 'scursor'" class="scaled-box" style="width: 210px; height: 110px; cursor: none; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px">
+      <IuSmoothCursor />
+      <span style="font-size: 11px; opacity: 0.7">移动鼠标</span>
+    </div>
+
+    <div v-else-if="kind === 'wavy'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuWavyBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'vortex'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuVortex style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'bstar'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; background: #000">
+      <IuStarsBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'bhola'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; background: #000">
+      <IuBlackHoleBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'bfall'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; background: #020205">
+      <IuFallingStarsBg :count="120" style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'bsilk'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuSilkBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'bsing'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuSingularityBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'bthun'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuThunderstormBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'bstrac'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative">
+      <IuStractiumBackground style="position: absolute; inset: 0" />
+    </div>
+
+    <div v-else-if="kind === 'snow'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; background: #0f172a">
+      <IuSnowfallBg :quantity="90" style="position: absolute; inset: 0" />
+    </div>
+
+    <span v-else-if="kind === 'screw'" style="font-size: 16px; font-weight: 800">
+      <IuScrewText label="SCREW" />
+    </span>
+
+    <span v-else-if="kind === 'vtext'" style="font-size: 15px">
+      <IuVariableLetterText label="V-TEXT" />
+    </span>
+
+    <span v-else-if="kind === 'vltext'" style="font-size: 14px">
+      <IuVariableLetterText label="LETTERS" />
+    </span>
+
+    <div v-else-if="kind === 'sswap'" class="scaled-box" style="width: 210px; height: 120px; border: 1px solid var(--border); border-radius: 10px; overflow-y: auto" ref="sswapBox">
+      <div style="height: 200px; padding: 14px; box-sizing: border-box">
+        <IuScrollSwapText :container-ref="sswapBox" text="滚动" style="font-size: 16px; font-weight: 700" />
+      </div>
+    </div>
+
+    <div v-else-if="kind === 'scratch'" class="scaled-box" style="width: 210px; height: 130px; display: grid; place-items: center">
+      <IuScratchToReveal :width="180" :height="110">
+        <div style="width: 100%; height: 100%; display: grid; place-items: center; font-size: 14px; font-weight: 700">🎉 中奖</div>
+      </IuScratchToReveal>
+    </div>
+
+    <div v-else-if="kind === 'mtext'" class="scaled-box" style="width: 220px; padding: 8px">
+      <IuMediaText
+        first-text="灵感瞬间"
+        second-text="画面展开"
+        media-url="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400"
+        media-type="image"
+        style="pointer-events: none"
+      />
+    </div>
+
+    <div v-else-if="kind === 'pmarq'" class="scaled-box" style="width: 220px; height: 120px">
+      <IuPathMarquee path="M 10 60 C 80 10, 150 110, 210 60" text="路径循环 ·" :base-velocity="2" :show-path="false" style="width: 100%" />
+    </div>
+
+    <div v-else-if="kind === 'vinput'" class="scaled-box" style="width: 210px; display: grid; place-items: center">
+      <IuVanishingInput :placeholders="['回车试试…']" style="width: 190px" />
+    </div>
+
+    <div v-else-if="kind === 'smask'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden">
+      <IuSVGMask class="h-full" :size="30" :reveal-size="400" style="height: 100%">
+        <img src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400" alt="" style="width: 100%; height: 100%; object-fit: cover">
+      </IuSVGMask>
+    </div>
+
+    <div v-else-if="kind === 'scscale'" class="scaled-box" style="width: 210px; height: 120px; border-radius: 10px; overflow: hidden; position: relative; border: 1px solid var(--border)">
+      <IuScales :size="10" style="position: absolute; inset: 0" />
+    </div>
+
+    <span v-else-if="kind === 't3d'" style="font-size: 22px; font-weight: 900">
+      <IuText3d text-color="#FFFFFF" stroke-color="#000000" shadow-color="#6366F1">3D</IuText3d>
+    </span>
 
     <!-- 真实 IuDialog：teleport 到 body，受预览容器控制 -->
     <Teleport to="body">

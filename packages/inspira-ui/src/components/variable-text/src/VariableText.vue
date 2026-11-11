@@ -49,13 +49,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 const FONT_VARIATION_PATTERN = /['"]?([A-Z0-9]{4})['"]?\s+(-?\d*\.?\d+)/gi;
 
-const [scope, animate] = useAnimate();
+const [, animate] = useAnimate();
 const letterRefs = ref<(HTMLElement | null)[]>([]);
 const shuffledIndices = ref<number[]>([]);
 const letters = computed(() => [...props.label]);
 const containerTarget = computed(() => props.containerRef);
 
-const { elementX, elementY, isOutside } = useMouseInElement(containerTarget);
+const { elementX, elementY, isOutside } = useMouseInElement(containerTarget as never);
 
 function parseFontVariationSettings(settings: string): Map<string, number> {
   const axes = new Map<string, number>();

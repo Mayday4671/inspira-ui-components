@@ -104,6 +104,28 @@ export type PreviewKind =
   | 'ibadge'
   | 'htext'
   | 'agrid'
+  | 'scursor'
+  | 'wavy'
+  | 'vortex'
+  | 'bstar'
+  | 'bhola'
+  | 'bfall'
+  | 'bsilk'
+  | 'bsing'
+  | 'bthun'
+  | 'bstrac'
+  | 'snow'
+  | 'screw'
+  | 'vtext'
+  | 'vltext'
+  | 'sswap'
+  | 'scratch'
+  | 'mtext'
+  | 'pmarq'
+  | 'vinput'
+  | 'smask'
+  | 'scscale'
+  | 't3d'
 
 export interface ComponentMeta {
   /** 导出名（含 Iu 前缀） */
@@ -194,7 +216,7 @@ function staticCode(template: string, importName: string): string {
 /** 生成「数据定义在 script setup、模板只引用」的标准示例代码 */
 function scriptedCode(
   name: string,
-  consts: Array<[string, string]>,
+  consts: Array<[string, string]> | string[][],
   body: string,
 ): string {
   const constLines = consts.map(([k, v]) => `const ${k} = ${v}`).join('\n')
@@ -2255,6 +2277,523 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'textGlowStartColor / textGlowEndColor', desc: '文字光晕色', type: 'string', def: "'#38ef7d80' / '#38ef7d'" },
     ],
   },
+
+  // ========= 批次 5：扩展组件 =========
+  {
+    importName: 'IuSmoothCursor', name: 'SmoothCursor', zh: '弹性光标',
+    category: '交互', desc: '弹簧跟随的自定义光标', slug: 'smooth-cursor', preview: 'scursor',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="flex h-40 items-center justify-center rounded-xl border" style="cursor: none">',
+        '    <IuSmoothCursor />',
+        '    <span class="text-sm opacity-70">移动鼠标，弹簧光标跟随</span>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuSmoothCursor', [], body)
+    },
+    apiRows: [
+      { prop: 'cursor', desc: '自定义光标组件', type: 'Component', def: '默认圆点' },
+      { prop: 'springConfig', desc: '弹簧参数（damping/stiffness/mass/restDelta）', type: 'object', def: '—' },
+    ],
+    note: '组件会隐藏系统光标，请在演示区域移动鼠标查看效果',
+  },
+  {
+    importName: 'IuWavyBackground', name: 'WavyBackground', zh: '波浪背景',
+    category: '背景', desc: '多条渐变波浪线流动', slug: 'wavy-background', preview: 'wavy',
+    demoState: { waveWidth: 50, blur: 10, waveOpacity: 0.5 },
+    controls: [
+      { kind: 'number', key: 'waveWidth', label: '波宽 Wave Width', step: 10 },
+      { kind: 'number', key: 'blur', label: '模糊 Blur', step: 2 },
+      { kind: 'number', key: 'waveOpacity', label: '透明度 Opacity', step: 0.1 },
+    ],
+    demoCode: (s) => {
+      const consts = [['waveWidth', String(s.waveWidth)], ['blur', String(s.blur)], ['waveOpacity', String(s.waveOpacity)]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuWavyBackground :wave-width="waveWidth" :blur="blur" :wave-opacity="waveOpacity" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuWavyBackground', consts, body)
+    },
+    apiRows: [
+      { prop: 'colors', desc: '波浪渐变五色', type: 'string[]', def: '五种蓝紫渐变' },
+      { prop: 'waveWidth', desc: '波浪宽度', type: 'number', def: '50' },
+      { prop: 'backgroundFill', desc: '底色', type: 'string', def: "'black'" },
+      { prop: 'blur', desc: '模糊半径', type: 'number', def: '10' },
+      { prop: 'speed', desc: '速度', type: "'slow' | 'fast'", def: "'fast'" },
+      { prop: 'waveOpacity', desc: '波浪透明度（0-1）', type: 'number', def: '0.5' },
+    ],
+    note: '组件自带黑色底，深浅色模式下观感一致',
+  },
+  {
+    importName: 'IuVortex', name: 'Vortex', zh: '漩涡粒子',
+    category: '背景', desc: '向内汇聚的彩色粒子漩涡', slug: 'vortex', preview: 'vortex',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuVortex base-hue="220" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuVortex', [], body)
+    },
+    apiRows: [
+      { prop: 'particleCount', desc: '粒子数量', type: 'number', def: '700' },
+      { prop: 'rangeY', desc: '纵向分布范围', type: 'number', def: '100' },
+      { prop: 'baseHue', desc: '基础色相', type: 'number', def: '随机' },
+      { prop: 'baseSpeed / rangeSpeed', desc: '基础/随机速度', type: 'number', def: '0 / 0' },
+      { prop: 'baseRadius / rangeRadius', desc: '基础/随机半径', type: 'number', def: '1 / 2' },
+      { prop: 'backgroundColor', desc: '底色', type: 'string', def: "'black'" },
+    ],
+  },
+  {
+    importName: 'IuStarsBackground', name: 'StarsBackground', zh: '星空背景',
+    category: '背景', desc: '视差跟随的闪烁星空', slug: 'bg-stars', preview: 'bstar',
+    demoState: { factor: 0.05, speed: 0.8, starColor: '#FFF' },
+    controls: [
+      { kind: 'number', key: 'factor', label: '视差系数 Factor', step: 0.01 },
+      { kind: 'number', key: 'speed', label: '速度 Speed', step: 0.1 },
+      { kind: 'text', key: 'starColor', label: '星星颜色 Star Color' },
+    ],
+    demoCode: (s) => {
+      const consts = [['factor', String(s.factor)], ['speed', String(s.speed)], ['starColor', "'" + s.starColor + "'"]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '    <IuStarsBackground :factor="factor" :speed="speed" :star-color="starColor" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuStarsBackground', consts, body)
+    },
+    apiRows: [
+      { prop: 'factor', desc: '鼠标视差系数', type: 'number', def: '0.05' },
+      { prop: 'speed', desc: '回弹速度', type: 'number', def: '0.8' },
+      { prop: 'starColor', desc: '星星颜色', type: 'string', def: "'#FFF'" },
+    ],
+  },
+  {
+    importName: 'IuBlackHoleBackground', name: 'BlackHoleBackground', zh: '黑洞背景',
+    category: '背景', desc: '同心圆盘旋转的黑洞', slug: 'bg-black-hole', preview: 'bhola',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '    <IuBlackHoleBackground style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuBlackHoleBackground', [], body)
+    },
+    apiRows: [
+      { prop: 'strokeColor', desc: '圆盘描边色', type: 'string', def: "'white'" },
+      { prop: 'numberOfLines', desc: '线条组数', type: 'number', def: '—' },
+      { prop: 'numberOfDiscs', desc: '圆盘数量', type: 'number', def: '—' },
+      { prop: 'particleRGBColor', desc: '粒子颜色（RGB 三元组）', type: '[number, number, number]', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuFallingStarsBg', name: 'FallingStarsBg', zh: '坠落流星',
+    category: '背景', desc: 'canvas 流星划落动画', slug: 'bg-falling-stars', preview: 'bfall',
+    demoState: { color: '#FFF', count: 200 },
+    controls: [
+      { kind: 'text', key: 'color', label: '流星颜色 Color' },
+      { kind: 'number', key: 'count', label: '数量 Count', step: 10 },
+    ],
+    demoCode: (s) => {
+      const consts = [['color', "'" + s.color + "'"], ['count', String(s.count)]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '    <IuFallingStarsBg :color="color" :count="count" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuFallingStarsBg', consts, body)
+    },
+    apiRows: [
+      { prop: 'color', desc: '流星颜色', type: 'string', def: "'#FFF'" },
+      { prop: 'count', desc: '流星数量', type: 'number', def: '200' },
+    ],
+  },
+  {
+    importName: 'IuSilkBackground', name: 'SilkBackground', zh: '丝绸背景',
+    category: '背景', desc: '流动丝绸质感渐变', slug: 'bg-silk', preview: 'bsilk',
+    demoState: { hue: 300, saturation: 0.5, brightness: 1 },
+    controls: [
+      { kind: 'number', key: 'hue', label: '色相 Hue', step: 10 },
+      { kind: 'number', key: 'saturation', label: '饱和度 Saturation', step: 0.1 },
+      { kind: 'number', key: 'brightness', label: '亮度 Brightness', step: 0.1 },
+    ],
+    demoCode: (s) => {
+      const consts = [['hue', String(s.hue)], ['saturation', String(s.saturation)], ['brightness', String(s.brightness)]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuSilkBackground :hue="hue" :saturation="saturation" :brightness="brightness" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuSilkBackground', consts, body)
+    },
+    apiRows: [
+      { prop: 'hue', desc: '色相（0-360）', type: 'number', def: '300' },
+      { prop: 'saturation', desc: '饱和度', type: 'number', def: '0.5' },
+      { prop: 'brightness', desc: '亮度', type: 'number', def: '1' },
+      { prop: 'speed', desc: '流速', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuSingularityBackground', name: 'SingularityBackground', zh: '奇点背景',
+    category: '背景', desc: '鼠标互动的奇点流场', slug: 'bg-singularity', preview: 'bsing',
+    demoState: { hue: 260, saturation: 0.6 },
+    controls: [
+      { kind: 'number', key: 'hue', label: '色相 Hue', step: 10 },
+      { kind: 'number', key: 'saturation', label: '饱和度 Saturation', step: 0.1 },
+    ],
+    demoCode: (s) => {
+      const consts = [['hue', String(s.hue)], ['saturation', String(s.saturation)]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuSingularityBackground :hue="hue" :saturation="saturation" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuSingularityBackground', consts, body)
+    },
+    apiRows: [
+      { prop: 'hue / saturation / brightness', desc: '流场颜色', type: 'number', def: '—' },
+      { prop: 'mouseSensitivity', desc: '鼠标敏感度', type: 'number', def: '—' },
+      { prop: 'damping', desc: '阻尼', type: 'number', def: '—' },
+      { prop: 'noise', desc: '噪点（opacity / scale）', type: '{ opacity: number; scale: number }', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuThunderstormBackground', name: 'ThunderstormBackground', zh: '雷暴背景',
+    category: '背景', desc: '闪电交加的动态雷雨', slug: 'bg-thunderstorm', preview: 'bthun',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuThunderstormBackground style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuThunderstormBackground', [], body)
+    },
+    apiRows: [
+      { prop: 'hue / saturation / brightness', desc: '云层颜色', type: 'number', def: '—' },
+      { prop: 'speed', desc: '雷暴节奏', type: 'number', def: '—' },
+      { prop: 'noise', desc: '噪点（opacity / scale）', type: '{ opacity: number; scale: number }', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuStractiumBackground', name: 'StractiumBackground', zh: '岩浆背景',
+    category: '背景', desc: '熔岩流动质感背景', slug: 'bg-stractium', preview: 'bstrac',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '    <IuStractiumBackground style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuStractiumBackground', [], body)
+    },
+    apiRows: [
+      { prop: 'hue / saturation / brightness', desc: '岩浆颜色', type: 'number', def: '—' },
+      { prop: 'speed', desc: '流速', type: 'number', def: '—' },
+      { prop: 'noise', desc: '噪点（opacity / scale）', type: '{ opacity: number; scale: number }', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuSnowfallBg', name: 'SnowfallBg', zh: '飘雪背景',
+    category: '背景', desc: 'canvas 飘雪动画', slug: 'snowfall-bg', preview: 'snow',
+    demoState: { color: '#FFFFFF', quantity: 120, speed: 1 },
+    controls: [
+      { kind: 'text', key: 'color', label: '雪花颜色 Color' },
+      { kind: 'number', key: 'quantity', label: '数量 Quantity', step: 10 },
+      { kind: 'number', key: 'speed', label: '速度 Speed', step: 0.5 },
+    ],
+    demoCode: (s) => {
+      const consts = [['color', "'" + s.color + "'"], ['quantity', String(s.quantity)], ['speed', String(s.speed)]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border bg-slate-900" style="height: 280px">',
+        '    <IuSnowfallBg :color="color" :quantity="quantity" :speed="speed" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuSnowfallBg', consts, body)
+    },
+    apiRows: [
+      { prop: 'color', desc: '雪花颜色', type: 'string', def: '—' },
+      { prop: 'quantity', desc: '雪花数量', type: 'number', def: '—' },
+      { prop: 'speed', desc: '下落速度', type: 'number', def: '—' },
+      { prop: 'minRadius / maxRadius', desc: '雪花半径范围（px）', type: 'number', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuScrewText', name: 'ScrewText', zh: '螺旋文字',
+    category: '文本', desc: '字符螺旋翻转入场', slug: 'screw-text', preview: 'screw',
+    demoState: { label: 'SCREW', rotateDirection: 'right' },
+    controls: [
+      { kind: 'text', key: 'label', label: '文本 Label' },
+      { kind: 'select', key: 'rotateDirection', label: '旋转方向 Direction', options: [{ label: 'right', value: 'right' }, { label: 'left', value: 'left' }] },
+    ],
+    demoCode: (s) => {
+      const consts = [['label', "'" + s.label + "'"], ['rotateDirection', "'" + s.rotateDirection + "'"]]
+      const body = '  <IuScrewText :label="label" :rotate-direction="rotateDirection" style="font-size: 34px; font-weight: 800" />'
+      return scriptedCode('IuScrewText', consts, body)
+    },
+    apiRows: [
+      { prop: 'label', desc: '文本内容', type: 'string', def: '必填' },
+      { prop: 'rotateDirection', desc: '螺旋方向', type: "'right' | 'left'", def: "'right'" },
+      { prop: 'staggerDuration', desc: '字符间隔（秒）', type: 'number', def: '0.05' },
+      { prop: 'staggerFrom', desc: '交错起点', type: "'first' | 'last' | 'center' | number", def: "'first'" },
+    ],
+  },
+  {
+    importName: 'IuVariableText', name: 'VariableText', zh: '可变文字',
+    category: '文本', desc: '鼠标周围字重渐变', slug: 'variable-text', preview: 'vtext',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div ref="container">',
+        '    <IuVariableText',
+        '      label="VARIABLE WEIGHT"',
+        '      :container-ref="container"',
+        '      from-font-variation-settings="\'wght\' 100, \'slnt\' 0"',
+        '      to-font-variation-settings="\'wght\' 900, \'slnt\' 8"',
+        '      :radius="120"',
+        '      style="font-size: 32px"',
+        '    />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuVariableText', [['container', 'useTemplateRef(\'container\')']], body)
+    },
+    apiRows: [
+      { prop: 'label', desc: '文本内容', type: 'string', def: '必填' },
+      { prop: 'containerRef', desc: '鼠标追踪容器（useTemplateRef）', type: 'MaybeComputedElementRef', def: '必填' },
+      { prop: 'fromFontVariationSettings', desc: '起始可变字体设置', type: 'string', def: '必填' },
+      { prop: 'toFontVariationSettings', desc: '峰值可变字体设置', type: 'string', def: '必填' },
+      { prop: 'radius', desc: '影响半径（px）', type: 'number', def: '—' },
+      { prop: 'falloff', desc: '衰减曲线', type: 'Falloff', def: '—' },
+    ],
+    note: '需要可变字体才能看到字重变化',
+  },
+  {
+    importName: 'IuVariableLetterText', name: 'VariableLetterText', zh: '逐字可变文字',
+    category: '文本', desc: '字符字重交错呼吸', slug: 'variable-letter-text', preview: 'vltext',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = '  <IuVariableLetterText label="LETTER WEIGHT" style="font-size: 30px" />'
+      return scriptedCode('IuVariableLetterText', [], body)
+    },
+    apiRows: [
+      { prop: 'label', desc: '文本内容', type: 'string', def: '必填' },
+      { prop: 'fromFontVariationSettings', desc: '起始设置', type: 'string', def: "'wght' 400" },
+      { prop: 'toFontVariationSettings', desc: '峰值设置', type: 'string', def: "'wght' 900" },
+      { prop: 'staggerDuration', desc: '交错延迟（秒）', type: 'number', def: '0.03' },
+      { prop: 'staggerFrom', desc: '交错起点', type: "'first' | 'last' | 'center' | number", def: "'first'" },
+    ],
+    note: '需要可变字体才能看到字重变化',
+  },
+  {
+    importName: 'IuScrollSwapText', name: 'ScrollSwapText', zh: '滚动换字',
+    category: '文本', desc: '随滚动上下换位的文字', slug: 'scroll-swap-text', preview: 'sswap',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div ref="container" class="h-40 overflow-auto rounded-xl border">',
+        '    <div class="h-80 p-6">',
+        '      <IuScrollSwapText :container-ref="container" text="向下滚动" style="font-size: 28px; font-weight: 700" />',
+        '    </div>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuScrollSwapText', [['container', 'useTemplateRef(\'container\')']], body)
+    },
+    apiRows: [
+      { prop: 'containerRef', desc: '滚动容器（useTemplateRef）', type: 'MaybeComputedElementRef', def: '必填' },
+      { prop: 'text', desc: '文字（默认取插槽）', type: 'string', def: '—' },
+      { prop: 'offset', desc: '滚动触发偏移', type: '[string, string]', def: '—' },
+      { prop: 'springConfig', desc: '弹簧参数', type: 'SpringConfig', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '文字内容（text 为空时使用）', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuScratchToReveal', name: 'ScratchToReveal', zh: '刮刮卡',
+    category: '特效', desc: '刮开涂层显示内容', slug: 'scratch-to-reveal', preview: 'scratch',
+    demoState: { width: 280, height: 180, minScratchPercentage: 50 },
+    controls: [
+      { kind: 'number', key: 'width', label: '宽 Width', step: 20 },
+      { kind: 'number', key: 'height', label: '高 Height', step: 20 },
+      { kind: 'number', key: 'minScratchPercentage', label: '完成阈值（%）', step: 10 },
+    ],
+    demoCode: (s) => {
+      const consts = [['width', String(s.width)], ['height', String(s.height)], ['minScratchPercentage', String(s.minScratchPercentage)]]
+      const body = [
+        '  <IuScratchToReveal :width="width" :height="height" :min-scratch-percentage="minScratchPercentage" @complete="onComplete">',
+        '    <div class="flex size-full items-center justify-center text-lg font-bold">🎉 恭喜中奖</div>',
+        '  </IuScratchToReveal>',
+      ].join('\n')
+      return scriptedCode('IuScratchToReveal', consts, body)
+    },
+    apiRows: [
+      { prop: 'width / height', desc: '刮卡区域尺寸（px）', type: 'number', def: '必填' },
+      { prop: 'minScratchPercentage', desc: '判定完成的刮开比例（%）', type: 'number', def: '50' },
+      { prop: 'gradientColors', desc: '涂层渐变色', type: '[string, string, string]', def: '粉紫橙' },
+    ],
+    eventRows: [{ prop: 'complete', desc: '刮开达标时触发', type: '—', def: '—' }],
+    slotRows: [{ prop: 'default', desc: '涂层下的内容', type: '—', def: '—' }],
+    note: '鼠标按住刮擦涂层，触屏同样支持',
+  },
+  {
+    importName: 'IuMediaText', name: 'MediaText', zh: '图文展开',
+    category: '特效', desc: '媒体随文字逐词展开', slug: 'media-text', preview: 'mtext',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuMediaText',
+        '    first-text="灵感闪现的瞬间"',
+        '    second-text="画面随之展开"',
+        '    media-url="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600"',
+        '    media-type="image"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuMediaText', [], body)
+    },
+    apiRows: [
+      { prop: 'firstText / secondText', desc: '媒体前后的文字', type: 'string', def: '必填' },
+      { prop: 'mediaUrl', desc: '媒体地址（图片/视频）', type: 'string', def: '必填' },
+      { prop: 'mediaType', desc: '媒体类型', type: "'image' | 'video'", def: '必填' },
+      { prop: 'triggerType', desc: '触发方式', type: "'hover' | 'inView'", def: "'hover'" },
+      { prop: 'autoPlay / loop / muted', desc: '视频播放参数', type: 'boolean', def: 'true' },
+    ],
+  },
+  {
+    importName: 'IuPathMarquee', name: 'PathMarquee', zh: '路径跑马灯',
+    category: '特效', desc: '文字沿 SVG 路径循环', slug: 'path-marquee', preview: 'pmarq',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const pathD = "'M 20 60 C 200 -30, 400 150, 680 60'"
+      const body = [
+        '  <IuPathMarquee',
+        '    :path="path"',
+        '    text="Inspira UI · 动效组件 · Inspira UI · 动效组件"',
+        '    :base-velocity="2"',
+        '    :show-path="false"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuPathMarquee', [['path', pathD]], body)
+    },
+    apiRows: [
+      { prop: 'path', desc: 'SVG 路径（d 属性）', type: 'string', def: '必填' },
+      { prop: 'text', desc: '循环文字（默认取插槽）', type: 'string', def: '—' },
+      { prop: 'baseVelocity', desc: '基础速度', type: 'number', def: '—' },
+      { prop: 'direction', desc: '方向', type: "'normal' | 'reverse'", def: "'normal'" },
+      { prop: 'slowdownOnHover', desc: '悬停减速', type: 'boolean', def: '—' },
+      { prop: 'useScrollVelocity', desc: '滚动加减速联动', type: 'boolean', def: '—' },
+      { prop: 'showPath', desc: '显示路径参考线', type: 'boolean', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '循环内容（text 为空时使用）', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuVanishingInput', name: 'VanishingInput', zh: '消失输入框',
+    category: '交互', desc: '提交时文字像素化飞散', slug: 'vanishing-input', preview: 'vinput',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const phConst = "[\n    '输入点什么…',\n    '按下回车见证消失',\n  ]"
+      const body = '  <IuVanishingInput :placeholders="placeholders" @submit="onSubmit" />'
+      return scriptedCode('IuVanishingInput', [['placeholders', phConst]], body)
+    },
+    apiRows: [
+      { prop: 'placeholders', desc: '占位文案轮换数组', type: 'string[]', def: '必填' },
+    ],
+    eventRows: [
+      { prop: 'submit', desc: '回车提交（文字粒子消散）', type: '(value: string)', def: '—' },
+      { prop: 'change', desc: '输入变化', type: '(value: string)', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuSVGMask', name: 'SVGMask', zh: '图像揭幕',
+    category: '特效', desc: '光标处的揭幕遮罩', slug: 'svg-mask', preview: 'smask',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuSVGMask class="h-80" :size="40" :reveal-size="600">',
+        '    <img src="/image.jpg" alt="" class="size-full object-cover" />',
+        '  </IuSVGMask>',
+      ].join('\n')
+      return scriptedCode('IuSVGMask', [], body)
+    },
+    apiRows: [
+      { prop: 'size', desc: '光标遮罩尺寸（px）', type: 'number', def: '10' },
+      { prop: 'revealSize', desc: '展开后的遮罩尺寸（px）', type: 'number', def: '600' },
+    ],
+    slotRows: [{ prop: 'default', desc: '被揭幕的内容', type: '—', def: '—' }],
+    note: '组件默认 h-screen，用 class 覆盖高度；悬停扩大遮罩',
+  },
+  {
+    importName: 'IuScales', name: 'Scales', zh: '鳞片纹理',
+    category: '背景', desc: '细密的鳞片图案纹理', slug: 'scales', preview: 'scscale',
+    demoState: { size: 10, orientation: 'diagonal' },
+    controls: [
+      { kind: 'number', key: 'size', label: '鳞片尺寸 Size', step: 2 },
+      { kind: 'select', key: 'orientation', label: '方向 Orientation', options: [{ label: 'diagonal', value: 'diagonal' }, { label: 'horizontal', value: 'horizontal' }, { label: 'vertical', value: 'vertical' }] },
+    ],
+    demoCode: (s) => {
+      const consts = [['size', String(s.size)], ['orientation', "'" + s.orientation + "'"]]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border" style="height: 240px">',
+        '    <IuScales :size="size" :orientation="orientation" style="position: absolute; inset: 0" />',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuScales', consts, body)
+    },
+    apiRows: [
+      { prop: 'orientation', desc: '鳞片方向', type: "'horizontal' | 'vertical' | 'diagonal'", def: "'diagonal'" },
+      { prop: 'size', desc: '鳞片尺寸（px）', type: 'number', def: '10' },
+      { prop: 'color', desc: '鳞片颜色', type: 'string', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuText3d', name: 'Text3d', zh: '立体文字',
+    category: '文本', desc: '描边加阴影的 3D 文字', slug: 'text-3d', preview: 't3d',
+    demoState: { textColor: '#FFFFFF', strokeColor: '#000000', shadowColor: '#6366F1', animate: true },
+    controls: [
+      { kind: 'text', key: 'textColor', label: '文字颜色 Text Color' },
+      { kind: 'text', key: 'strokeColor', label: '描边色 Stroke Color' },
+      { kind: 'text', key: 'shadowColor', label: '阴影色 Shadow Color' },
+      { kind: 'switch', key: 'animate', label: '抖动动画 animate' },
+    ],
+    demoCode: (s) => {
+      const consts = [['textColor', "'" + s.textColor + "'"], ['strokeColor', "'" + s.strokeColor + "'"], ['shadowColor', "'" + s.shadowColor + "'"], ['animate', s.animate ? 'true' : 'false']]
+      const body = [
+        '  <IuText3d',
+        '    :text-color="textColor"',
+        '    :stroke-color="strokeColor"',
+        '    :shadow-color="shadowColor"',
+        '    :animate="animate"',
+        '  >',
+        '    3D TEXT',
+        '  </IuText3d>',
+      ].join('\n')
+      return scriptedCode('IuText3d', consts, body)
+    },
+    apiRows: [
+      { prop: 'textColor', desc: '文字颜色', type: 'string', def: "'white'" },
+      { prop: 'strokeColor / shadowColor', desc: '描边/阴影颜色', type: 'string', def: "'black' / 'yellow'" },
+      { prop: 'strokeSize', desc: '描边粗细', type: 'number', def: '20' },
+      { prop: 'shadow1Size / shadow2Size', desc: '两层阴影尺寸', type: 'number', def: '7 / 10' },
+      { prop: 'animate', desc: '抖动动画', type: 'boolean', def: 'true' },
+      { prop: 'animationDuration', desc: '动画时长（毫秒）', type: 'number', def: '1500' },
+    ],
+    slotRows: [{ prop: 'default', desc: '文字内容', type: '—', def: '—' }],
+  },
+
+
 
 ]
 

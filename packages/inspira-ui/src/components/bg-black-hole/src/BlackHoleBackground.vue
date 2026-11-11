@@ -60,7 +60,7 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
-import { h, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { motion } from "motion-v";
 
 

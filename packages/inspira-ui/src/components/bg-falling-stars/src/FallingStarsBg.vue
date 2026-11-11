@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { h } from 'vue'
 import { cn } from '../../../utils';
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 

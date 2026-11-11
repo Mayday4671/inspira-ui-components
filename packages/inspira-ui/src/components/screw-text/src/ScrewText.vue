@@ -42,14 +42,16 @@ const props = withDefaults(defineProps<Props>(), {
   rotateDirection: "right" as RotateDirection,
 });
 
-const [scope, animate] = useAnimate();
+const [, animate] = useAnimate();
 const isAnimating = ref(false);
 const isHovering = ref(false);
 const shuffledIndices = ref<number[]>([]);
 
 function splitIntoCharacters(text: string) {
   if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-    const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
+    type SegmenterLike = { segment(text: string): Iterable<{ segment: string }> }
+    const SegmenterCtor = (Intl as unknown as { Segmenter: new (locale: string, options: { granularity: string }) => SegmenterLike }).Segmenter
+    const segmenter = new SegmenterCtor("en", { granularity: "grapheme" });
     return Array.from(segmenter.segment(text), ({ segment }) => segment);
   }
 
@@ -120,7 +122,7 @@ const secondFaceTransform = computed(() => {
 function transitionWithStagger(): Transition {
   return {
     ...props.transition,
-    delay: stagger(props.staggerDuration, { from: props.staggerFrom }),
+    delay: stagger(props.staggerDuration, { from: props.staggerFrom as never }) as never,
   };
 }
 

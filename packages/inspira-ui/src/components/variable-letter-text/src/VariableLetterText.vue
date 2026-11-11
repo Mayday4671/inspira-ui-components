@@ -36,14 +36,14 @@ const emit = defineEmits<{
   click: [event: MouseEvent];
 }>();
 
-const [scope, animate] = useAnimate();
+const [, animate] = useAnimate();
 const isHovered = ref(false);
 const letters = computed(() => [...props.label]);
 
 function transitionWithStagger(): Transition {
   return {
     ...props.transition,
-    delay: stagger(props.staggerDuration, { from: props.staggerFrom }),
+    delay: stagger(props.staggerDuration, { from: props.staggerFrom as never }) as never,
   };
 }
 
