@@ -6,19 +6,31 @@
  */
 import { computed } from 'vue'
 import {
+  IuAnimateGrid,
+  IuAnimatedCircularProgressBar,
+  IuAnimatedTabs,
+  IuAnimatedTestimonials,
   IuAnimatedTooltip,
   IuAuroraBackground,
+  IuBalanceSlider,
+  IuBook,
   IuBentoGrid,
   IuBorderBeam,
   IuBoxReveal,
   IuBreathingText,
   IuCard3D,
   IuCardSpotlight,
+  IuCardStack,
+  IuCardStackItem,
   IuColourfulText,
   IuCompare,
+  IuConfetti,
+  IuConfettiButton,
   IuContainerTextFlip,
   IuDialog,
   IuDirectionAwareHover,
+  IuDock,
+  IuDockIcon,
   IuEncryptedText,
   IuFlickeringGrid,
   IuFloat,
@@ -28,13 +40,21 @@ import {
   IuFocus,
   IuGlareCard,
   IuGradientButton,
+  IuGlowBorder,
+  IuGlowingEffect,
+  IuHighlightText,
   IuHyperText,
   IuInteractiveGridPattern,
+  IuIPhone15ProMockup,
+  IuImagesBadge,
+  IuImagesSlider,
   IuInteractiveHoverButton,
   IuIInput,
   IuLens,
+  IuLampEffect,
   IuLetterPullup,
   IuLetterSwap,
+  IuLinkPreview,
   IuLineShadowText,
   IuMarquee,
   IuMeteors,
@@ -57,6 +77,7 @@ import {
   IuTextGlitch,
   IuTextHighlight,
   IuTextHoverEffect,
+  IuTree,
   IuTextReveal,
   IuTimeline,
   IuTracingBeam,
@@ -442,6 +463,136 @@ const auroraHeight = '128px'
         </div>
       </IuTracingBeam>
     </div>
+
+    <!-- ============ 批次 4 预览 ============ -->
+    <div v-else-if="kind === 'gborder'" class="scaled-box" style="width: 210px; height: 120px; border: 1px solid var(--border); border-radius: 12px; position: relative; overflow: hidden; display: grid; place-items: center">
+      <IuGlowBorder color="#6366f1" :duration="5" />
+      <span style="font-size: 12px; font-weight: 600">Glow Border</span>
+    </div>
+
+    <div v-else-if="kind === 'geffect'" class="scaled-box" style="width: 210px; height: 110px; border: 1px solid var(--border); border-radius: 14px; position: relative; display: grid; place-items: center">
+      <IuGlowingEffect :proximity="140" :spread="40" :disabled="false" :blur="0" />
+      <span style="font-size: 12px; font-weight: 600">Glowing Effect</span>
+    </div>
+
+    <div v-else-if="kind === 'circprog'" class="scaled-box" style="width: 130px; height: 130px; display: grid; place-items: center">
+      <IuAnimatedCircularProgressBar :value="72" :duration="1" />
+    </div>
+
+    <div v-else-if="kind === 'atabs'" class="scaled-box" style="width: 220px">
+      <IuAnimatedTabs :tabs="[{ title: 'A', value: 'a' }, { title: 'B', value: 'b' }]" model-value="a">
+        <template #content>
+          <div style="padding: 10px; font-size: 12px; border: 1px solid var(--border); border-radius: 10px; margin-top: 8px">内容面板</div>
+        </template>
+      </IuAnimatedTabs>
+    </div>
+
+    <div v-else-if="kind === 'islider'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden">
+      <IuImagesSlider :images="['https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400', 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=400']" style="width: 100%; height: 100%" />
+    </div>
+
+    <div v-else-if="kind === 'confetti'" class="scaled-box" style="display: grid; place-items: center">
+      <IuConfetti>
+        <IuConfettiButton class="btn sm">撒彩带 🎉</IuConfettiButton>
+      </IuConfetti>
+    </div>
+
+    <div v-else-if="kind === 'cscroll'" class="scaled-box" style="width: 230px; height: 150px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden">
+      <IuContainerScroll style="height: 150px">
+        <template #title>
+          <h4 style="text-align: center; font-size: 12px; font-weight: 700; margin: 6px 0">旋转展开</h4>
+        </template>
+        <div style="height: 90px; margin: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(99,102,241,0.1)" />
+      </IuContainerScroll>
+    </div>
+
+    <div v-else-if="kind === 'ftree'" class="scaled-box" style="width: 220px; height: 140px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden">
+      <IuTree
+        :elements="[{ id: '1', name: 'src', children: [{ id: '2', name: 'app.ts', isSelectable: true }] }, { id: '3', name: 'package.json', isSelectable: true }]"
+        initial-selected-id="2"
+        :initial-expanded-items="['1']"
+        style="font-size: 12px; padding: 8px"
+      />
+    </div>
+
+    <div v-else-if="kind === 'dock'" class="scaled-box" style="width: 230px; height: 90px; display: grid; place-items: center">
+      <IuDock class="rounded-xl border" style="padding: 6px 8px; background: var(--surface)">
+        <IuDockIcon title="A">🏠</IuDockIcon>
+        <IuDockIcon title="B">📄</IuDockIcon>
+        <IuDockIcon title="C">⚙️</IuDockIcon>
+      </IuDock>
+    </div>
+
+    <div v-else-if="kind === 'lprev'" class="scaled-box" style="height: 110px; display: grid; place-items: center">
+      <span style="font-size: 12px">
+        看
+        <IuLinkPreview url="https://inspira-ui.com" :is-static="true" image-src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300">
+          这个链接
+        </IuLinkPreview>
+        预览
+      </span>
+    </div>
+
+    <div v-else-if="kind === 'book'" class="scaled-box" style="width: 180px; height: 150px; display: grid; place-items: center">
+      <IuBook color="indigo" size="sm" :is-static="true">
+        <template #title>
+          <h5 style="margin: 0; font-size: 13px; font-weight: 700">动效组件集</h5>
+        </template>
+        <template #description>
+          <p style="margin: 0; font-size: 10px; opacity: 0.8">静态翻开预览</p>
+        </template>
+      </IuBook>
+    </div>
+
+    <div v-else-if="kind === 'lamp'" class="scaled-box" style="width: 230px; height: 140px; border-radius: 10px; overflow: hidden">
+      <IuLampEffect style="min-height: 140px">
+        <h5 style="z-index: 10; text-align: center; font-size: 12px; font-weight: 650; color: #fff; margin: 0">Lamp</h5>
+      </IuLampEffect>
+    </div>
+
+    <div v-else-if="kind === 'iphone'" class="scaled-box" style="width: 140px; height: 150px; display: grid; place-items: center; overflow: hidden">
+      <IuIPhone15ProMockup :width="120" :height="244" style="transform: scale(0.62)">
+        <img src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=240" alt="" style="width: 100%; height: 100%; object-fit: cover">
+      </IuIPhone15ProMockup>
+    </div>
+
+    <div v-else-if="kind === 'bslider'" class="scaled-box" style="width: 210px; height: 80px; display: grid; place-items: center">
+      <IuBalanceSlider :initial-value="50" style="width: 190px" />
+    </div>
+
+    <div v-else-if="kind === 'atesti'" class="scaled-box" style="width: 230px; height: 150px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; padding: 12px">
+      <IuAnimatedTestimonials
+        :testimonials="[{ quote: '交付速度提升三倍。', name: '张伟', designation: '前端负责人', image: avatar('Zhang Wei', '#6366f1') }]"
+        style="pointer-events: none"
+      />
+    </div>
+
+    <div v-else-if="kind === 'cstack'" class="scaled-box" style="width: 210px; height: 140px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden">
+      <IuCardStack :total-cards="2" style="height: 200%">
+        <IuCardStackItem :index="0" class="rounded-lg border p-3" style="font-size: 12px; background: var(--surface)">第一张</IuCardStackItem>
+        <IuCardStackItem :index="1" class="rounded-lg border p-3" style="font-size: 12px; background: var(--surface)">第二张</IuCardStackItem>
+      </IuCardStack>
+    </div>
+
+    <div v-else-if="kind === 'ibadge'" class="scaled-box" style="width: 210px; height: 140px; display: grid; place-items: flex-end; padding: 16px; box-sizing: border-box">
+      <IuImagesBadge
+        text="作品"
+        :images="['https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=240', 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=240']"
+        style="pointer-events: none"
+      />
+    </div>
+
+    <span v-else-if="kind === 'htext'" style="font-size: 13px; display: inline-block">
+      <IuHighlightText highlight-color="hsl(25 90% 80%)">高亮涂色文字</IuHighlightText>
+    </span>
+
+    <div v-else-if="kind === 'agrid'" class="scaled-box" style="width: 220px; height: 150px; display: grid; place-items: center">
+      <IuAnimateGrid
+        :cards="[{ logo: 'https://picsum.photos/seed/g1/160' }, { logo: 'https://picsum.photos/seed/g2/160' }, { logo: 'https://picsum.photos/seed/g3/160' }, { logo: 'https://picsum.photos/seed/g4/160' }]"
+        style="width: 200px"
+      />
+    </div>
+
 
     <!-- 真实 IuDialog：teleport 到 body，受预览容器控制 -->
     <Teleport to="body">

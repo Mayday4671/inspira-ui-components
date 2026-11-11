@@ -1,14 +1,18 @@
-<script setup lang="ts">
-import { computed } from 'vue'
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from '../../../utils';
-interface Props {
+
+export interface Props {
   borderRadius?: number;
   color?: string | Array<string>;
   borderWidth?: number;
   duration?: number;
   class?: HTMLAttributes["class"];
 }
+</script>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { cn } from '../../../utils';
 
 const props = withDefaults(defineProps<Props>(), {
   borderRadius: 10,

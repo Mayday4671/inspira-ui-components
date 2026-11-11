@@ -1,16 +1,8 @@
-<script lang="ts" setup>
-import { computed } from 'vue'
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
 import type { BookColor, BookRadius, BookShadowSize, BookSize } from './book-maps';
-import { cn } from '../../../utils';
-import {
-  BOOK_COLOR_MAP as colorMap,
-  BOOK_RADIUS_MAP as radiusMap,
-  BOOK_SHADOW_SIZE_MAP as shadowSizeMap,
-  BOOK_SIZE_MAP as sizeMap,
-} from './book-maps';
 
-interface BookProps {
+export interface BookProps {
   class?: HTMLAttributes["class"];
   duration?: number;
   color?: BookColor;
@@ -19,6 +11,18 @@ interface BookProps {
   radius?: BookRadius;
   shadowSize?: BookShadowSize;
 }
+</script>
+
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { cn } from '../../../utils';
+import {
+  BOOK_COLOR_MAP as colorMap,
+  BOOK_RADIUS_MAP as radiusMap,
+  BOOK_SHADOW_SIZE_MAP as shadowSizeMap,
+  BOOK_SIZE_MAP as sizeMap,
+} from './book-maps';
+
 
 const props = withDefaults(defineProps<BookProps>(), {
   duration: 1000,

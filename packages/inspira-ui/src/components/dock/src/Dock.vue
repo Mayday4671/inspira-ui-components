@@ -1,7 +1,18 @@
-<script setup lang="ts">
-import { computed, provide, ref } from 'vue'
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
 import type { DataOrientation, Direction } from "./types";
+
+export interface DockProps {
+  class?: HTMLAttributes["class"];
+  magnification?: number;
+  distance?: number;
+  direction?: Direction;
+  orientation?: DataOrientation;
+}
+</script>
+
+<script setup lang="ts">
+import { computed, provide, ref } from 'vue'
 import { cn } from '../../../utils';
 import {
   DISTANCE_INJECTION_KEY,
@@ -11,13 +22,6 @@ import {
   ORIENTATION_INJECTION_KEY,
 } from "./injectionKeys";
 
-interface DockProps {
-  class?: HTMLAttributes["class"];
-  magnification?: number;
-  distance?: number;
-  direction?: Direction;
-  orientation?: DataOrientation;
-}
 
 const props = withDefaults(defineProps<DockProps>(), {
   magnification: 60,
@@ -26,7 +30,6 @@ const props = withDefaults(defineProps<DockProps>(), {
   orientation: "horizontal",
 });
 
-const dockRef = ref<HTMLElement | null>(null);
 const mouseX = ref(Infinity);
 const mouseY = ref(Infinity);
 const magnification = computed(() => props.magnification);

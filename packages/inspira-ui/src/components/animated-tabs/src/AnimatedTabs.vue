@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useId, watch } from 'vue'
+import { computed, onScopeDispose, ref, useId, watch } from 'vue'
 import { motion } from 'motion-v'
 import type { AnimatedTab } from "./types";
 import { cn } from '../../../utils';

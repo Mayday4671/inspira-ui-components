@@ -1,10 +1,14 @@
-<script lang="ts" setup>
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from '../../../utils';
 
-interface BookDescriptionProps {
+export interface BookDescriptionProps {
   class?: HTMLAttributes["class"];
 }
+</script>
+
+<script lang="ts" setup>
+import { cn } from '../../../utils';
+
 
 defineProps<BookDescriptionProps>();
 </script>

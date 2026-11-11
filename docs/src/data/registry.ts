@@ -85,6 +85,25 @@ export type PreviewKind =
   | 'inp'
   | 'tl'
   | 'tbm'
+  | 'gborder'
+  | 'geffect'
+  | 'circprog'
+  | 'atabs'
+  | 'islider'
+  | 'confetti'
+  | 'cscroll'
+  | 'ftree'
+  | 'dock'
+  | 'lprev'
+  | 'book'
+  | 'lamp'
+  | 'iphone'
+  | 'bslider'
+  | 'atesti'
+  | 'cstack'
+  | 'ibadge'
+  | 'htext'
+  | 'agrid'
 
 export interface ComponentMeta {
   /** 导出名（含 Iu 前缀） */
@@ -1789,6 +1808,452 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'class', desc: '容器样式（默认 max-w-4xl 居中）', type: 'string', def: '—' },
     ],
     slotRows: [{ prop: 'default', desc: '长文本内容（滚动时被光束追踪）', type: '—', def: '—' }],
+  },
+  // ========= 批次 4：扩展组件 =========
+  {
+    importName: 'IuGlowBorder', name: 'GlowBorder', zh: '光晕边框',
+    category: '特效', desc: '旋转扫过的光晕描边', slug: 'glow-border', preview: 'gborder',
+    demoState: { color: '#6366f1', borderWidth: 2, duration: 6 },
+    controls: [
+      { kind: 'text', key: 'color', label: '光晕颜色 Color' },
+      { kind: 'number', key: 'borderWidth', label: '边框宽度 Border Width', step: 1 },
+      { kind: 'number', key: 'duration', label: '周期 Duration（秒）', step: 1 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['color', `'${s.color}'`],
+        ['borderWidth', String(s.borderWidth)],
+        ['duration', String(s.duration)],
+      ]
+      const body = [
+        '  <div class="relative overflow-hidden rounded-xl border p-8 text-center">',
+        '    <IuGlowBorder :color="color" :border-width="borderWidth" :duration="duration" />',
+        '    <p class="m-0 text-sm font-medium">Glow Border 内容</p>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuGlowBorder', consts, body)
+    },
+    apiRows: [
+      { prop: 'color', desc: '光晕颜色（数组为多彩）', type: 'string | string[]', def: "'#FFF'" },
+      { prop: 'borderRadius', desc: '圆角（px）', type: 'number', def: '10' },
+      { prop: 'borderWidth', desc: '光晕宽度（px）', type: 'number', def: '2' },
+      { prop: 'duration', desc: '旋转周期（秒）', type: 'number', def: '10' },
+    ],
+    note: '组件自身铺满定位容器（absolute inset-0），请放在 relative rounded 容器内使用',
+  },
+  {
+    importName: 'IuGlowingEffect', name: 'GlowingEffect', zh: '辉光效果',
+    category: '特效', desc: '跟随光标的卡面辉光', slug: 'glowing-effect', preview: 'geffect',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <div class="relative rounded-2xl border p-8 text-center">',
+        '    <IuGlowingEffect :proximity="80" :spread="40" :disabled="false" :blur="0" />',
+        '    <p class="m-0 text-sm font-medium">鼠标靠近时卡面出现辉光</p>',
+        '  </div>',
+      ].join('\n')
+      return scriptedCode('IuGlowingEffect', [], body)
+    },
+    apiRows: [
+      { prop: 'proximity', desc: '触发距离（px）', type: 'number', def: '0' },
+      { prop: 'spread', desc: '辉光扩散（px）', type: 'number', def: '20' },
+      { prop: 'inactiveZone', desc: '中心不敏感区（0-1）', type: 'number', def: '0.7' },
+      { prop: 'glow', desc: '是否开启外发光', type: 'boolean', def: 'false' },
+      { prop: 'disabled', desc: '禁用（默认 true）', type: 'boolean', def: 'true' },
+      { prop: 'variant', desc: '配色', type: "'default' | 'white'", def: "'default'" },
+    ],
+  },
+  {
+    importName: 'IuAnimatedCircularProgressBar', name: 'AnimatedCircularProgressBar', zh: '环形进度条',
+    category: '数据', desc: '入视口时动画填充的环形进度', slug: 'animated-circular-progressbar', preview: 'circprog',
+    demoState: { value: 72, max: 100, duration: 1 },
+    controls: [
+      { kind: 'number', key: 'value', label: '当前值 Value', step: 1 },
+      { kind: 'number', key: 'max', label: '最大值 Max', step: 10 },
+      { kind: 'number', key: 'duration', label: '动画时长 Duration（秒）', step: 0.5 },
+    ],
+    demoCode: (s) => {
+      const consts: Array<[string, string]> = [
+        ['value', String(s.value)],
+        ['max', String(s.max)],
+        ['duration', String(s.duration)],
+      ]
+      const body = '  <IuAnimatedCircularProgressBar :value="value" :max="max" :duration="duration" />'
+      return scriptedCode('IuAnimatedCircularProgressBar', consts, body)
+    },
+    apiRows: [
+      { prop: 'value / max / min', desc: '进度数值范围', type: 'number', def: '0 / 100 / 0' },
+      { prop: 'gaugePrimaryColor', desc: '进度环颜色', type: 'string', def: "'rgb(79 70 229)'" },
+      { prop: 'gaugeSecondaryColor', desc: '轨道颜色', type: 'string', def: "'rgba(0,0,0,0.1)'" },
+      { prop: 'circleStrokeWidth', desc: '环宽（px）', type: 'number', def: '10' },
+      { prop: 'showPercentage', desc: '显示百分比文字', type: 'boolean', def: 'true' },
+      { prop: 'duration', desc: '动画时长（秒）', type: 'number', def: '1' },
+    ],
+  },
+  {
+    importName: 'IuAnimatedTabs', name: 'AnimatedTabs', zh: '动画标签页',
+    category: '交互', desc: '滑动胶囊指示器的标签页', slug: 'animated-tabs', preview: 'atabs',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const tabsConst = `[\n    { title: '首页', value: 'home' },\n    { title: '组件', value: 'components' },\n    { title: '主题', value: 'themes' },\n  ]`
+      const body = [
+        '  <IuAnimatedTabs :tabs="tabs" v-model="active">',
+        '    <template #content="{ tab }">',
+        '      <div class="p-4 text-sm">当前：{{ tab.value }}</div>',
+        '    </template>',
+        '  </IuAnimatedTabs>',
+      ].join('\n')
+      return scriptedCode('IuAnimatedTabs', [['tabs', tabsConst], ['active', "'home'"]], body)
+    },
+    apiRows: [
+      { prop: 'tabs', desc: '标签数组（title / value）', type: 'AnimatedTab[]', def: '必填' },
+      { prop: 'modelValue / v-model', desc: '当前标签 value', type: 'string', def: '—' },
+      { prop: 'containerClassName', desc: '标签条样式', type: 'string', def: "''" },
+      { prop: 'contentClassName', desc: '内容面板样式', type: 'string', def: "''" },
+    ],
+    slotRows: [
+      { prop: '#content', desc: '面板内容插槽（作用域：tab）', type: '—', def: '—' },
+    ],
+    eventRows: [
+      { prop: 'update:modelValue', desc: '标签切换', type: '(value: string)', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuImagesSlider', name: 'ImagesSlider', zh: '图片滑动',
+    category: '特效', desc: '缩放入场的图片轮播', slug: 'images-slider', preview: 'islider',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const imgsConst = "[\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800',\n    'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800',\n  ]"
+      const body = [
+        '  <IuImagesSlider :images="images" class="h-72 rounded-xl">',
+        '    <template #overlay>',
+        '      <div class="p-6 text-white text-lg font-bold">叠加内容</div>',
+        '    </template>',
+        '  </IuImagesSlider>',
+      ].join('\n')
+      return scriptedCode('IuImagesSlider', [['images', imgsConst]], body)
+    },
+    apiRows: [
+      { prop: 'images', desc: '图片地址数组', type: 'string[]', def: '[]' },
+      { prop: 'hideOverlay', desc: '隐藏叠加层', type: 'boolean', def: 'false' },
+      { prop: 'overlayClass / imageClass', desc: '叠加层 / 图片样式', type: 'string', def: '—' },
+    ],
+    slotRows: [{ prop: '#overlay', desc: '图片上的叠加内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuConfetti', name: 'Confetti', zh: '彩带',
+    category: '特效', desc: 'canvas-confetti 彩带画布', slug: 'confetti', preview: 'confetti',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuConfetti>',
+        '    <IuConfettiButton class="btn">',
+        '      撒彩带 🎉',
+        '    </IuConfettiButton>',
+        '  </IuConfetti>',
+      ].join('\n')
+      return scriptedCode('IuConfetti', [], body)
+    },
+    apiRows: [
+      { prop: 'options', desc: '彩带参数（particleCount / spread 等）', type: 'ConfettiOptions', def: '—' },
+      { prop: 'globalOptions', desc: '全局默认参数', type: 'ConfettiGlobalOptions', def: '—' },
+      { prop: 'manualstart', desc: '不自动撒放，仅手动 fire()', type: 'boolean', def: 'false' },
+    ],
+    slotRows: [{ prop: 'default', desc: '触发内容（IuConfettiButton 会注入上下文）', type: '—', def: '—' }],
+    note: '依赖 canvas-confetti（已随库安装），IuConfetti 暴露 fire() 方法可编程触发',
+  },
+  {
+    importName: 'IuContainerScroll', name: 'ContainerScroll', zh: '滚动缩放容器',
+    category: '特效', desc: '滚动驱动的 3D 旋转展示台', slug: 'container-scroll', preview: 'cscroll',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuContainerScroll>',
+        '    <template #title>',
+        '      <h3 class="text-center text-2xl font-bold">滚动体验旋转展开</h3>',
+        '    </template>',
+        '    <div class="h-96 rounded-2xl border bg-gradient-to-b from-indigo-100 to-white dark:from-zinc-800 dark:to-zinc-900">',
+        '      <p class="p-8 text-center text-sm">卡片随页面滚动旋转入场</p>',
+        '    </div>',
+        '  </IuContainerScroll>',
+      ].join('\n')
+      return scriptedCode('IuContainerScroll', [], body)
+    },
+    apiRows: [
+      { prop: 'rotate / scale / translateY', desc: '由滚动进度自动驱动', type: 'number', def: '—' },
+    ],
+    slotRows: [
+      { prop: '#title', desc: '顶部标题（随滚动上移）', type: '—', def: '—' },
+      { prop: 'default', desc: '被旋转卡片包裹的内容', type: '—', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuTree', name: 'Tree', zh: '文件树',
+    category: '数据', desc: '可展开选中的文件树', slug: 'file-tree', preview: 'ftree',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const elsConst = `[\n    { id: '1', name: 'src', children: [\n      { id: '2', name: 'components', children: [{ id: '3', name: 'button.ts', isSelectable: true }] },\n      { id: '4', name: 'index.ts', isSelectable: true },\n    ] },\n    { id: '5', name: 'package.json', isSelectable: true },\n  ]`
+      const body = [
+        '  <IuTree',
+        '    :elements="elements"',
+        '    initial-selected-id="4"',
+        '    :initial-expanded-items="[\'1\', \'2\']"',
+        '    class="h-64 overflow-auto rounded-lg border p-2"',
+        '  />',
+      ].join('\n')
+      return scriptedCode('IuTree', [['elements', elsConst]], body)
+    },
+    apiRows: [
+      { prop: 'elements', desc: '树数据（id / name / children / isSelectable）', type: 'TreeViewElement[]', def: '必填' },
+      { prop: 'initialSelectedId', desc: '初始选中节点 id', type: 'string', def: '必填' },
+      { prop: 'initialExpandedItems', desc: '初始展开节点 id 数组', type: 'string[]', def: '必填' },
+      { prop: 'indicator', desc: '显示缩进参考线', type: 'boolean', def: '—' },
+      { prop: 'openIcon / closeIcon / fileIcon', desc: '图标（heroicon 名）', type: 'string', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuDock', name: 'Dock', zh: '程序坞',
+    category: '交互', desc: 'macOS 风格放大 Dock', slug: 'dock', preview: 'dock',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuDock class="rounded-2xl border p-2">',
+        '    <IuDockIcon title="主页">🏠</IuDockIcon>',
+        '    <IuDockIcon title="文档">📄</IuDockIcon>',
+        '    <IuDockSeparator />',
+        '    <IuDockIcon title="设置">⚙️</IuDockIcon>',
+        '  </IuDock>',
+      ].join('\n')
+      return scriptedCode('IuDock', [], body)
+    },
+    apiRows: [
+      { prop: 'magnification', desc: '放大后的图标尺寸（px）', type: 'number', def: '60' },
+      { prop: 'distance', desc: '放大影响距离（px）', type: 'number', def: '140' },
+      { prop: 'orientation', desc: '排列方向', type: "'horizontal' | 'vertical'", def: "'horizontal'" },
+      { prop: 'direction', desc: '图标展开方向', type: "'top' | 'middle' | 'bottom'", def: "'middle'" },
+    ],
+    slotRows: [{ prop: 'default', desc: 'IuDockIcon / IuDockSeparator 列表', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuLinkPreview', name: 'LinkPreview', zh: '链接预览',
+    category: '交互', desc: '悬停链接弹出图片预览', slug: 'link-preview', preview: 'lprev',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <span style="font-size: 15px">',
+        '    看',
+        '    <IuLinkPreview',
+        '      url="https://inspira-ui.com"',
+        '      is-static',
+        '      image-src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400"',
+        '    >',
+        '      这个链接',
+        '    </IuLinkPreview>',
+        '    的悬停预览。',
+        '  </span>',
+      ].join('\n')
+      return scriptedCode('IuLinkPreview', [], body)
+    },
+    apiRows: [
+      { prop: 'url', desc: '目标链接', type: 'string', def: '必填' },
+      { prop: 'isStatic', desc: '静态图片模式（不请求 microlink）', type: 'boolean', def: 'false' },
+      { prop: 'imageSrc', desc: '静态模式图片地址', type: 'string', def: '—' },
+      { prop: 'width / height', desc: '预览图尺寸', type: 'number', def: '200 / 125' },
+      { prop: 'linkClass', desc: '链接文字样式', type: 'string', def: '—' },
+    ],
+    slotRows: [{ prop: 'default', desc: '链接文字内容', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuBook', name: 'Book', zh: '3D 书本',
+    category: '卡片', desc: '悬停翻开封面变化的书', slug: 'book', preview: 'book',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuBook color="indigo" size="md" is-static>',
+        '    <template #header>',
+        '      <span class="text-xs opacity-70">inspira-ui-components</span>',
+        '    </template>',
+        '    <template #title>',
+        '      <h4 class="m-0 text-xl font-bold">Vue 动效组件集</h4>',
+        '    </template>',
+        '    <template #description>',
+        '      <p class="m-0 text-xs opacity-80">悬停翻开封面查看内容。</p>',
+        '    </template>',
+        '  </IuBook>',
+      ].join('\n')
+      return scriptedCode('IuBook', [], body)
+    },
+    apiRows: [
+      { prop: 'color', desc: '封面色系（tailwind 色名）', type: 'BookColor', def: "'zinc'" },
+      { prop: 'size', desc: '尺寸', type: "'sm' | 'md' | 'lg' | 'xl'", def: "'md'" },
+      { prop: 'radius', desc: '圆角', type: 'BookRadius', def: "'md'" },
+      { prop: 'shadowSize', desc: '书脊阴影', type: 'BookShadowSize', def: "'lg'" },
+      { prop: 'isStatic', desc: '静态翻开（不悬停）', type: 'boolean', def: 'false' },
+      { prop: 'duration', desc: '翻开动画时长（毫秒）', type: 'number', def: '1000' },
+    ],
+    slotRows: [
+      { prop: '#header / #title / #description', desc: '封面三段内容', type: '—', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuLampEffect', name: 'LampEffect', zh: '台灯效果',
+    category: '背景', desc: '顶部双锥形光束照明', slug: 'lamp-effect', preview: 'lamp',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuLampEffect class="min-h-64 rounded-xl">',
+        '    <h3 class="z-10 text-center text-2xl font-semibold text-white">Lamp Effect</h3>',
+        '  </IuLampEffect>',
+      ].join('\n')
+      return scriptedCode('IuLampEffect', [], body)
+    },
+    apiRows: [
+      { prop: 'delay', desc: '光束入场延迟（秒）', type: 'number', def: '0.5' },
+      { prop: 'duration', desc: '光束入场时长（秒）', type: 'number', def: '0.8' },
+    ],
+    slotRows: [{ prop: 'default', desc: '灯下内容（自身为深色底容器）', type: '—', def: '—' }],
+    note: '组件默认 min-h-screen，用 class 覆盖高度',
+  },
+  {
+    importName: 'IuIPhone15ProMockup', name: 'IPhone15ProMockup', zh: '手机样机',
+    category: '特效', desc: 'iPhone 15 Pro 边框样机', slug: 'iphone-mockup', preview: 'iphone',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuIPhone15ProMockup :width="300" :height="610" class="drop-shadow-xl">',
+        '    <img',
+        '      src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600"',
+        '      alt=""',
+        '      style="width: 100%; height: 100%; object-fit: cover"',
+        '    />',
+        '  </IuIPhone15ProMockup>',
+      ].join('\n')
+      return scriptedCode('IuIPhone15ProMockup', [], body)
+    },
+    apiRows: [
+      { prop: 'width / height', desc: '样机尺寸（px）', type: 'number', def: '433 / 882' },
+    ],
+    slotRows: [{ prop: 'default', desc: '屏幕内容（填入边框内屏）', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuBalanceSlider', name: 'BalanceSlider', zh: '平衡滑块',
+    category: '交互', desc: '左右加权的平衡拖动条', slug: 'balance-slider', preview: 'bslider',
+    demoState: { initialValue: 50 },
+    controls: [{ kind: 'number', key: 'initialValue', label: '初始值 Initial Value', step: 5 }],
+    demoCode: (s) => {
+      const body = '  <IuBalanceSlider :initial-value="initialValue" style="width: 360px" />'
+      return scriptedCode('IuBalanceSlider', [['initialValue', String(s.initialValue)]], body)
+    },
+    apiRows: [
+      { prop: 'initialValue', desc: '初始比例（0-100）', type: 'number', def: '50' },
+      { prop: 'leftColor / rightColor', desc: '两侧颜色', type: 'string', def: "'#e68a00' / '#ffffff'" },
+      { prop: 'leftContent / rightContent', desc: '两侧文字', type: 'string', def: "'LEFT' / 'RIGHT'" },
+      { prop: 'indicatorColor', desc: '指针颜色', type: 'string', def: "'#FFFFFF'" },
+      { prop: 'minShiftLimit / maxShiftLimit', desc: '指针可动范围', type: 'number', def: '40 / 68' },
+      { prop: 'borderRadius', desc: '圆角（px）', type: 'number', def: '8' },
+    ],
+  },
+  {
+    importName: 'IuAnimatedTestimonials', name: 'AnimatedTestimonials', zh: '见证轮播',
+    category: '数据', desc: '逐词浮现的用户评价轮播', slug: 'animated-testimonials', preview: 'atesti',
+    demoState: { autoplay: false, duration: 5000 },
+    controls: [
+      { kind: 'switch', key: 'autoplay', label: '自动轮播 autoplay' },
+      { kind: 'number', key: 'duration', label: '停留时长 Duration（毫秒）', step: 1000 },
+    ],
+    demoCode: (s) => {
+      const tConst = `[\n    {\n      quote: '这套组件库让我们的动效页面交付速度快了三倍。',\n      name: '张伟',\n      designation: '前端负责人',\n      image: '/avatar-zhang.png',\n    },\n    {\n      quote: '类型完备，暗色模式开箱即用。',\n      name: '李娜',\n      designation: 'UI 设计师',\n      image: '/avatar-li.png',\n    },\n  ]`
+      const body = '  <IuAnimatedTestimonials :testimonials="testimonials" :autoplay="autoplay" :duration="duration" />'
+      return scriptedCode('IuAnimatedTestimonials', [['testimonials', tConst], ['autoplay', s.autoplay ? 'true' : 'false'], ['duration', String(s.duration)]], body)
+    },
+    apiRows: [
+      { prop: 'testimonials', desc: '评价数组（quote / name / designation / image）', type: 'Testimonial[]', def: '[]' },
+      { prop: 'autoplay', desc: '自动轮播', type: 'boolean', def: 'false' },
+      { prop: 'duration', desc: '停留时长（毫秒）', type: 'number', def: '5000' },
+    ],
+  },
+  {
+    importName: 'IuCardStack', name: 'CardStack', zh: '卡片堆叠',
+    category: '卡片', desc: '滚动时逐张收起的卡片堆', slug: 'card-stack', preview: 'cstack',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = [
+        '  <IuCardStack :total-cards="3" class="h-96">',
+        '    <IuCardStackItem :index="0" class="rounded-xl border p-6">第一张</IuCardStackItem>',
+        '    <IuCardStackItem :index="1" class="rounded-xl border p-6">第二张</IuCardStackItem>',
+        '    <IuCardStackItem :index="2" class="rounded-xl border p-6">第三张</IuCardStackItem>',
+        '  </IuCardStack>',
+      ].join('\n')
+      return scriptedCode('IuCardStack', [], body)
+    },
+    apiRows: [
+      { prop: 'totalCards', desc: '卡片总数', type: 'number', def: '必填' },
+      { prop: 'scaleMultiplier', desc: '滚动缩放系数', type: 'number', def: '0.03' },
+    ],
+    slotRows: [{ prop: 'default', desc: 'IuCardStackItem 列表', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuImagesBadge', name: 'ImagesBadge', zh: '文件夹徽章',
+    category: '交互', desc: '悬停展开图片的文件夹图标', slug: 'images-badge', preview: 'ibadge',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const imgsConst = "[\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300',\n    'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300',\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300&sat=-100',\n  ]"
+      const body = '  <IuImagesBadge text="我的作品" :images="images" />'
+      return scriptedCode('IuImagesBadge', [['images', imgsConst]], body)
+    },
+    apiRows: [
+      { prop: 'text', desc: '文件夹旁文字', type: 'string', def: '必填' },
+      { prop: 'images', desc: '展开的图片数组', type: 'string[]', def: '必填' },
+      { prop: 'folderSize', desc: '文件夹尺寸', type: '{ width: number; height: number }', def: '{ width: 60, height: 44 }' },
+      { prop: 'hoverSpread / hoverRotation', desc: '悬停散开间距 / 旋转角', type: 'number', def: '—' },
+      { prop: 'href / target', desc: '渲染为链接', type: 'string', def: '—' },
+    ],
+  },
+  {
+    importName: 'IuHighlightText', name: 'HighlightText', zh: '高亮涂色',
+    category: '文本', desc: '笔刷式方向高亮动画', slug: 'highlight-text', preview: 'htext',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const body = '  <IuHighlightText highlight-color="hsl(25 90% 80%)">高亮涂色的文字内容</IuHighlightText>'
+      return scriptedCode('IuHighlightText', [], body)
+    },
+    apiRows: [
+      { prop: 'highlightColor', desc: '高亮颜色', type: 'string', def: "'hsl(25 90% 80%)'" },
+      { prop: 'direction', desc: '涂色方向', type: "'ltr' | 'rtl' | 'ttb' | 'btt'", def: "'ltr'" },
+      { prop: 'triggerType', desc: '触发方式', type: "'hover' | 'ref' | 'inView' | 'auto'", def: "'inView'" },
+    ],
+    slotRows: [{ prop: 'default', desc: '要高亮的文字', type: '—', def: '—' }],
+  },
+  {
+    importName: 'IuAnimateGrid', name: 'AnimateGrid', zh: '网格联动',
+    category: '特效', desc: '悬停时相邻卡片联动的网格', slug: 'animate-grid', preview: 'agrid',
+    demoState: {},
+    controls: [],
+    demoCode: (s) => {
+      const cardsConst = `[\n    { logo: 'https://picsum.photos/seed/g1/200' },\n    { logo: 'https://picsum.photos/seed/g2/200' },\n    { logo: 'https://picsum.photos/seed/g3/200' },\n    { logo: 'https://picsum.photos/seed/g4/200' },\n  ]`
+      const body = '  <IuAnimateGrid :cards="cards" class="max-w-md" />'
+      return scriptedCode('IuAnimateGrid', [['cards', cardsConst]], body)
+    },
+    apiRows: [
+      { prop: 'cards', desc: '卡片图片数组（4 的倍数排布）', type: '{ logo: string }[]', def: '必填' },
+      { prop: 'perspective', desc: '透视距离（px）', type: 'number', def: '600' },
+      { prop: 'rotateX / rotateY', desc: '联动倾斜幅度（度）', type: 'number', def: '-1 / -15' },
+      { prop: 'textGlowStartColor / textGlowEndColor', desc: '文字光晕色', type: 'string', def: "'#38ef7d80' / '#38ef7d'" },
+    ],
   },
 
 ]

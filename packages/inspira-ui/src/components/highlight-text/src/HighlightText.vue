@@ -1,13 +1,12 @@
-<script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useInView, Motion } from 'motion-v'
+<script lang="ts">
 import type { UseInViewOptions } from "motion-v";
 import type { HTMLAttributes } from "vue";
-import { cn } from '../../../utils';
+
 export type HighlightDirection = "ltr" | "rtl" | "ttb" | "btt";
+
 export type HighlightTrigger = "hover" | "ref" | "inView" | "auto";
 
-interface Props {
+export interface Props {
   as?: string;
   triggerType?: HighlightTrigger;
   transition?: Record<string, unknown>;
@@ -16,6 +15,13 @@ interface Props {
   highlightColor?: string;
   direction?: HighlightDirection;
 }
+</script>
+
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+import { useInView, Motion } from 'motion-v'
+import { cn } from '../../../utils';
+
 
 const props = withDefaults(defineProps<Props>(), {
   as: "span",
@@ -85,7 +91,7 @@ defineExpose({ animate, reset });
         backgroundPosition,
         backgroundSize: targetSize,
         boxDecorationBreak: 'clone',
-        WebkitBoxDecorationBreak: 'clone',
+        ...( { WebkitBoxDecorationBreak: 'clone' } as Record<string, string> ),
       }"
       :initial="{ backgroundSize: initialSize }"
       :animate="{ backgroundSize: targetSize }"

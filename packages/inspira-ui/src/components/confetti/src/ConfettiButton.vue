@@ -1,10 +1,14 @@
-<script setup lang="ts">
-import { inject } from 'vue'
+<script lang="ts">
 import type { Options as ConfettiOptions } from "canvas-confetti";
-import confetti from "canvas-confetti";
-interface ConfettiButtonProps {
+
+export interface ConfettiButtonProps {
   options?: ConfettiOptions & { canvas?: HTMLCanvasElement };
 }
+</script>
+
+<script setup lang="ts">
+import { inject } from 'vue'
+import confetti from "canvas-confetti";
 
 const props = defineProps<ConfettiButtonProps>();
 const confettiContext = inject<{ fire: (opts?: ConfettiOptions) => void }>("ConfettiContext");

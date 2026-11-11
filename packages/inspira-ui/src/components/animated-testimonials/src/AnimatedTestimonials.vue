@@ -1,17 +1,23 @@
-<script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { Motion } from 'motion-v'
-interface Testimonial {
+<script lang="ts">
+
+
+export interface Testimonial {
   quote: string;
   name: string;
   designation: string;
   image: string;
 }
-interface Props {
+
+export interface Props {
   testimonials?: Testimonial[];
   autoplay?: boolean;
   duration?: number;
 }
+</script>
+
+<script lang="ts" setup>
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { Motion } from 'motion-v'
 
 const props = withDefaults(defineProps<Props>(), {
   testimonials: () => [],

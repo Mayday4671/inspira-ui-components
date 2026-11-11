@@ -5,8 +5,15 @@
  */
 import { computed, ref } from 'vue'
 import {
+  IuAnimateGrid,
+  IuAnimatedCircularProgressBar,
   IuAnimatedModal,
   IuAnimatedModalBody,
+  IuAnimatedTabs,
+  IuAnimatedTestimonials,
+  IuBalanceSlider,
+  IuBook,
+
   IuAnimatedModalContent,
   IuAnimatedTooltip,
   IuAnimatedModalTrigger,
@@ -17,11 +24,19 @@ import {
   IuBreathingText,
   IuCard3D,
   IuCardSpotlight,
+  IuCardStack,
+  IuCardStackItem,
   IuColourfulText,
   IuCompare,
+  IuConfetti,
+  IuConfettiButton,
+  IuContainerScroll,
   IuContainerTextFlip,
   IuDialog,
   IuDirectionAwareHover,
+  IuDock,
+  IuDockIcon,
+  IuDockSeparator,
   IuEncryptedText,
   IuFlickeringGrid,
   IuFloat,
@@ -31,13 +46,21 @@ import {
   IuFocus,
   IuGlareCard,
   IuGradientButton,
+  IuGlowBorder,
+  IuGlowingEffect,
+  IuHighlightText,
   IuHyperText,
   IuInteractiveGridPattern,
+  IuIPhone15ProMockup,
+  IuImagesBadge,
+  IuImagesSlider,
   IuInteractiveHoverButton,
   IuIInput,
   IuLens,
+  IuLampEffect,
   IuLetterPullup,
   IuLetterSwap,
+  IuLinkPreview,
   IuLineShadowText,
   IuMarquee,
   IuMeteors,
@@ -60,6 +83,7 @@ import {
   IuTextGlitch,
   IuTextHighlight,
   IuTextHoverEffect,
+  IuTree,
   IuTextReveal,
   IuTimeline,
   IuTracingBeam,
@@ -127,6 +151,43 @@ const mslSteps = [
   { text: '连接数据库', afterText: '数据库已连接' },
   { text: '初始化模型', afterText: '模型就绪' },
   { text: '启动服务', afterText: '服务运行中' },
+]
+
+const atabsActive = ref('home')
+const atabsTabs = [
+  { title: '首页', value: 'home' },
+  { title: '组件', value: 'components' },
+  { title: '主题', value: 'themes' },
+]
+
+const treeElements = [
+  { id: '1', name: 'src', children: [
+    { id: '2', name: 'components', children: [{ id: '3', name: 'button.ts', isSelectable: true }] },
+    { id: '4', name: 'index.ts', isSelectable: true },
+  ] },
+  { id: '5', name: 'package.json', isSelectable: true },
+]
+
+const sliderImages = [
+  'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800',
+  'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800',
+]
+
+const gridCards = [
+  { logo: 'https://picsum.photos/seed/g1/200' },
+  { logo: 'https://picsum.photos/seed/g2/200' },
+  { logo: 'https://picsum.photos/seed/g3/200' },
+  { logo: 'https://picsum.photos/seed/g4/200' },
+]
+
+const badgeImages = [
+  'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300',
+  'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300',
+]
+
+const testimonialData = [
+  { quote: '这套组件库让我们的动效页面交付速度快了三倍。', name: '张伟', designation: '前端负责人', image: avatar('Zhang Wei', '#6366f1') },
+  { quote: '类型完备，暗色模式开箱即用。', name: '李娜', designation: 'UI 设计师', image: avatar('Li Na', '#ec4899') },
 ]
 
 const timelineItems = [
@@ -590,6 +651,146 @@ const timelineItems = [
         </div>
       </div>
     </IuTracingBeam>
+  </div>
+
+  <!-- ============ 批次 4：扩展组件 ============ -->
+  <div v-else-if="meta.slug === 'glow-border'" class="demo-fit" style="height: 180px; width: 100%; max-width: 520px">
+    <div style="position: relative; width: 100%; height: 100%; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; display: grid; place-items: center">
+      <IuGlowBorder :color="String(s.color)" :border-width="Number(s.borderWidth) || 2" :duration="Number(s.duration) || 6" />
+      <p style="margin: 0; font-size: 14px; font-weight: 600">Glow Border 内容</p>
+    </div>
+  </div>
+
+  <div v-else-if="meta.slug === 'glowing-effect'" class="demo-fit" style="height: 180px; width: 100%; max-width: 520px">
+    <div style="position: relative; width: 100%; height: 100%; border-radius: 16px; border: 1px solid var(--border); display: grid; place-items: center">
+      <IuGlowingEffect :proximity="120" :spread="40" :disabled="false" :blur="0" />
+      <p style="margin: 0; font-size: 14px; font-weight: 600">鼠标靠近时卡面出现辉光</p>
+    </div>
+  </div>
+
+  <div v-else-if="meta.slug === 'animated-circular-progressbar'" class="demo-fit" style="height: 220px">
+    <IuAnimatedCircularProgressBar :value="Number(s.value) || 0" :max="Number(s.max) || 100" :duration="Number(s.duration) || 1" />
+  </div>
+
+  <div v-else-if="meta.slug === 'animated-tabs'" class="demo-fit" style="width: 100%; max-width: 520px">
+    <IuAnimatedTabs :tabs="atabsTabs" v-model="atabsActive">
+      <template #content="{ tab }">
+        <div style="padding: 16px; font-size: 14px; border: 1px solid var(--border); border-radius: 12px; margin-top: 12px">当前：{{ tab.value }}</div>
+      </template>
+    </IuAnimatedTabs>
+  </div>
+
+  <div v-else-if="meta.slug === 'images-slider'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px">
+    <IuImagesSlider :images="sliderImages" style="width: 100%; height: 100%; border-radius: 14px" />
+  </div>
+
+  <div v-else-if="meta.slug === 'confetti'" class="demo-fit" style="height: 140px">
+    <IuConfetti>
+      <IuConfettiButton class="btn">撒彩带 🎉</IuConfettiButton>
+    </IuConfetti>
+  </div>
+
+  <div v-else-if="meta.slug === 'container-scroll'" style="width: 100%; max-width: 640px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden">
+    <IuContainerScroll style="height: 320px">
+      <template #title>
+        <h3 style="text-align: center; font-size: 20px; font-weight: 700; margin: 0">滚动体验旋转展开</h3>
+      </template>
+      <div style="height: 240px; border-radius: 14px; border: 1px solid var(--border); background: linear-gradient(to bottom, rgba(99, 102, 241, 0.12), transparent)">
+        <p style="padding: 24px; text-align: center; font-size: 13px; margin: 0">卡片随页面滚动旋转入场</p>
+      </div>
+    </IuContainerScroll>
+  </div>
+
+  <div v-else-if="meta.slug === 'file-tree'" style="width: 100%; max-width: 520px">
+    <IuTree
+      :elements="treeElements"
+      initial-selected-id="4"
+      :initial-expanded-items="['1', '2']"
+      class="h-64 overflow-auto rounded-lg border p-2"
+    />
+  </div>
+
+  <div v-else-if="meta.slug === 'dock'" class="demo-fit" style="height: 140px; align-items: flex-end; padding-bottom: 16px">
+    <IuDock class="rounded-2xl border" style="padding: 8px 12px; background: var(--surface)">
+      <IuDockIcon title="主页">🏠</IuDockIcon>
+      <IuDockIcon title="文档">📄</IuDockIcon>
+      <IuDockSeparator />
+      <IuDockIcon title="设置">⚙️</IuDockIcon>
+    </IuDock>
+  </div>
+
+  <div v-else-if="meta.slug === 'link-preview'" class="demo-fit" style="height: 200px; align-items: flex-start; padding-top: 24px">
+    <span style="font-size: 15px">
+      看
+      <IuLinkPreview
+        url="https://inspira-ui.com"
+        :is-static="true"
+        image-src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=400"
+      >
+        这个链接
+      </IuLinkPreview>
+      的悬停预览。
+    </span>
+  </div>
+
+  <div v-else-if="meta.slug === 'book'" class="demo-fit" style="height: 320px">
+    <IuBook color="indigo" size="md">
+      <template #header>
+        <span style="font-size: 12px; opacity: 0.7">inspira-ui-components</span>
+      </template>
+      <template #title>
+        <h4 style="margin: 0; font-size: 20px; font-weight: 700">Vue 动效组件集</h4>
+      </template>
+      <template #description>
+        <p style="margin: 0; font-size: 12px; opacity: 0.8">悬停翻开封面查看内容。</p>
+      </template>
+    </IuBook>
+  </div>
+
+  <div v-else-if="meta.slug === 'lamp-effect'" class="demo-fit" style="width: 100%; max-width: 640px">
+    <IuLampEffect class="rounded-xl" style="min-height: 260px">
+      <h3 style="z-index: 10; text-align: center; font-size: 22px; font-weight: 650; color: #fff; margin: 0">Lamp Effect</h3>
+    </IuLampEffect>
+  </div>
+
+  <div v-else-if="meta.slug === 'iphone-mockup'" class="demo-fit" style="height: 560px">
+    <IuIPhone15ProMockup :width="260" :height="528" style="filter: drop-shadow(0 24px 48px rgba(0,0,0,0.35))">
+      <img
+        src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=520"
+        alt="screen"
+        style="width: 100%; height: 100%; object-fit: cover"
+      >
+    </IuIPhone15ProMockup>
+  </div>
+
+  <div v-else-if="meta.slug === 'balance-slider'" class="demo-fit" style="height: 160px; width: 100%; max-width: 520px">
+    <IuBalanceSlider :initial-value="Number(s.initialValue) || 50" style="width: 100%" />
+  </div>
+
+  <div v-else-if="meta.slug === 'animated-testimonials'" class="demo-fit" style="width: 100%; max-width: 560px; min-height: 320px; border: 1px solid var(--border); border-radius: 14px; padding: 24px">
+    <IuAnimatedTestimonials :testimonials="testimonialData" :autoplay="Boolean(s.autoplay)" :duration="Number(s.duration) || 5000" style="width: 100%" />
+  </div>
+
+  <div v-else-if="meta.slug === 'card-stack'" class="demo-fit" style="height: 460px; width: 100%; max-width: 520px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px">
+    <IuCardStack :total-cards="3" class="h-[400%]">
+      <IuCardStackItem :index="0" class="rounded-xl border p-6" style="background: var(--surface)">第一张 —— 向下滚动查看堆叠收起</IuCardStackItem>
+      <IuCardStackItem :index="1" class="rounded-xl border p-6" style="background: var(--surface)">第二张</IuCardStackItem>
+      <IuCardStackItem :index="2" class="rounded-xl border p-6" style="background: var(--surface)">第三张</IuCardStackItem>
+    </IuCardStack>
+  </div>
+
+  <div v-else-if="meta.slug === 'images-badge'" class="demo-fit" style="height: 220px; width: 100%; max-width: 520px; align-items: flex-end; padding-bottom: 24px">
+    <IuImagesBadge text="我的作品" :images="badgeImages" />
+  </div>
+
+  <div v-else-if="meta.slug === 'highlight-text'" class="demo-fit" style="height: 120px">
+    <span style="font-size: 17px">
+      <IuHighlightText highlight-color="hsl(25 90% 80%)">高亮涂色的文字内容</IuHighlightText>
+    </span>
+  </div>
+
+  <div v-else-if="meta.slug === 'animate-grid'" class="demo-fit" style="height: 420px; width: 100%; max-width: 560px">
+    <IuAnimateGrid :cards="gridCards" style="width: 100%" />
   </div>
 
   <!-- Dialog 详情页的真实弹窗实例 -->

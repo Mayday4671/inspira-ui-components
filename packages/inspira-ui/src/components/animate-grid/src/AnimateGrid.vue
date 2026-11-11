@@ -1,13 +1,11 @@
-<script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
-import { cn } from '../../../utils';
+<script lang="ts">
 
-interface Cards {
+
+export interface Cards {
   logo: string;
 }
 
-interface Props {
+export interface Props {
   class?: string;
   textGlowStartColor?: string;
   perspective?: number;
@@ -16,6 +14,14 @@ interface Props {
   rotateX?: number;
   rotateY?: number;
 }
+</script>
+
+<script lang="ts" setup>
+import { onMounted, ref, watch } from 'vue'
+import { useDebounceFn, useMouseInElement } from '@vueuse/core'
+import { cn } from '../../../utils';
+
+
 
 const {
   textGlowStartColor = "#38ef7d80",

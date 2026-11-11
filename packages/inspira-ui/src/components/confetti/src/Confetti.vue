@@ -1,21 +1,26 @@
-<script setup lang="ts">
-import { onMounted, onUnmounted, provide, ref } from 'vue'
+<script lang="ts">
 import type {
   GlobalOptions as ConfettiGlobalOptions,
   CreateTypes as ConfettiInstance,
   Options as ConfettiOptions,
 } from "canvas-confetti";
-import { create } from "canvas-confetti";
-interface Api {
+
+export interface Api {
   fire: (options?: ConfettiOptions) => void;
 }
 
-interface ConfettiProps {
+export interface ConfettiProps {
   options?: ConfettiOptions;
   globalOptions?: ConfettiGlobalOptions;
   manualstart?: boolean;
   class?: string;
 }
+</script>
+
+<script setup lang="ts">
+import { onMounted, onUnmounted, provide, ref } from 'vue'
+import { create } from "canvas-confetti";
+
 
 const props = defineProps<ConfettiProps>();
 

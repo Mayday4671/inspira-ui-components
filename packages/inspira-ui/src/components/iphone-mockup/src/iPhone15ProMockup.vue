@@ -1,11 +1,16 @@
 <!-- eslint-disable check-file/filename-naming-convention -->
-<script lang="ts" setup>
-// eslint-disable-next-line check-file/filename-naming-convention
-interface Props {
+<script lang="ts">
+
+
+export interface Props {
   width?: number;
   height?: number;
   src?: string;
 }
+</script>
+
+<script lang="ts" setup>
+// eslint-disable-next-line check-file/filename-naming-convention
 
 withDefaults(defineProps<Props>(), {
   width: 433,

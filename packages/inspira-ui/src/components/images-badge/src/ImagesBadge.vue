@@ -1,9 +1,7 @@
-<script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { motion } from 'motion-v'
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from '../../../utils';
-interface Props {
+
+export interface Props {
   text: string;
   images: string[];
   class?: HTMLAttributes["class"];
@@ -24,6 +22,12 @@ interface Props {
   /** Rotation angle for fanned images on hover in degrees */
   hoverRotation?: number;
 }
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import { motion } from 'motion-v'
+import { cn } from '../../../utils';
 
 const {
   text,

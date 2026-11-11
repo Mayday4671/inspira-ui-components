@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import { computed } from 'vue'
-import { cn } from '../../../utils';
-interface Props {
+<script lang="ts">
+
+
+export interface Props {
   max?: number;
   value?: number;
   min?: number;
@@ -12,6 +12,11 @@ interface Props {
   showPercentage?: boolean;
   duration?: number;
 }
+</script>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { cn } from '../../../utils';
 
 const props = withDefaults(defineProps<Props>(), {
   max: 100,

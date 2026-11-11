@@ -1,12 +1,16 @@
-<script lang="ts" setup>
-import { computed } from 'vue'
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from '../../../utils';
-interface LampEffectProps {
+
+export interface LampEffectProps {
   delay?: number;
   duration?: number;
   class?: HTMLAttributes["class"];
 }
+</script>
+
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { cn } from '../../../utils';
 
 const props = withDefaults(defineProps<LampEffectProps>(), {
   delay: 0.5,

@@ -1,6 +1,7 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue'
-interface Props {
+<script lang="ts">
+
+
+export interface Props {
   initialValue?: number;
   leftColor?: string;
   rightColor?: string;
@@ -11,6 +12,10 @@ interface Props {
   indicatorColor?: string;
   borderRadius?: number;
 }
+</script>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
 
 const props = withDefaults(defineProps<Props>(), {
   initialValue: 50,
@@ -52,7 +57,7 @@ const sliderTrackStyles = computed(() => ({
 }));
 
 const leftColorHsl = computed(() => {
-  const [h, s, l] = hexToHsl(props.leftColor);
+  const [h, s] = hexToHsl(props.leftColor);
   const alpha = 0.4;
   const lightness = 24 + (30 * (100 - value.value)) / 100;
   return `hsl(${h} ${s}% ${lightness}% / ${alpha})`;

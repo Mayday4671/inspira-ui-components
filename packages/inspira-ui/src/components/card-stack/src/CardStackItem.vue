@@ -1,15 +1,19 @@
-<script setup lang="ts">
-import { computed, inject } from 'vue'
-import { useTransform, Motion } from 'motion-v'
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from '../../../utils';
-import { CardStackKey } from "./CardStackContext";
 
-interface Props {
+export interface Props {
   index: number;
   topPosition?: string;
   class?: HTMLAttributes["class"];
 }
+</script>
+
+<script setup lang="ts">
+import { computed, inject } from 'vue'
+import { useTransform, Motion } from 'motion-v'
+import { cn } from '../../../utils';
+import { CardStackKey } from "./CardStackContext";
+
 
 defineOptions({ inheritAttrs: false });
 

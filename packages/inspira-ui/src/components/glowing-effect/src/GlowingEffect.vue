@@ -1,9 +1,7 @@
-<script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
-import { animate } from 'motion-v'
+<script lang="ts">
 import type { HTMLAttributes } from "vue";
-import { cn } from '../../../utils';
-interface Props {
+
+export interface Props {
   blur?: number;
   inactiveZone?: number;
   proximity?: number;
@@ -15,6 +13,12 @@ interface Props {
   movementDuration?: number;
   borderWidth?: number;
 }
+</script>
+
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
+import { animate } from 'motion-v'
+import { cn } from '../../../utils';
 
 const props = withDefaults(defineProps<Props>(), {
   blur: 0,
