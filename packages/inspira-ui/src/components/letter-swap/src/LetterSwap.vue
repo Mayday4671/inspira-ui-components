@@ -17,6 +17,10 @@ export interface Props {
 }
 </script>
 
+
+type StaggerOrigin = "first" | "last" | "center" | number;
+
+type AnimationMode = "forward" | "pingpong";
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { cn } from '../../../utils';
