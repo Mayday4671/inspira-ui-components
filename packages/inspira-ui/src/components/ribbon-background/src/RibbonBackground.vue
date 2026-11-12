@@ -16,6 +16,7 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
+import ShaderToy from '../../shader-toy/src/ShaderToy.vue'
 import { cn } from '../../../utils';
 import { computed } from "vue";
 defineOptions({ name: 'IuRibbonBackground' })

@@ -36,7 +36,7 @@ const currentColors = ref(props.colors);
 const count = ref(0);
 const lastHidden = ref(0);
 
-let intervalId: undefined | NodeJS.Timeout;
+let intervalId: ReturnType<typeof setInterval> | undefined;
 onMounted(() => {
   intervalId = setInterval(() => {
     const shuffled = [...props.colors].sort(() => 0.5 - Math.random());

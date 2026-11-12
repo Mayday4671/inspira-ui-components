@@ -1,5 +1,3 @@
-import type { MotionProps } from 'motion-v'
-
 const GRADIENT_ANGLES = {
   top: 0,
   right: 90,
@@ -14,6 +12,6 @@ export type ProgressiveBlurProps = {
   blurLayers?: number
   class?: string
   blurIntensity?: number
-} & MotionProps<'div'>
+}
 
 export { GRADIENT_ANGLES }

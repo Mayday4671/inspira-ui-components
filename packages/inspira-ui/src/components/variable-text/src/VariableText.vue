@@ -1,6 +1,6 @@
 <script lang="ts">
-import type { MaybeComputedElementRef } from "@vueuse/core";
-import type { Transition } from "motion-v";
+import type { MaybeComputedElementRef } from "../../motion-types";
+import type { Transition } from "motion-dom";
 import type { HTMLAttributes } from "vue";
 
 export type Falloff = "linear" | "exponential" | "gaussian";

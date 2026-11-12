@@ -15,24 +15,24 @@ export interface Props {
 
 
 <script lang="ts" setup>
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，motion-v useScroll/useTransform 类型与严格模式冲突
-import { nextTick, onMounted, ref, watch } from 'vue'
-import { Motion, useScroll, useTransform } from "motion-v";
+import { nextTick, onMounted, ref } from 'vue'
+import { Motion, useMotionValue, useScroll, useTransform } from "motion-v";
 defineOptions({ name: 'IuTimeline' })
 
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],
 });
 
-const timelineContainerRef = ref<HTMLElement | null>(null);
 const timelineRef = ref<HTMLElement | null>(null);
 const height = ref(0);
+const measuredHeight = useMotionValue(0);
 
 onMounted(async () => {
   await nextTick();
   if (timelineRef.value) {
     const rect = timelineRef.value.getBoundingClientRect();
     height.value = rect.height;
+    measuredHeight.set(rect.height);
   }
 });
 
@@ -42,16 +42,11 @@ const { scrollYProgress } = useScroll({
 });
 
 const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-const heightTransform = ref(useTransform(scrollYProgress, [0, 1], [0, 0]));
-
-watch(height, (newHeight) => {
-  heightTransform.value = useTransform(scrollYProgress, [0, 1], [0, newHeight]);
-});
+const heightTransform = useTransform(() => scrollYProgress.get() * measuredHeight.get());
 </script>
 
 <template>
   <div
-    ref="timelineContainerRef"
     class="w-full bg-white font-sans md:px-10 dark:bg-neutral-950"
   >
     <div class="mx-auto max-w-7xl px-4 py-20 md:px-8 lg:px-10">
@@ -94,7 +89,7 @@ watch(height, (newHeight) => {
         :style="{
           height: `${height}px`,
         }"
-        class="absolute top-0 left-8 w-[2px] overflow-hidden bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-0% via-neutral-200 to-transparent to-99% mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] md:left-8 dark:via-neutral-700"
+        class="absolute top-0 left-8 w-[2px] overflow-hidden bg-linear-to-b from-transparent from-0% via-neutral-200 to-transparent to-99% mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] md:left-8 dark:via-neutral-700"
       >
         <Motion
           as="div"

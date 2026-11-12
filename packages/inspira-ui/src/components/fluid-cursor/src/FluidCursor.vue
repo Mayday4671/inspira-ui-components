@@ -60,8 +60,6 @@ export interface DoubleFBO {
 </script>
 
 <script setup lang="ts">
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，流体模拟类型过宽
-import { h } from 'vue'
 import { cn } from '../../../utils';
 import { onMounted, ref, watch } from "vue";
 defineOptions({ name: 'IuFluidCursor' })
@@ -129,7 +127,9 @@ onMounted(() => {
   };
 
   // Get WebGL context (WebGL1 or WebGL2)
-  const { gl, ext } = getWebGLContext(canvas);
+  const context = getWebGLContext(canvas);
+  if (!context) return;
+  const { gl, ext } = context;
   if (!gl || !ext) return;
 
   // If no linear filtering, reduce resolution
@@ -139,7 +139,7 @@ onMounted(() => {
   }
 
   function getWebGLContext(canvas: HTMLCanvasElement) {
-    const params = {
+    const params: WebGLContextAttributes = {
       alpha: true,
       depth: false,
       stencil: false,
@@ -147,59 +147,45 @@ onMounted(() => {
       preserveDrawingBuffer: false,
     };
 
-    let gl = canvas.getContext("webgl2", params) as WebGL2RenderingContext | null;
-
-    if (!gl) {
-      gl = (canvas.getContext("webgl", params) ||
-        canvas.getContext("experimental-webgl", params)) as WebGL2RenderingContext | null;
-    }
-
-    if (!gl) {
-      throw new Error("Unable to initialize WebGL.");
-    }
+    const gl = canvas.getContext("webgl2", params) ??
+      canvas.getContext("webgl", params) ??
+      (canvas.getContext("experimental-webgl", params) as WebGLRenderingContext | null);
+    if (!gl) return null;
 
     const isWebGL2 = "drawBuffers" in gl;
 
-    let supportLinearFiltering = false;
-    let halfFloat = null;
-
-    if (isWebGL2) {
-      (gl as WebGL2RenderingContext).getExtension("EXT_color_buffer_float");
-      supportLinearFiltering = !!(gl as WebGL2RenderingContext).getExtension(
-        "OES_texture_float_linear",
-      );
-    } else {
-      halfFloat = gl.getExtension("OES_texture_half_float");
-      supportLinearFiltering = !!gl.getExtension("OES_texture_half_float_linear");
-    }
+    if (isWebGL2) gl.getExtension("EXT_color_buffer_float");
+    const supportLinearFiltering = !!gl.getExtension(
+      isWebGL2 ? "OES_texture_float_linear" : "OES_texture_half_float_linear",
+    );
+    const halfFloatTexType = isWebGL2
+      ? gl.HALF_FLOAT
+      : gl.getExtension("OES_texture_half_float")?.HALF_FLOAT_OES;
+    if (halfFloatTexType === undefined) return null;
 
     gl.clearColor(0, 0, 0, 1);
 
-    const halfFloatTexType = isWebGL2
-      ? (gl as WebGL2RenderingContext).HALF_FLOAT
-      : (halfFloat && halfFloat.HALF_FLOAT_OES) || 0;
-
-    let formatRGBA: unknown;
-    let formatRG: unknown;
-    let formatR: unknown;
+    let formatRGBA: ReturnType<typeof getSupportedFormat>;
+    let formatRG: ReturnType<typeof getSupportedFormat>;
+    let formatR: ReturnType<typeof getSupportedFormat>;
 
     if (isWebGL2) {
       formatRGBA = getSupportedFormat(
         gl,
-        (gl as WebGL2RenderingContext).RGBA16F,
+        gl.RGBA16F,
         gl.RGBA,
         halfFloatTexType,
       );
       formatRG = getSupportedFormat(
         gl,
-        (gl as WebGL2RenderingContext).RG16F,
-        (gl as WebGL2RenderingContext).RG,
+        gl.RG16F,
+        gl.RG,
         halfFloatTexType,
       );
       formatR = getSupportedFormat(
         gl,
-        (gl as WebGL2RenderingContext).R16F,
-        (gl as WebGL2RenderingContext).RED,
+        gl.R16F,
+        gl.RED,
         halfFloatTexType,
       );
     } else {
@@ -207,6 +193,7 @@ onMounted(() => {
       formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
       formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
     }
+    if (!formatRGBA || !formatRG || !formatR) return null;
 
     return {
       gl,
@@ -261,11 +248,16 @@ onMounted(() => {
     gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
 
     const fbo = gl.createFramebuffer();
-    if (!fbo) return false;
+    if (!fbo) {
+      gl.deleteTexture(texture);
+      return false;
+    }
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    gl.deleteFramebuffer(fbo);
+    gl.deleteTexture(texture);
     return status === gl.FRAMEBUFFER_COMPLETE;
   }
 

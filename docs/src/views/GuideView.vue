@@ -20,7 +20,8 @@ const tocLinks: Array<[string, string]> = [
 ]
 
 const onDemandCode = `<script setup lang="ts">
-import { IuShimmerButton, IuNumberTicker } from '${PACKAGE_NAME}'
+import { IuShimmerButton } from '${PACKAGE_NAME}/components/shimmer-button'
+import { IuNumberTicker } from '${PACKAGE_NAME}/components/number-ticker'
 import '${PACKAGE_NAME}/dist/index.css'
 <\/script>
 

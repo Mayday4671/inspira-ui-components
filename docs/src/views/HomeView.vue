@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IuShimmerButton } from 'inspira-ui-components'
+import { IuShimmerButton } from 'inspira-ui-components/components/shimmer-button'
 import { useRouter } from 'vue-router'
 import UiIcon from '../components/UiIcon.vue'
 import LazyPreview from '../components/LazyPreview.vue'

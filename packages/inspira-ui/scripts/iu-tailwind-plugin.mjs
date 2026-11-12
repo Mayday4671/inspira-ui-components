@@ -16,7 +16,21 @@ import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
-const tailwindCssEntry = require.resolve('tailwindcss/index.css')
+
+function namespaceTheme(css, theme) {
+  const variables = new Set(Array.from(theme.matchAll(/(--[\w-]+):/g), ([, name]) => name))
+  const namespace = (name) => {
+    if (name.startsWith('--tw-')) return `--iu-${name.slice(2)}`
+    return variables.has(name) ? `--iu-tw-${name.slice(2)}` : name
+  }
+
+  return css
+    .replace(/@layer properties\b/g, '@layer iu-properties')
+    .replace(/(^[ \t]*|var\(\s*|@property\s+)(--[\w-]+)/gm, (_, prefix, name) =>
+      prefix + namespace(name),
+    )
+    .replace(/(@keyframes |(?:--iu-tw-animate-[\w-]+|animation):\s*)(spin|ping|pulse|bounce)\b/g, '$1iu-$2')
+}
 
 function collectFiles(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -32,9 +46,10 @@ function collectFiles(dir, out = []) {
  * @param {string} opts.stylesId      被拦截编译的 CSS 文件绝对路径（正斜杠）
  * @param {string} opts.base          Tailwind base 目录（相对 @source/@import 的锚点）
  * @param {string[]} opts.sourceDirs  参与候选扫描的目录列表
+ * @param {boolean} [opts.library]   组件库样式需独立于宿主主题
  */
 export function iuTailwindPlugin(opts) {
-  const { stylesId, base, sourceDirs } = opts
+  const { stylesId, base, sourceDirs, library = false } = opts
   const sourceDirsNorm = sourceDirs.map((d) => path.resolve(d))
 
   return {
@@ -61,24 +76,33 @@ export function iuTailwindPlugin(opts) {
       }
       contents.push({ content: code, extension: 'css' })
 
-      const scanner = new Scanner({ base: sourceDirsNorm[0] })
-      const candidates = scanner.scanFiles(
-        contents.map(({ content, extension }) => ({ content, extension })),
-      )
-
+      let tailwindTheme = ''
       const compiled = await compile(code, {
         // Windows 下 fileURLToPath/path.resolve 产生反斜杠，Tailwind base 需正斜杠
         base: String(base ?? path.dirname(norm)).replace(/\\/g, '/') + '/',
         async loadStylesheet(id, ctxBase) {
-          const resolved =
-            id === 'tailwindcss' ? tailwindCssEntry : path.resolve(ctxBase, id)
+          const resolved = id.startsWith('tailwindcss')
+            ? require.resolve(id === 'tailwindcss' ? 'tailwindcss/index.css' : id)
+            : path.resolve(ctxBase, id)
           const newBase = path.dirname(resolved) + '/'
-          return { content: fs.readFileSync(resolved, 'utf8'), base: newBase, path: resolved }
+          const content = fs.readFileSync(resolved, 'utf8')
+          if (id === 'tailwindcss/theme.css' || id === './theme.css') tailwindTheme += content
+          return { content, base: newBase, path: resolved }
         },
       })
 
-      const css = compiled.build(candidates)
-      return { code: css, map: null }
+      const scanner = new Scanner({ base: sourceDirsNorm[0] })
+      const candidates = scanner.scanFiles(contents)
+      if (!library) return { code: compiled.build(candidates), map: null }
+
+      // Scope the declarations via a Tailwind variant while preserving the
+      // existing utility class names in component templates.
+      const css = compiled.build(candidates.map((candidate) => `iu:${candidate}`))
+        .replaceAll('.iu\\:', '.')
+      if (!css.includes('.dark\\:')) {
+        this.error('组件库样式缺少 dark: 工具类')
+      }
+      return { code: namespaceTheme(css, tailwindTheme), map: null }
     },
   }
 }
@@ -90,4 +114,5 @@ export const libTailwindOptions = {
     .replace(/\\/g, '/'),
   base: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/styles') + '/',
   sourceDirs: [path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/components')],
+  library: true,
 }

@@ -89,9 +89,9 @@ function calcGrid() {
 
 watch(width, calcGrid);
 
-let intervalId: NodeJS.Timeout | undefined;
+let intervalId: ReturnType<typeof setInterval> | undefined;
 
-let timeoutId: NodeJS.Timeout | undefined;
+let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
 onMounted(() => {
   timeoutId = setTimeout(calcGrid, 50);

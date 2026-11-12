@@ -8,7 +8,8 @@
     "dev:dist": "vite --mode dist",
     "build": "vite build",
     "build:dist": "vite build --mode dist",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "inspira-ui-components": "workspace:*"

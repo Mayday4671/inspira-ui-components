@@ -56,7 +56,7 @@ function createCurvedPath(dot: Dot) {
 
 <template>
   <div class="relative aspect-2/1 w-full rounded-lg bg-white font-sans dark:bg-black">
-    <NuxtImg
+    <img
       :src="`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`"
       class="pointer-events-none size-full mask-[linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] select-none"
       alt="world map"

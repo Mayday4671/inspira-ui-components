@@ -57,7 +57,6 @@ export interface AppConfig {
 </script>
 
 <script setup lang="ts">
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，three/ogl 类型过严
 /* eslint-disable @typescript-eslint/no-explicit-any  */
 
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from "ogl";

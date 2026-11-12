@@ -2,6 +2,7 @@
 import { useEventListener } from '@vueuse/core'
 import { computed, provide, ref } from 'vue'
 import { ANIMATED_MODAL_KEY, type AnimatedModalContext } from './context'
+import { isTopModal } from './modal-stack'
 import type { AnimatedModalProps } from './modal-types'
 
 defineOptions({ name: 'IuAnimatedModal' })
@@ -56,9 +57,8 @@ provide(ANIMATED_MODAL_KEY, ctx)
 
 if (typeof window !== 'undefined') {
   useEventListener(window, 'keydown', (event: KeyboardEvent) => {
-    if (!props.closeOnEsc) return
-    if (!open.value) return
-    if (event.key !== 'Escape') return
+    if (event.defaultPrevented || event.key !== 'Escape' || !open.value || !props.closeOnEsc) return
+    if (!isTopModal(window.document, ctx)) return
     event.preventDefault()
     closeModal()
   })

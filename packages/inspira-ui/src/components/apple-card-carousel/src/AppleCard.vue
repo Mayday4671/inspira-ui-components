@@ -15,10 +15,12 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { onClickOutside } from "@vueuse/core";
 import { AnimatePresence, Motion } from "motion-v";
 import { inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { CarouselKey } from "./AppleCarouselContext";
+import AppleBlurImage from "./AppleBlurImage.vue";
 defineOptions({ name: 'IuAppleCard' })
 
 
@@ -95,10 +97,12 @@ function handleClose() {
           class="relative z-60 mx-auto my-10 h-fit max-w-5xl rounded-3xl bg-white p-4 font-sans md:p-10 dark:bg-neutral-900"
         >
           <button
+            type="button"
+            aria-label="Close card"
             class="sticky top-4 right-0 ml-auto flex size-8 items-center justify-center rounded-full bg-black dark:bg-white"
             @click="handleClose"
           >
-            <Icon
+            <ComponentIcon
               name="tabler:x"
               class="size-6 text-neutral-100 dark:text-neutral-900"
             />

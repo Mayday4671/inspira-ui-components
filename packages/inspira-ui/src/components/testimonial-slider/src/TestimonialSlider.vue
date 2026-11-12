@@ -10,6 +10,7 @@ export interface Testimonial {
 </script>
 
 <script lang="ts" setup>
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { onMounted, onUnmounted, ref } from "vue";
 defineOptions({ name: 'IuTestimonialSlider' })
 
@@ -99,7 +100,7 @@ onUnmounted(() => {
               :key="`image-${index}`"
               class="absolute inset-0 -z-10 flex h-full flex-col"
             >
-              <NuxtImg
+              <img
                 class="relative top-11 left-1/2 -translate-x-1/2 rounded-full"
                 :src="testimonial.img"
                 width="60"
@@ -135,10 +136,12 @@ onUnmounted(() => {
     </div>
     <div class="mt-4 flex w-full items-center justify-between gap-4 pt-12 md:pt-0">
       <button
+        type="button"
+        aria-label="Previous testimonial"
         class="group/button flex size-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
         @click="handlePrev"
       >
-        <Icon
+        <ComponentIcon
           name="lucide:arrow-left"
           class="size-5 text-black transition-transform duration-300 group-hover/button:rotate-12 dark:text-neutral-400"
         />
@@ -151,10 +154,12 @@ onUnmounted(() => {
       </div>
 
       <button
+        type="button"
+        aria-label="Next testimonial"
         class="group/button flex size-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
         @click="handleNext"
       >
-        <Icon
+        <ComponentIcon
           name="lucide:arrow-right"
           class="size-5 text-black transition-transform duration-300 group-hover/button:-rotate-12 dark:text-neutral-400"
         />

@@ -6,7 +6,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "inspira-ui-components": ["../packages/inspira-ui/src/index.ts"]
+      "inspira-ui-components": ["../packages/inspira-ui/src/index.ts"],
+      "inspira-ui-components/components/*": ["../packages/inspira-ui/src/components/*/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts"]

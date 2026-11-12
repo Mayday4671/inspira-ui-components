@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import ContainerScrollTitle from './ContainerScrollTitle.vue'
+import ContainerScrollCard from './ContainerScrollCard.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useElementBounding, useScroll, useWindowSize } from '@vueuse/core'
 defineOptions({ name: 'IuContainerScroll' })

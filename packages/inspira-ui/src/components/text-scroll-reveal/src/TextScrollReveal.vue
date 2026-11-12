@@ -8,6 +8,7 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
+import ScrollWord from './ScrollWord.vue'
 import { cn } from '../../../utils';
 import { computed, onMounted, onUnmounted, ref } from "vue";
 defineOptions({ name: 'IuTextScrollReveal' })

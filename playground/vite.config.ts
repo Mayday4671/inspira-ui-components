@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { vueOptions } from '../packages/inspira-ui/scripts/vue-options'
 import { iuTailwindPlugin } from '../packages/inspira-ui/scripts/iu-tailwind-plugin.mjs'
 
 /**
@@ -13,7 +14,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-    vue(),
+    vue(vueOptions),
     // 自定义管线：demo 自身工具类（含 dark:）正确生成
     iuTailwindPlugin({
       stylesId: fileURLToPath(new URL('./src/assets/tw.css', import.meta.url)),

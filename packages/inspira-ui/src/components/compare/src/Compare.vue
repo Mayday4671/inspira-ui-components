@@ -17,6 +17,7 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { cn } from '../../../utils';
 import { onMounted, onUnmounted, ref, useTemplateRef, watch } from "vue";
 defineOptions({ name: 'IuCompare' })
@@ -237,10 +238,11 @@ watch(
         />
         <div
           class="absolute top-1/2 -right-10 h-3/4 w-10 -translate-y-1/2 mask-[radial-gradient(100px_at_left,white,transparent)]"
+          aria-hidden="true"
         >
-          <StarField
-            :stars-count="120"
+          <div
             class="size-full"
+            style="background-image: radial-gradient(circle, #818cf8 1px, transparent 1px); background-size: 6px 7px"
           />
         </div>
 
@@ -250,7 +252,7 @@ watch(
             v-if="props.showHandlebar"
             class="pointer-events-auto absolute top-1/2 -right-2.5 z-30 flex size-5 -translate-y-1/2 cursor-grab items-center justify-center rounded-md bg-white shadow-[0px_-1px_0px_0px_#FFFFFF40]"
           >
-            <Icon
+            <ComponentIcon
               name="heroicons:ellipsis-vertical"
               class="size-4 text-black"
             />

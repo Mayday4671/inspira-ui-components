@@ -1,8 +1,7 @@
 import type { HTMLAttributes } from 'vue'
-import type { TransitionPresets } from '@vueuse/core'
 import type { ReducedMotionMode } from '../../motion-shared'
 
-type TransitionPresetKey = keyof typeof TransitionPresets
+type TransitionPresetKey = 'linear' | `ease${'In' | 'Out' | 'InOut'}${'Sine' | 'Quad' | 'Cubic' | 'Quart' | 'Quint' | 'Expo' | 'Circ' | 'Back'}`
 
 export interface NumberTickerProps {
   /** 目标数值 */

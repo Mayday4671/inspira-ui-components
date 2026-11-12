@@ -20,42 +20,20 @@ const { images = [], variant = "type1" } = defineProps<Props>();
 
 const containerRef = useTemplateRef("containerRef");
 
-let currentInstance: any = null;
+let currentInstance: InstanceType<(typeof variantMap)[string]> | undefined;
 
-// Initialize the variant instance
 function initializeVariant() {
-  if (!containerRef.value) return;
-
-  if (currentInstance && typeof currentInstance.destroy === "function") {
-    currentInstance.destroy();
-  }
-
-  // Get the appropriate variant class constructor
-  const Variant = variantMap[variant] || variantMap.type1;
-
-  // Create a new instance with the container element
-  currentInstance = new Variant!(containerRef.value);
+  currentInstance?.destroy();
+  currentInstance = undefined;
+  if (!containerRef.value || !images.length) return;
+  const Variant = variantMap[variant] ?? variantMap.type1;
+  currentInstance = new Variant(containerRef.value);
 }
 
-// Initialize on mount
-onMounted(() => {
-  initializeVariant();
-});
+onMounted(initializeVariant);
+watch([() => variant, () => images.slice()], initializeVariant, { flush: "post" });
 
-// Re-initialize when variant prop changes
-watch(
-  () => variant,
-  () => {
-    initializeVariant();
-  },
-);
-
-// Clean up on component unmount
-onBeforeUnmount(() => {
-  if (currentInstance && typeof currentInstance.destroy === "function") {
-    currentInstance.destroy();
-  }
-});
+onBeforeUnmount(() => currentInstance?.destroy());
 </script>
 
 <template>

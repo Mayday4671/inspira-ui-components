@@ -5,8 +5,11 @@
  */
 import { computed, ref } from 'vue'
 import {
+  IuAnimateGrid,
   IuAnimatedBeam,
   IuAnimatedCircularProgressBar,
+  IuAnimatedList,
+  IuAnimatedLogoCloud,
   IuAnimatedModal,
   IuAnimatedModalBody,
   IuAnimatedModalContent,
@@ -14,7 +17,6 @@ import {
   IuAnimatedTabs,
   IuAnimatedTestimonials,
   IuAnimatedTooltip,
-  IuAnimateGrid,
   IuAppleCardCarousel,
   IuAppleCarouselItem,
   IuAuroraBackground,
@@ -22,6 +24,7 @@ import {
   IuBendingGallery,
   IuBentoGrid,
   IuBlackHoleBackground,
+  IuBlurReveal,
   IuBook,
   IuBorderBeam,
   IuBoxReveal,
@@ -43,7 +46,6 @@ import {
   IuCosmicPortal,
   IuCubeCarousel,
   IuDesignTestimonials,
-  IuDialog,
   IuDirectionAwareHover,
   IuDitherShader,
   IuDock,
@@ -77,16 +79,16 @@ import {
   IuHtmlInCanvas,
   IuHtmlLiquid,
   IuHyperText,
+  IuIInput,
+  IuIPhone15ProMockup,
   IuIconCloud,
   IuIconLogoCloud,
-  IuIInput,
+  IuImageTrailCursor,
   IuImagesBadge,
   IuImagesSlider,
-  IuImageTrailCursor,
   IuInfiniteGrid,
   IuInteractiveGridPattern,
   IuInteractiveHoverButton,
-  IuIPhone15ProMockup,
   IuLampEffect,
   IuLens,
   IuLetterPullup,
@@ -112,8 +114,8 @@ import {
   IuParallaxFloat,
   IuParallaxFloatElement,
   IuParticleImage,
-  IuParticlesBg,
   IuParticleWhirlpoolBg,
+  IuParticlesBg,
   IuPathMarquee,
   IuPatternBackground,
   IuPhotoGallery,
@@ -123,6 +125,7 @@ import {
   IuRibbonBackground,
   IuRipple,
   IuRippleButton,
+  IuSVGMask,
   IuSafariMockup,
   IuScales,
   IuScratchToReveal,
@@ -145,7 +148,6 @@ import {
   IuStaticLogoCloud,
   IuStatistic,
   IuStractiumBackground,
-  IuSVGMask,
   IuTailedCursor,
   IuTestimonialSlider,
   IuTetris,
@@ -171,16 +173,15 @@ import {
   IuWarpBackground,
   IuWavyBackground,
   IuWorldMap,
-} from 'inspira-ui-components'
-import type { ComponentMeta } from '../data/registry'
+} from './preview-components'
+import DialogExample from '../examples/DialogExample.vue'
+import { htmlCanvasShader, type ComponentMeta } from '../data/registry'
 
 const props = defineProps<{
   meta: ComponentMeta
   state: Record<string, any>
   resetKey: number
 }>()
-
-const dialogOpen = ref(false)
 
 const s = computed(() => props.state)
 
@@ -426,9 +427,13 @@ const timelineItems = [
   </span>
 
   <!-- ============ 交互 ×5 ============ -->
-  <button v-else-if="meta.slug === 'dialog'" class="btn" type="button" @click="dialogOpen = true">
-    打开弹窗
-  </button>
+  <DialogExample
+    v-else-if="meta.slug === 'dialog'"
+    :key="resetKey"
+    :title="String(s.title)"
+    :danger="Boolean(s.danger)"
+    :show-close="Boolean(s.showClose)"
+  />
 
   <IuAnimatedModal v-else-if="meta.slug === 'animated-modal'">
     <IuAnimatedModalTrigger class="btn">打开弹窗</IuAnimatedModalTrigger>
@@ -466,7 +471,7 @@ const timelineItems = [
       :value="Number(s.value) || 0"
       :suffix="String(s.suffix ?? '')"
       :trend="s.trend === '' || s.trend === undefined ? undefined : Number(s.trend)"
-      trend-label="较上月"
+      :trend-label="String(s.trendLabel)"
     />
   </div>
 
@@ -490,7 +495,7 @@ const timelineItems = [
       :variant="(s.variant as 'grid' | 'dot' | 'big-dot')"
       :animate="Boolean(s.animate)"
       direction="top"
-      :speed="(12000 as any)"
+      :speed="10000"
       style="position: absolute; inset: 0"
     >
       <span style="font-size: 15px; font-weight: 750">网格 / 圆点图案背景</span>
@@ -968,11 +973,10 @@ const timelineItems = [
   <div v-else-if="meta.slug === 'path-marquee'" class="demo-fit" style="height: 200px; width: 100%; max-width: 640px">
     <IuPathMarquee
       path="M 20 100 C 200 10, 400 190, 620 100"
-      text="Inspira UI · 动效组件 · Inspira UI · 动效组件"
       :base-velocity="2"
       :show-path="false"
       style="width: 100%"
-    />
+    >Inspira UI · 动效组件 · Inspira UI · 动效组件</IuPathMarquee>
   </div>
 
   <div v-else-if="meta.slug === 'vanishing-input'" class="demo-fit" style="width: 100%; max-width: 480px">
@@ -1063,7 +1067,7 @@ const timelineItems = [
   </div>
 
   <div v-else-if="meta.slug === 'file-upload'" class="demo-fit" style="width: 100%; max-width: 480px">
-    <IuFileUpload @change="(files: File[]) => undefined" />
+    <IuFileUpload />
   </div>
 
   <div v-else-if="meta.slug === 'logo-origami'" class="demo-fit" style="height: 180px; width: 100%; max-width: 520px">
@@ -1132,7 +1136,7 @@ const timelineItems = [
   </div>
 
   <div v-else-if="meta.slug === 'circular-gallery'" class="demo-fit" style="height: 300px; width: 100%; max-width: 640px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
-    <IuCircularGallery text="GALLERY" text-color="#6366f1" class="h-full" />
+    <IuCircularGallery pause-on-hover><span>Vue</span><span>Inspira UI</span><span>TypeScript</span></IuCircularGallery>
   </div>
 
   <div v-else-if="meta.slug === 'safari-mockup'" class="demo-fit" style="height: 360px; width: 100%; max-width: 640px">
@@ -1146,7 +1150,10 @@ const timelineItems = [
   </div>
 
   <div v-else-if="meta.slug === 'text-reveal-card'" class="demo-fit" style="height: 220px; width: 100%; max-width: 480px">
-    <IuTextRevealCard text="把鼠标移过来" reveal-text="✦ 星光为你揭示答案" :stars-count="80" />
+    <IuTextRevealCard :stars-count="80">
+      <template #text>把鼠标移过来</template>
+      <template #revealText>✦ 星光为你揭示答案</template>
+    </IuTextRevealCard>
   </div>
 
   <div v-else-if="meta.slug === 'text-scroll-reveal'" class="demo-fit" style="height: 200px; width: 100%; max-width: 440px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px">
@@ -1166,18 +1173,18 @@ const timelineItems = [
   </div>
 
   <div v-else-if="meta.slug === 'halo-search'" class="demo-fit" style="width: 100%; max-width: 440px">
-    <IuHaloSearch placeholder="搜索组件…" />
+    <IuHaloSearch />
   </div>
 
   <div v-else-if="meta.slug === 'parallax-float'" class="demo-fit" style="height: 280px; width: 100%; max-width: 520px">
     <IuParallaxFloat class="h-full w-full rounded-xl border" :sensitivity="0.2" style="display: grid; place-items: center">
-      <IuParallaxFloatElement :sensitivity="0.35" style="font-size: 18px; font-weight: 700">前景层</IuParallaxFloatElement>
-      <IuParallaxFloatElement :sensitivity="0.12" style="font-size: 13px; opacity: 0.6">背景层</IuParallaxFloatElement>
+      <IuParallaxFloatElement :depth="0.35" style="font-size: 18px; font-weight: 700">前景层</IuParallaxFloatElement>
+      <IuParallaxFloatElement :depth="0.12" style="font-size: 13px; opacity: 0.6">背景层</IuParallaxFloatElement>
     </IuParallaxFloat>
   </div>
 
   <div v-else-if="meta.slug === 'orbit'" class="demo-fit" style="height: 280px">
-    <IuOrbit class="size-56" :duration="16" :radius="46" reverse>
+    <IuOrbit class="size-56" :duration="16" :radius="46" direction="reverse">
       <span class="rounded-full bg-emerald-500" style="width: 14px; height: 14px" />
       <span class="rounded-full bg-sky-500" style="width: 10px; height: 10px" />
     </IuOrbit>
@@ -1239,8 +1246,8 @@ const timelineItems = [
 
   <div v-else-if="meta.slug === 'html-in-canvas'" class="demo-fit" style="height: 300px; width: 100%; max-width: 560px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
     <IuHtmlInCanvas
-      shader-code="void main() { vec4 c = texture2D(uTexture, vUv); gl_FragColor = vec4(c.r, c.g, c.b, 1.0); }"
-      :mouse-enabled="true"
+      :shader-code="htmlCanvasShader"
+      interactive
       class="h-full"
     >
       <div style="padding: 28px; font-size: 18px; font-weight: 700">这段 DOM 进入了 WebGL 画布</div>
@@ -1420,27 +1427,6 @@ const timelineItems = [
       class="h-full"
     />
   </div>
-
-  <!-- Dialog 详情页的真实弹窗实例 -->
-  <Teleport to="body">
-    <IuDialog
-      v-if="meta.slug === 'dialog'"
-      v-model="dialogOpen"
-      :title="String(s.title)"
-      description="通过 v-model 控制开关：支持 Esc、点击遮罩、滚动锁定与焦点管理。"
-      :width="'420px'"
-      :danger="Boolean(s.danger)"
-      :show-close="Boolean(s.showClose)"
-      confirm-text="确 定"
-      cancel-text="取 消"
-      @confirm="dialogOpen = false"
-      @cancel="dialogOpen = false"
-    >
-      <div style="font-size: 13px; color: var(--muted)">
-        确认按钮点击后自动进入 loading，异步完成后自动关闭。
-      </div>
-    </IuDialog>
-  </Teleport>
 
   <!-- MultiStepLoader 详情页的真实全屏加载层（fixed 遮罩） -->
   <IuMultiStepLoader

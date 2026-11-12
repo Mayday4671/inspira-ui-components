@@ -58,16 +58,19 @@ import { cn } from '../../../utils';
 
 import {
   AmbientLight,
+  BufferGeometry,
   Color,
   DirectionalLight,
+  Material,
   PerspectiveCamera,
   PointLight,
   Scene,
+  Texture,
   WebGLRenderer,
 } from "three";
-import ThreeGlobe from "three-globe";
+import type ThreeGlobe from "three-globe";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import contries from "./globe.json";
 defineOptions({ name: 'IuGithubGlobe' })
 
@@ -100,53 +103,70 @@ const defaultGlobeConfig: GlobeConfig = {
 };
 
 const githubGlobeRef = ref<HTMLCanvasElement>();
-const globeData = ref<GlobeData[]>();
+const isUnavailable = ref(false);
 
-let numberOfRings: number[] = [];
+let renderer: WebGLRenderer | undefined;
+let scene: Scene | undefined;
+let camera: PerspectiveCamera | undefined;
+let controls: OrbitControls | undefined;
+let globe: ThreeGlobe | undefined;
+let animationFrame: number | undefined;
+let unmounted = false;
 
-let renderer: WebGLRenderer;
-let scene: Scene;
-let camera: PerspectiveCamera;
-let controls: OrbitControls;
+onMounted(async () => {
+  const canvas = githubGlobeRef.value;
+  if (!canvas) return;
 
-let globe: ThreeGlobe;
+  try {
+    // three-globe reads window when its module is evaluated.
+    const { default: Globe } = await import("three-globe");
+    if (unmounted) return;
 
-onMounted(() => {
-  setupScene();
-  initGlobe();
-  startAnimation();
-  animate();
+    createRenderer(canvas);
+    if (!renderer) {
+      isUnavailable.value = true;
+      return;
+    }
 
-  onWindowResize();
+    setupScene(canvas);
+    globe = new Globe({ waitForGlobeReady: true, animateIn: true });
+    scene?.add(globe);
+    initGlobe(globe);
 
-  window.addEventListener("resize", onWindowResize, false);
-
-  watch(globeData, () => {
-    if (!globe || !globeData.value) return;
-
-    numberOfRings = genRandomNumbers(0, props.data.length, Math.floor((props.data.length * 4) / 5));
-
-    globe.ringsData(globeData.value.filter((d, i) => numberOfRings.includes(i)));
-  });
+    canvas.addEventListener("webglcontextlost", onContextLost);
+    canvas.addEventListener("webglcontextrestored", onContextRestored);
+    window.addEventListener("resize", onWindowResize);
+    onWindowResize();
+    animate();
+  } catch {
+    if (unmounted) return;
+    disposeGlobe(canvas);
+    isUnavailable.value = true;
+  }
 });
 
-function setupScene() {
-  if (!githubGlobeRef.value) {
-    throw new Error("Canvas not initialized");
+onBeforeUnmount(() => {
+  unmounted = true;
+  disposeGlobe(githubGlobeRef.value);
+});
+
+function createRenderer(canvas: HTMLCanvasElement) {
+  const context = canvas.getContext("webgl2", { antialias: true, alpha: false });
+  if (!context) return;
+  try {
+    renderer = new WebGLRenderer({ canvas, context, antialias: true });
+  } catch (error) {
+    context.getExtension("WEBGL_lose_context")?.loseContext();
+    throw error;
   }
-
-  const width = githubGlobeRef.value.clientWidth;
-  const height = githubGlobeRef.value.clientHeight;
-
-  renderer = new WebGLRenderer({ canvas: githubGlobeRef.value, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
   renderer.autoClear = false;
+}
 
+function setupScene(canvas: HTMLCanvasElement) {
   scene = new Scene();
 
   camera = new PerspectiveCamera();
-  camera.aspect = width / height;
   camera.position.setX(0);
   camera.position.setY(0);
   camera.position.setZ(400);
@@ -176,7 +196,7 @@ function setupScene() {
   camera.updateProjectionMatrix();
   scene.add(camera);
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, canvas);
   controls.enableZoom = false;
   controls.enablePan = false;
   controls.enableDamping = true;
@@ -203,13 +223,8 @@ function latLngToCartesian(lat: number, lng: number, radius = 400) {
   return { x, y, z };
 }
 
-function initGlobe() {
-  buildData();
-
-  globe = new ThreeGlobe({
-    waitForGlobeReady: true,
-    animateIn: true,
-  })
+function initGlobe(globe: ThreeGlobe) {
+  globe
     .hexPolygonsData(contries.features)
     .hexPolygonResolution(3)
     .hexPolygonMargin(0.7)
@@ -217,9 +232,6 @@ function initGlobe() {
     .atmosphereColor(defaultGlobeConfig.atmosphereColor!)
     .atmosphereAltitude(defaultGlobeConfig.atmosphereAltitude!)
     .hexPolygonColor((_e) => defaultGlobeConfig.polygonColor!);
-
-  // globe.rotateY(-Math.PI * (5 / 9));
-  // globe.rotateZ(-Math.PI / 6);
 
   const globeMaterial = globe.globeMaterial() as unknown as {
     color: Color;
@@ -233,24 +245,6 @@ function initGlobe() {
   globeMaterial.emissiveIntensity = defaultGlobeConfig.emissiveIntensity || 0.1;
   globeMaterial.shininess = defaultGlobeConfig.shininess || 0.9;
 
-  scene.add(globe);
-}
-
-function onWindowResize() {
-  if (!githubGlobeRef.value) {
-    return;
-  }
-
-  const width = githubGlobeRef.value.clientWidth;
-  const height = githubGlobeRef.value.clientHeight;
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(width, height);
-}
-function startAnimation() {
-  if (!globe || !globeData.value!) return;
   globe
     .arcsData(props.data)
     .arcStartLat((d: any) => d.startLat * 1)
@@ -280,81 +274,93 @@ function startAnimation() {
     );
 }
 
+function onWindowResize() {
+  const canvas = githubGlobeRef.value;
+  if (!canvas || !camera || !renderer || isUnavailable.value) return;
+
+  const width = Math.max(1, canvas.clientWidth);
+  const height = Math.max(1, canvas.clientHeight);
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height, false);
+}
+
 function animate() {
+  if (!renderer || !scene || !camera || isUnavailable.value) return;
   if (globe && defaultGlobeConfig.autoRotate) {
     globe.rotation.y += (defaultGlobeConfig.autoRotateSpeed ?? 2.0) * 0.001;
   }
   renderer.render(scene, camera);
-
-  requestAnimationFrame(animate);
+  animationFrame = requestAnimationFrame(animate);
 }
 
-function buildData() {
-  const arcs = props.data;
-  const points = [];
-  for (let i = 0; i < arcs.length; i++) {
-    const arc = arcs[i] as Position;
-    const rgb = hexToRgb(arc.color) as { r: number; g: number; b: number };
-    points.push({
-      size: props.globeConfig.pointSize,
-      order: arc.order,
-      color: (t: number) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${1 - t})`,
-      lat: arc.startLat,
-      lng: arc.startLng,
-    });
-    points.push({
-      size: props.globeConfig.pointSize,
-      order: arc.order,
-      color: (t: number) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${1 - t})`,
-      lat: arc.endLat,
-      lng: arc.endLng,
-    });
+function stopAnimation() {
+  if (animationFrame !== undefined) {
+    cancelAnimationFrame(animationFrame);
+    animationFrame = undefined;
   }
-
-  // remove duplicates for same lat and lng
-  const filteredPoints = points.filter(
-    (v, i, a) =>
-      a.findIndex((v2) =>
-        ["lat", "lng"].every((k) => v2[k as "lat" | "lng"] === v[k as "lat" | "lng"]),
-      ) === i,
-  );
-
-  globeData.value = filteredPoints;
 }
 
-function hexToRgb(color: string) {
-  let hex = color.replace(/^#/, "");
-
-  // If the hex code is 3 characters, expand it to 6 characters
-  if (hex.length === 3) {
-    hex = hex
-      .split("")
-      .map((char) => char + char)
-      .join("");
-  }
-
-  // Parse the r, g, b values from the hex string
-  const bigint = Number.parseInt(hex, 16);
-  const r = (bigint >> 16) & 255; // Extract the red component
-  const g = (bigint >> 8) & 255; // Extract the green component
-  const b = bigint & 255; // Extract the blue component
-
-  // Return the RGB values as a string separated by spaces
-  return {
-    r,
-    g,
-    b,
-  };
+function onContextLost(event: Event) {
+  event.preventDefault();
+  isUnavailable.value = true;
+  stopAnimation();
+  globe?.pauseAnimation();
+  // Release Three.js listeners and caches before the restored context allocates new GPU handles.
+  renderer?.dispose();
+  renderer = undefined;
 }
 
-function genRandomNumbers(min: number, max: number, count: number) {
-  const arr: number[] = [];
-  while (arr.length < count) {
-    const r = Math.floor(Math.random() * (max - min)) + min;
-    if (!arr.includes(r)) arr.push(r);
+function onContextRestored() {
+  const canvas = githubGlobeRef.value;
+  if (!isUnavailable.value || !canvas) return;
+  try {
+    createRenderer(canvas);
+    if (!renderer) return;
+    isUnavailable.value = false;
+    globe?.resumeAnimation();
+    onWindowResize();
+    animate();
+  } catch {
+    disposeGlobe(canvas);
+    isUnavailable.value = true;
   }
+}
 
-  return arr;
+function disposeGlobe(canvas: HTMLCanvasElement | undefined) {
+  stopAnimation();
+  canvas?.removeEventListener("webglcontextlost", onContextLost);
+  canvas?.removeEventListener("webglcontextrestored", onContextRestored);
+  window.removeEventListener("resize", onWindowResize);
+  controls?.dispose();
+  globe?._destructor();
+
+  // Dispose scene meshes as well as three-globe's own animation and layer state.
+  const resources = new Set<{ dispose(): void }>();
+  scene?.traverse((object) => {
+    if ("geometry" in object && object.geometry instanceof BufferGeometry) {
+      resources.add(object.geometry);
+    }
+    if (!("material" in object)) return;
+    const materials = Array.isArray(object.material) ? object.material : [object.material];
+    for (const material of materials) {
+      if (!(material instanceof Material)) continue;
+      resources.add(material);
+      for (const value of Object.values(material)) {
+        if (value instanceof Texture) resources.add(value);
+      }
+    }
+  });
+  for (const resource of resources) resource.dispose();
+  scene?.clear();
+  renderer?.dispose();
+  renderer?.forceContextLoss();
+
+  controls = undefined;
+  globe = undefined;
+  scene = undefined;
+  camera = undefined;
+  renderer = undefined;
 }
 </script>
 
@@ -362,5 +368,9 @@ function genRandomNumbers(min: number, max: number, count: number) {
   <canvas
     ref="githubGlobeRef"
     :class="cn(`h-96 w-96`, props.class)"
+    role="img"
+    :aria-label="isUnavailable ? 'GitHub activity globe unavailable' : 'GitHub activity globe'"
+    :title="isUnavailable ? '3D globe unavailable' : undefined"
+    :style="isUnavailable ? { backgroundImage: `radial-gradient(circle closest-side, ${defaultGlobeConfig.globeColor} 70%, transparent 71%)` } : undefined"
   />
 </template>

@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { HTMLAttributes } from 'vue'
-import type { Transition } from 'motion-v'
+import type { Transition } from 'motion-dom'
 
 export interface Props {
   text?: string;

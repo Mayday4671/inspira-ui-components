@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import {  } from 'vue'
 import type { HexColor, HslaColor, HsvaColor, RgbaColor } from "@uiw/color-convert";
 import {
@@ -356,7 +357,7 @@ function updateAlpha(event: MouseEvent | TouchEvent) {
               @click="toggleDropdown"
             >
               <span>{{ colorType }}</span>
-              <Icon
+              <ComponentIcon
                 name="lucide:chevron-down"
                 :size="14"
               />

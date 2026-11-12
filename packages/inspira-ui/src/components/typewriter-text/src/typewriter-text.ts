@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'vue'
-import type { VariantType } from 'motion-v'
+import type { VariantType } from '../../motion-types'
 import type { ReducedMotionMode } from '../../motion-shared'
 
 type VariantResolver = (custom: any) => VariantType

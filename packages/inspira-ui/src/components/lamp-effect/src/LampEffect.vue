@@ -35,7 +35,7 @@ const delayInSeconds = computed(() => `${props.delay}s`);
       <!-- Conic Gradient -->
       <div
         :style="{
-          backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+          backgroundImage: `conic-gradient(var(--conic-position), var(--iu-tw-gradient-stops))`,
         }"
         class="animate-conic-gradient bg-gradient-conic absolute inset-auto right-1/2 h-56 w-60 overflow-visible from-cyan-500 via-transparent to-transparent text-white opacity-50 [--conic-position:from_70deg_at_center_top]"
       >
@@ -49,7 +49,7 @@ const delayInSeconds = computed(() => `${props.delay}s`);
 
       <div
         :style="{
-          backgroundImage: `conic-gradient(var(--conic-position), var(--tw-gradient-stops))`,
+          backgroundImage: `conic-gradient(var(--conic-position), var(--iu-tw-gradient-stops))`,
         }"
         class="animate-conic-gradient bg-gradient-conic absolute inset-auto left-1/2 h-56 w-60 from-transparent via-transparent to-cyan-500 text-white opacity-50 [--conic-position:from_290deg_at_center_top]"
       >

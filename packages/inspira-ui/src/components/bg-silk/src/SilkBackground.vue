@@ -11,6 +11,7 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
+import ShaderToy from '../../shader-toy/src/ShaderToy.vue'
 import { cn } from '../../../utils';
 defineOptions({ name: 'IuSilkBackground' })
 

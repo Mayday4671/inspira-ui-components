@@ -2,7 +2,7 @@
 export type AnimationMode = "forward" | "pingpong";
 export type StaggerOrigin = "first" | "last" | "center" | number;
 
-import type { Transition } from 'motion-v'
+import type { Transition } from 'motion-dom'
 import type { HTMLAttributes } from 'vue'
 
 export interface Props {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import type { HsvaColor } from "@uiw/color-convert";
 import { hsvaToRgba } from "@uiw/color-convert";
 import { computed, ref, watch } from "vue";
@@ -126,26 +127,28 @@ watch(() => props.color, calculateContrastRatios, { immediate: true, deep: true 
       </div>
     </div>
     <div class="flex items-center justify-end gap-1 *:select-none">
-      <UiBadge
-        :variant="isAccessible.aa ? 'default' : 'secondary'"
-        class="gap-1"
+      <span
+        :class="isAccessible.aa ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'"
+        class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold"
+        :aria-label="isAccessible.aa ? 'AA contrast passes' : 'AA contrast fails'"
       >
-        <Icon
+        <ComponentIcon
           :name="isAccessible.aa ? 'lucide:check' : 'lucide:x'"
           :size="12"
         />
         AA
-      </UiBadge>
-      <UiBadge
-        :variant="isAccessible.aaa ? 'default' : 'secondary'"
-        class="gap-1"
+      </span>
+      <span
+        :class="isAccessible.aaa ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'"
+        class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold"
+        :aria-label="isAccessible.aaa ? 'AAA contrast passes' : 'AAA contrast fails'"
       >
-        <Icon
+        <ComponentIcon
           :name="isAccessible.aaa ? 'lucide:check' : 'lucide:x'"
           :size="12"
         />
         AAA
-      </UiBadge>
+      </span>
     </div>
   </div>
 </template>

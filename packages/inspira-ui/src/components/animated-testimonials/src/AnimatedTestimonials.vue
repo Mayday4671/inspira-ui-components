@@ -16,8 +16,9 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { Motion } from 'motion-v'
+import { AnimatePresence, Motion } from 'motion-v'
 
 defineOptions({ name: 'IuAnimatedTestimonials' })
 const props = withDefaults(defineProps<Props>(), {
@@ -28,8 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const active = ref(0);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const interval = ref<any>();
+let interval: ReturnType<typeof setInterval> | undefined;
 
 const activeTestimonialQuote = computed(() => {
   return props.testimonials[active.value].quote.split(" ");
@@ -37,14 +37,12 @@ const activeTestimonialQuote = computed(() => {
 
 onMounted(() => {
   if (props.autoplay) {
-    interval.value = setInterval(handleNext, props.duration);
+    interval = setInterval(handleNext, props.duration);
   }
 });
 
 onUnmounted(() => {
-  if (!interval.value) {
-    clearInterval(interval.value);
-  }
+  clearInterval(interval);
 });
 
 function handleNext() {
@@ -100,7 +98,7 @@ function randomRotateY() {
               }"
               class="absolute inset-0 origin-bottom"
             >
-              <NuxtImg
+              <img
                 :src="testimonial.image"
                 :alt="testimonial.name"
                 width="500"
@@ -170,19 +168,23 @@ function randomRotateY() {
         </Motion>
         <div class="flex gap-4 pt-12 md:pt-0">
           <button
+            type="button"
+            aria-label="Previous testimonial"
             class="group/button flex size-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
             @click="handlePrev"
           >
-            <Icon
+            <ComponentIcon
               name="lucide:arrow-left"
               class="size-5 text-black transition-transform duration-300 group-hover/button:rotate-12 dark:text-neutral-400"
             />
           </button>
           <button
+            type="button"
+            aria-label="Next testimonial"
             class="group/button flex size-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
             @click="handleNext"
           >
-            <Icon
+            <ComponentIcon
               name="lucide:arrow-right"
               class="size-5 text-black transition-transform duration-300 group-hover/button:-rotate-12 dark:text-neutral-400"
             />

@@ -14,6 +14,7 @@ export interface Props {
 
 
 <script setup lang="ts">
+import RippleCircle from './RippleCircle.vue'
 defineOptions({ name: 'IuRipple' })
 withDefaults(defineProps<Props>(), {
   baseCircleSize: 210,

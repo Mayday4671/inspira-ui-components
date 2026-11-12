@@ -17,6 +17,10 @@ export interface AnimatedModalBodyProps {
   width?: string
   /** 是否显示右上角关闭按钮 */
   showClose?: boolean
+  /** 禁用右上角关闭按钮 */
+  disableClose?: boolean
+  /** 离场结束后卸载内容 */
+  destroyOnClose?: boolean
   /** 点击遮罩关闭 */
   closeOnOutside?: boolean
   /** 打开时锁定滚动 */

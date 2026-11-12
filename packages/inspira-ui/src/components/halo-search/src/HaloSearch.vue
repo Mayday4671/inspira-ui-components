@@ -7,6 +7,7 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 defineOptions({ name: 'IuHaloSearch' })
 const props = defineProps<Props>();
 </script>
@@ -28,6 +29,7 @@ const props = defineProps<Props>();
     <div id="search-wrapper">
       <input
         placeholder="Search..."
+        aria-label="Search"
         type="text"
         name="text"
         class="search-field"
@@ -38,9 +40,10 @@ const props = defineProps<Props>();
         class="absolute top-2 right-2 isolate z-2 flex size-full max-h-10 max-w-10 items-center justify-center overflow-hidden rounded-lg border border-solid border-transparent"
         style="background: linear-gradient(180deg, #161329, black, #1d1b4b)"
       >
-        <Icon
+        <ComponentIcon
           name="lucide:search"
           size="24"
+          class="text-white"
         />
       </span>
     </div>

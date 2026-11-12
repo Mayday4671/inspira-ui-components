@@ -2,7 +2,8 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import UiIcon from './UiIcon.vue'
-import { componentCount, packageVersion, REPO_URL } from '../data/registry'
+import { version as packageVersion } from 'inspira-ui-components/package.json'
+import { componentCount, REPO_URL } from '../data/registry'
 import { toggleTheme, useTheme } from '../composables/theme'
 
 const emit = defineEmits<{ (e: 'open-search'): void; (e: 'toggle-sidebar'): void }>()

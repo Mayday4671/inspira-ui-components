@@ -9,6 +9,7 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
+import AnimatedCircularProgressBar from '../../animated-circular-progressbar/src/AnimatedCircularProgressBar.vue'
 import type { VNode } from "vue"
 import { cn } from '../../../utils';
 import NumberFlow from "@number-flow/vue";

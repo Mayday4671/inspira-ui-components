@@ -9,6 +9,7 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
+import TextRevealStars from './TextRevealStars.vue'
 import { cn } from '../../../utils';
 import { computed, onMounted, ref } from "vue";
 defineOptions({ name: 'IuTextRevealCard' })

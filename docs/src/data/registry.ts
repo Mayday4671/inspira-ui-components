@@ -5,6 +5,7 @@
  * 禁止在此虚构不存在的组件或属性。
  */
 import type { Component } from 'vue'
+import dialogExample from '../examples/DialogExample.vue?raw'
 
 export interface ApiRow {
   prop: string
@@ -205,6 +206,7 @@ export interface ComponentMeta {
   apiRows: ApiRow[]
   eventRows?: ApiRow[]
   slotRows?: ApiRow[]
+  exposeRows?: ApiRow[]
   /** 额外说明（安装提示下方的 hint） */
   note?: string
 }
@@ -242,25 +244,26 @@ const BUTTON_CONTROLS: ControlSpec[] = [
 
 const BUTTON_DEMO_STATE = { size: 'default', text: '开始探索', loading: false, disabled: false }
 
-/** 按钮通用代码片段：size 与文案参与代码，bool 开关仅在 true 时输出 */
-function buttonCode(tag: string, state: Record<string, any>, useTextProp = false): string {
+/** Serialize editable values as JavaScript data without ending the SFC script block. */
+function scriptLiteral(value: string | string[]): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c')
+}
+
+function buttonCode(
+  tag: string,
+  state: Record<string, any>,
+  options: { textProp?: boolean; speed?: number; variant?: string } = {},
+): string {
   const attrs: string[] = []
-  if (useTextProp) attrs.push(`text="${state.text}"`)
+  if (options.textProp) attrs.push(':text="text"')
   if (state.size !== 'default') attrs.push(`size="${state.size}"`)
   if (state.loading) attrs.push('loading')
   if (state.disabled) attrs.push('disabled')
-  const attrText = attrs.length ? ' ' + attrs.join(' ') : ''
-  if (useTextProp) {
-    return `<template>\n  <${tag}${attrText} />\n</template>\n\n<script setup lang="ts">\nimport { ${tag.replace(
-      /<[^>]*>/g,
-      '',
-    )} } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n<\/script>`
-  }
-  const content = state.loading && state.text ? state.text : state.text
-  return `<template>\n  <${tag}${attrText}>${content}<\/${tag}>\n</template>\n\n<script setup lang="ts">\nimport { ${tag.replace(
-    /<[^>]*>/g,
-    '',
-  )} } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n<\/script>`
+  if (options.speed !== undefined && options.speed !== 2) attrs.push(`:speed="${options.speed}"`)
+  if (options.variant && options.variant !== 'rainbow') attrs.push(`variant="${options.variant}"`)
+  const openingTag = [tag, ...attrs].join(' ')
+  const body = options.textProp ? `  <${openingTag} />` : `  <${openingTag}>{{ text }}</${tag}>`
+  return scriptedCode(tag, [['text', scriptLiteral(String(state.text))]], body)
 }
 
 const INSTALL_SNIPPET = `\n\n<script setup lang="ts">\nimport { %NAME% } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n<\/script>`
@@ -277,10 +280,14 @@ function scriptedCode(
   name: string,
   consts: Array<[string, string]> | string[][],
   body: string,
+  vueImports: string[] = [],
 ): string {
+  const vueImport = vueImports.length ? `import { ${vueImports.join(', ')} } from 'vue'\n` : ''
   const constLines = consts.map(([k, v]) => `const ${k} = ${v}`).join('\n')
-  return `<template>\n${body}\n</template>\n\n<script setup lang="ts">\nimport { ${name} } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n\n${constLines}\n<\/script>`
+  return `<template>\n${body}\n</template>\n\n<script setup lang="ts">\n${vueImport}import { ${name} } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n\n${constLines}\n<\/script>`
 }
+
+export const htmlCanvasShader = 'void mainImage(out vec4 color, in vec2 pixel) { color = texture(iChannel0, pixel / iResolution.xy); }'
 
 const avatarFn = `function avatar(name: string, color: string) {
   const initials = name
@@ -289,11 +296,11 @@ const avatarFn = `function avatar(name: string, color: string) {
     .slice(0, 2)
     .join('')
     .toUpperCase()
-  const svg = \`<svg xmlns='http://www.w3.org/2000/svg' width='112' height='112'><rect width='100%25' height='100%25' fill='\${color}'/><text x='50%25' y='54%25' dy='.35em' text-anchor='middle' font-family='system-ui' font-size='42' fill='%23fff'>\${initials}</text></svg>\`
+  const svg = \`<svg xmlns='http://www.w3.org/2000/svg' width='112' height='112'><rect width='100%' height='100%' fill='\${color}'/><text x='50%' y='54%' dy='.35em' text-anchor='middle' font-family='system-ui' font-size='42' fill='#fff'>\${initials}</text></svg>\`
   return \`data:image/svg+xml;utf8,\${encodeURIComponent(svg)}\`
 }`
 
-export const COMPONENTS: ComponentMeta[] = [
+const registry: ComponentMeta[] = [
   {
     importName: 'IuShimmerButton',
     name: 'ShimmerButton',
@@ -332,7 +339,7 @@ export const COMPONENTS: ComponentMeta[] = [
     preview: 'hover',
     demoState: { ...BUTTON_DEMO_STATE, text: '了解更多' },
     controls: BUTTON_CONTROLS,
-    demoCode: (s) => buttonCode('IuInteractiveHoverButton', s, true),
+    demoCode: (s) => buttonCode('IuInteractiveHoverButton', s, { textProp: true }),
     apiRows: [
       { prop: 'text', desc: '按钮文本（也可用默认插槽覆盖）', type: 'string', def: "'Button'" },
       { prop: 'size', desc: '统一尺寸', type: "'small' | 'default' | 'large' | 'xl'", def: "'default'" },
@@ -360,15 +367,7 @@ export const COMPONENTS: ComponentMeta[] = [
       BUTTON_CONTROLS[3],
       { kind: 'number', key: 'speed', label: '速度 Speed（秒）', step: 1 },
     ],
-    demoCode: (s) => {
-      const attrs: string[] = []
-      if (s.size !== 'default') attrs.push(`size="${s.size}"`)
-      if (s.loading) attrs.push('loading')
-      if (s.disabled) attrs.push('disabled')
-      if (Number(s.speed) !== 2) attrs.push(`:speed="${s.speed}"`)
-      const attrText = attrs.length ? ' ' + attrs.join(' ') : ''
-      return `<template>\n  <IuRainbowButton${attrText}>${s.text}<\/IuRainbowButton>\n</template>\n\n<script setup lang="ts">\nimport { IuRainbowButton } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n<\/script>`
-    },
+    demoCode: (s) => buttonCode('IuRainbowButton', s, { speed: Number(s.speed) || 2 }),
     apiRows: [
       { prop: 'speed', desc: '彩虹流动一个周期的时长（秒）', type: 'number', def: '2' },
       { prop: 'size', desc: '统一尺寸', type: "'small' | 'default' | 'large' | 'xl'", def: "'default'" },
@@ -405,15 +404,7 @@ export const COMPONENTS: ComponentMeta[] = [
         ],
       },
     ],
-    demoCode: (s) => {
-      const attrs: string[] = []
-      if (s.size !== 'default') attrs.push(`size="${s.size}"`)
-      if (s.loading) attrs.push('loading')
-      if (s.disabled) attrs.push('disabled')
-      if (s.variant !== 'rainbow') attrs.push(`variant="${s.variant}"`)
-      const attrText = attrs.length ? ' ' + attrs.join(' ') : ''
-      return `<template>\n  <IuGradientButton${attrText}>${s.text}<\/IuGradientButton>\n</template>\n\n<script setup lang="ts">\nimport { IuGradientButton } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n<\/script>`
-    },
+    demoCode: (s) => buttonCode('IuGradientButton', s, { variant: s.variant }),
     apiRows: [
       { prop: 'variant', desc: '内置配色预设（被显式 colors / bgColor 覆盖）', type: "'rainbow' | 'ocean' | 'sunset' | 'candy'", def: "'rainbow'" },
       { prop: 'colors', desc: 'conic-gradient 颜色序列', type: 'string[]', def: '预设色板' },
@@ -463,9 +454,9 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
         demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['title', `'${s.title}'`],
+        ['title', scriptLiteral(String(s.title))],
         ['description', `'悬停整卡跟随鼠标旋转，标题与背景沿 Z 轴分层浮起。'`],
-        ['cta', `'${s.cta}'`],
+        ['cta', scriptLiteral(String(s.cta))],
       ]
       const body = [
         '  <IuCard3D',
@@ -504,7 +495,7 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
         demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['title', `'${s.title}'`],
+        ['title', scriptLiteral(String(s.title))],
         ['description', `'鼠标在卡片上移动，会有一道聚光灯跟随光斑。'`],
         ['gradientSize', String(s.gradientSize)],
       ]
@@ -553,8 +544,8 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
         demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['rotate', `'${s.rotate}'`],
-        ['backTitle', `'${s.backTitle}'`],
+        ['rotate', scriptLiteral(String(s.rotate))],
+        ['backTitle', scriptLiteral(String(s.backTitle))],
         ['backDescription', `'鼠标移开自动翻回正面。'`],
       ]
       const body = [
@@ -592,18 +583,19 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'width', label: '宽度 Width（px）', step: 20 },
       { kind: 'number', key: 'radius', label: '圆角 Radius（px）', step: 4 },
     ],
-        demoCode: (s) => {
+    demoCode: (s) => {
       const consts: Array<[string, string]> = [
+        ['title', scriptLiteral(String(s.title))],
         ['width', String(s.width)],
         ['radius', String(s.radius)],
       ]
       const body = [
         '  <IuGlareCard',
+        '    :title="title"',
+        '    description="细腻的悬停高光"',
         '    :width="width"',
         '    :radius="radius"',
-        '  >',
-        '    <div style="width: 100%; height: 100%">自定义内容</div>',
-        '  </IuGlareCard>',
+        '  />',
       ].join('\n')
       return scriptedCode('IuGlareCard', consts, body)
     },
@@ -666,8 +658,8 @@ export const COMPONENTS: ComponentMeta[] = [
         ['value', String(s.value)],
         ['decimalPlaces', String(s.decimalPlaces)],
       ]
-      if (s.prefix) consts.push(['prefix', `'${s.prefix}'`])
-      if (s.suffix) consts.push(['suffix', `'${s.suffix}'`])
+      if (s.prefix) consts.push(['prefix', scriptLiteral(String(s.prefix))])
+      if (s.suffix) consts.push(['suffix', scriptLiteral(String(s.suffix))])
       const body = [
         '  <IuNumberTicker',
         '    :value="value"',
@@ -707,7 +699,7 @@ export const COMPONENTS: ComponentMeta[] = [
       return scriptedCode(
         'IuTypewriterText',
         [
-          ['text', `'${s.text}'`],
+          ['text', scriptLiteral(String(s.text))],
           ['speed', String(s.speed)],
         ],
         '  <IuTypewriterText :text="text" :speed="speed" />',
@@ -741,12 +733,12 @@ export const COMPONENTS: ComponentMeta[] = [
         demoCode: (s) => {
       const words = String(s.words)
         .split(',')
-        .map((w) => `'${w.trim()}'`)
-        .join(', ')
+        .map((word) => word.trim())
+        .filter(Boolean)
       return scriptedCode(
         'IuFlipWords',
         [
-          ['words', `[${words}]`],
+          ['words', scriptLiteral(words.length ? words : ['流畅'])],
           ['duration', String(s.duration)],
         ],
         '  <IuFlipWords :words="words" :duration="duration" />',
@@ -775,7 +767,7 @@ export const COMPONENTS: ComponentMeta[] = [
         demoCode: (s) => {
       return scriptedCode(
         'IuTextGenerateEffect',
-        [['words', `'${s.words}'`]],
+        [['words', scriptLiteral(String(s.words))]],
         '  <IuTextGenerateEffect :words="words" />',
       )
     },
@@ -826,32 +818,48 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'switch', key: 'danger', label: 'danger' },
       { kind: 'switch', key: 'showClose', label: 'showClose' },
     ],
-    demoCode: (s) => {
-      const attrs: string[] = ['v-model="show"', `title="${s.title}"`, 'width="420px"']
-      if (s.danger) attrs.push('danger')
-      if (!s.showClose) attrs.push(':show-close="false"')
-      return `<template>\n  <IuDialog\n    ${attrs.join('\n    ')}\n  >\n    内容区：通过 v-model 控制开关，确认 / 取消按钮自带 loading。\n  </IuDialog>\n</template>\n\n<script setup lang="ts">\nimport { ref } from 'vue'\nimport { IuDialog } from 'inspira-ui-components'\nimport 'inspira-ui-components/dist/index.css'\n\nconst show = ref(false)\n<\/script>`
-    },
+    demoCode: (s) => dialogExample
+      .replace("const demoTitle = '确认提交订单'", () => `const demoTitle = ${scriptLiteral(String(s.title))}`)
+      .replace('const demoDanger = false', `const demoDanger = ${Boolean(s.danger)}`)
+      .replace('const demoShowClose = true', `const demoShowClose = ${Boolean(s.showClose)}`),
     apiRows: [
-      { prop: 'v-model', desc: '弹窗开关', type: 'boolean', def: 'false' },
-      { prop: 'title / description', desc: '标题与说明文字', type: 'string', def: '—' },
+      { prop: 'modelValue / v-model', desc: '弹窗开关，由调用方绑定', type: 'boolean', def: 'false' },
+      { prop: 'title', desc: '标题', type: 'string', def: "''" },
+      { prop: 'description', desc: '标题下方的说明', type: 'string', def: "''" },
       { prop: 'width', desc: '弹窗宽度（px 数值或 CSS 宽度）', type: 'number | string', def: '460' },
-      { prop: 'confirm', desc: '异步确认函数：loading 与关闭时机自动管理，返回 false 或抛异常保持打开', type: '() => Promise<any> | any', def: '—' },
-      { prop: 'confirm-text / cancel-text', desc: '按钮文案，传空字符串隐藏', type: 'string', def: "'确 定' / '取 消'" },
+      { prop: 'confirmText', desc: '确认按钮文案，传空字符串隐藏', type: 'string', def: "'确 定'" },
+      { prop: 'cancelText', desc: '取消按钮文案，传空字符串隐藏', type: 'string', def: "'取 消'" },
+      { prop: 'confirm', desc: '确认回调。返回 false、抛错或拒绝时保持打开，等待期间显示加载状态', type: 'DialogConfirmHandler', def: '—' },
+      { prop: 'loading', desc: '外部控制的加载状态', type: 'boolean', def: 'false' },
+      { prop: 'closeOnClickModal', desc: '点击遮罩请求关闭', type: 'boolean', def: 'true' },
+      { prop: 'closeOnPressEscape', desc: '按 Escape 请求关闭当前弹窗', type: 'boolean', def: 'true' },
+      { prop: 'beforeClose', desc: '关闭守卫，调用 done() 后请求关闭。直接更改 v-model 可由调用方控制开关', type: 'DialogBeforeClose', def: '—' },
+      { prop: 'destroyOnClose', desc: '退出过渡结束后卸载弹窗内容', type: 'boolean', def: 'false' },
+      { prop: 'showClose', desc: '显示标题区的关闭按钮', type: 'boolean', def: 'true' },
       { prop: 'danger', desc: '确认按钮使用危险色', type: 'boolean', def: 'false' },
-      { prop: 'close-on-click-modal', desc: '点击遮罩关闭', type: 'boolean', def: 'true' },
-      { prop: 'close-on-press-escape', desc: '按 Esc 关闭', type: 'boolean', def: 'true' },
-      { prop: 'before-close', desc: '关闭前拦截函数', type: '(done) => void', def: '—' },
-      { prop: 'destroy-on-close', desc: '关闭时销毁内容', type: 'boolean', def: 'false' },
+      { prop: 'zIndex', desc: '弹层层级', type: 'number', def: '10000' },
+      { prop: 'teleportTo', desc: '弹层挂载目标', type: 'string | HTMLElement', def: "'body'" },
+      { prop: 'class', desc: '面板样式类', type: "HTMLAttributes['class']", def: '—' },
     ],
     eventRows: [
-      { prop: 'confirm', desc: '点击确认时触发', type: '() => void', def: '—' },
-      { prop: 'cancel', desc: '点击取消 / 关闭时触发', type: '() => void', def: '—' },
-      { prop: 'update:modelValue', desc: '开关状态变化', type: '(v: boolean) => void', def: '—' },
+      { prop: 'update:modelValue', desc: '请求更新开关状态', type: '(value: boolean) => void', def: '—' },
+      { prop: 'confirm', desc: '点击确认按钮或调用 handleConfirm() 时触发', type: '() => void', def: '—' },
+      { prop: 'cancel', desc: '点击取消按钮或调用 handleCancel() 时触发', type: '() => void', def: '—' },
+      { prop: 'open', desc: '开始打开', type: '() => void', def: '—' },
+      { prop: 'opened', desc: '入场过渡结束', type: '() => void', def: '—' },
+      { prop: 'close', desc: '开始关闭', type: '() => void', def: '—' },
+      { prop: 'closed', desc: '退出过渡结束', type: '() => void', def: '—' },
     ],
     slotRows: [
       { prop: 'default', desc: '弹窗主体内容', type: '—', def: '—' },
-      { prop: 'footer', desc: '自定义底部（作用域：loading / confirm / cancel）', type: '—', def: '—' },
+      { prop: 'header', desc: '替换默认标题和说明', type: '—', def: '—' },
+      { prop: 'footer', desc: '替换底部操作区。默认按钮的可见性由 confirmText 和 cancelText 控制', type: '{ loading: boolean; confirm: () => Promise<void>; cancel: () => Promise<void> }', def: '—' },
+    ],
+    exposeRows: [
+      { prop: 'open', desc: '请求打开弹窗', type: '() => void', def: '—' },
+      { prop: 'close', desc: '经过 beforeClose 请求关闭弹窗', type: '() => Promise<void>', def: '—' },
+      { prop: 'handleConfirm', desc: '执行确认流程', type: '() => Promise<void>', def: '—' },
+      { prop: 'handleCancel', desc: '执行取消流程', type: '() => Promise<void>', def: '—' },
     ],
   },
   {
@@ -865,9 +873,24 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: {},
     controls: [],
     demoCode: () =>
-      staticCode(
-        `<template>\n  <IuAnimatedModal>\n    <IuAnimatedModalTrigger>打开弹窗</IuAnimatedModalTrigger>\n    <IuAnimatedModalBody>\n      <IuAnimatedModalContent>\n        <h4>完全自定义的五件套弹窗</h4>\n        <p>Trigger / Body / Content / Footer 各自独立，可任意组合排版。</p>\n      </IuAnimatedModalContent>\n      <IuAnimatedModalFooter>\n        <button @click="useAnimatedModal().closeModal()">关闭</button>\n      </IuAnimatedModalFooter>\n    </IuAnimatedModalBody>\n  </IuAnimatedModal>\n</template>`,
-        'IuAnimatedModal',
+      scriptedCode(
+        'IuAnimatedModal, IuAnimatedModalTrigger, IuAnimatedModalBody, IuAnimatedModalContent, IuAnimatedModalFooter',
+        [['open', 'ref(false)']],
+        [
+          '  <IuAnimatedModal v-model:open="open">',
+          '    <IuAnimatedModalTrigger>打开弹窗</IuAnimatedModalTrigger>',
+          '    <IuAnimatedModalBody>',
+          '      <IuAnimatedModalContent>',
+          '        <h4>自定义弹窗</h4>',
+          '        <p>可组合触发器、弹层、内容和底部操作区。</p>',
+          '      </IuAnimatedModalContent>',
+          '      <IuAnimatedModalFooter>',
+          '        <button type="button" @click="open = false">关闭</button>',
+          '      </IuAnimatedModalFooter>',
+          '    </IuAnimatedModalBody>',
+          '  </IuAnimatedModal>',
+        ].join('\n'),
+        ['ref'],
       ),
     apiRows: [
       { prop: 'open / v-model:open', desc: '受控打开状态', type: 'boolean', def: '—' },
@@ -895,13 +918,13 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const consts: Array<[string, string]> = [
+        ['avatar', avatarFn],
         ['items', `[
     { id: 1, name: '张伟', designation: '前端工程师', image: avatar('Zhang Wei', '#6366f1') },
     { id: 2, name: '李娜', designation: 'UI 设计师', image: avatar('Li Na', '#ec4899') },
     { id: 3, name: '王强', designation: '架构师', image: avatar('Wang Qiang', '#14b8a6') },
     { id: 4, name: '赵敏', designation: '产品经理', image: avatar('Zhao Min', '#f59e0b') },
   ]`],
-        ['avatar', avatarFn],
       ]
       const body = '  <IuAnimatedTooltip :items="items" />'
       return scriptedCode('IuAnimatedTooltip', consts, body)
@@ -965,7 +988,7 @@ export const COMPONENTS: ComponentMeta[] = [
     slug: 'statistic',
     recommended: true,
     preview: 'stat',
-    demoState: { label: '本月访问量', value: 24800, suffix: '+', trend: 12.6 },
+    demoState: { label: '本月访问量', value: 24800, suffix: '+', trend: 12.6, trendLabel: '较上月' },
     controls: [
       { kind: 'text', key: 'label', label: '名称 Label' },
       { kind: 'number', key: 'value', label: '数值 Value', step: 100 },
@@ -973,11 +996,11 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
         demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['label', `'${s.label}'`],
+        ['label', scriptLiteral(String(s.label))],
         ['value', String(s.value)],
-        ['suffix', `'${s.suffix}'`],
+        ['suffix', scriptLiteral(String(s.suffix))],
         ['trend', String(s.trend)],
-        ['trendLabel', `'${s.trendLabel}'`],
+        ['trendLabel', scriptLiteral(String(s.trendLabel))],
       ]
       const body = [
         '  <IuStatistic',
@@ -1022,9 +1045,10 @@ export const COMPONENTS: ComponentMeta[] = [
       },
     ],
     demoCode: (s) =>
-      staticCode(
-        `<template>\n  <IuAuroraBackground height="${s.height}" rounded="14px">\n    <h4>流动的极光渐变（亮 / 暗色下表现不同）</h4>\n  </IuAuroraBackground>\n</template>`,
+      scriptedCode(
         'IuAuroraBackground',
+        [['height', scriptLiteral(String(s.height))]],
+        '  <IuAuroraBackground :height="height" rounded="14px"><h4>流动的极光渐变（亮 / 暗色下表现不同）</h4></IuAuroraBackground>',
       ),
     apiRows: [
       { prop: 'height', desc: '容器高度（CSS 长度）', type: 'string', def: "'100vh'" },
@@ -1064,13 +1088,13 @@ export const COMPONENTS: ComponentMeta[] = [
         `    variant="${s.variant}"`,
         `    ${animateAttr}`,
         '    direction="top"',
-        '    :speed="12000"',
+        '    :speed="10000"',
         '    style="height: 240px; border-radius: 14px"',
         '  >',
         '    <p>网格 / 圆点图案背景</p>',
         '  </IuPatternBackground>',
       ].join('\n')
-      return scriptedCode('IuPatternBackground', [['variant', `'${s.variant}'`], ['animate', String(s.animate)]], body)
+      return scriptedCode('IuPatternBackground', [['variant', scriptLiteral(String(s.variant))], ['animate', String(s.animate)]], body)
     },
     apiRows: [
       { prop: 'variant', desc: '图案类型', type: "'grid' | 'dot' | 'big-dot'", def: "'grid'" },
@@ -1088,7 +1112,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: { words: 'Inspira UI', delay: 0.05 },
     controls: [{ kind: 'text', key: 'words', label: '文本 Words' }, { kind: 'number', key: 'delay', label: '延迟 Delay（秒）', step: 0.01 }],
     demoCode: (s) => {
-      return scriptedCode('IuLetterPullup', [['words', `'${s.words}'`], ['delay', String(s.delay)]], '  <IuLetterPullup :words="words" :delay="delay" />')
+      return scriptedCode('IuLetterPullup', [['words', scriptLiteral(String(s.words))], ['delay', String(s.delay)]], '  <IuLetterPullup :words="words" :delay="delay" />')
     },
     apiRows: [
       { prop: 'words', desc: '要逐字升起的文本', type: 'string', def: '必填' },
@@ -1105,7 +1129,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'radius', label: '半径 Radius', step: 1 },
     ],
     demoCode: (s) => {
-      return scriptedCode('IuSpinningText', [['text', `'${s.text}'`], ['duration', String(s.duration)], ['radius', String(s.radius)]],
+      return scriptedCode('IuSpinningText', [['text', scriptLiteral(String(s.text))], ['duration', String(s.duration)], ['radius', String(s.radius)]],
         '  <IuSpinningText :text="text" :duration="duration" :radius="radius" />')
     },
     apiRows: [
@@ -1126,7 +1150,7 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
     demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['color', `'${s.color}'`],
+        ['color', scriptLiteral(String(s.color))],
         ['duration', String(s.duration)],
         ['delay', String(s.delay)],
       ]
@@ -1151,7 +1175,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: { shadowColor: 'black' },
     controls: [{ kind: 'text', key: 'shadowColor', label: '阴影色 Shadow Color' }],
     demoCode: (s) => {
-      return scriptedCode('IuLineShadowText', [['shadowColor', `'${s.shadowColor}'`]], '  <IuLineShadowText :shadow-color="shadowColor">Hover Text</IuLineShadowText>')
+      return scriptedCode('IuLineShadowText', [['shadowColor', scriptLiteral(String(s.shadowColor))]], '  <IuLineShadowText :shadow-color="shadowColor">Hover Text</IuLineShadowText>')
     },
     apiRows: [
       { prop: 'shadowColor', desc: '阴影斜线颜色', type: 'string', def: "'black'" },
@@ -1168,7 +1192,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'duration', label: '时长 Duration（毫秒）', step: 100 },
     ],
     demoCode: (s) => {
-      return scriptedCode('IuHyperText', [['text', `'${s.text}'`], ['duration', String(s.duration)]], '  <IuHyperText :text="text" :duration="duration" :animate-on-load="true" />')
+      return scriptedCode('IuHyperText', [['text', scriptLiteral(String(s.text))], ['duration', String(s.duration)]], '  <IuHyperText :text="text" :duration="duration" :animate-on-load="true" />')
     },
     apiRows: [
       { prop: 'text', desc: '目标文本', type: 'string', def: '必填' },
@@ -1182,7 +1206,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: { text: 'Encrypted Text' },
     controls: [{ kind: 'text', key: 'text', label: '文本 Text' }],
     demoCode: (s) => {
-      return scriptedCode('IuEncryptedText', [['text', `'${s.text}'`]], '  <IuEncryptedText :text="text" />')
+      return scriptedCode('IuEncryptedText', [['text', scriptLiteral(String(s.text))]], '  <IuEncryptedText :text="text" />')
     },
     apiRows: [
       { prop: 'text', desc: '目标文本', type: 'string', def: '必填' },
@@ -1212,7 +1236,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: { sentence: 'Coding Is A Focus Game' },
     controls: [{ kind: 'text', key: 'sentence', label: '句子 Sentence' }],
     demoCode: (s) => {
-      return scriptedCode('IuFocus', [['sentence', `'${s.sentence}'`]], '  <IuFocus :sentence="sentence" :manual-mode="true" />')
+      return scriptedCode('IuFocus', [['sentence', scriptLiteral(String(s.sentence))]], '  <IuFocus :sentence="sentence" :manual-mode="true" />')
     },
     apiRows: [
       { prop: 'sentence', desc: '句子内容', type: 'string', def: "'Inspira Focus'" },
@@ -1226,7 +1250,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: { text: 'Colourful' },
     controls: [{ kind: 'text', key: 'text', label: '文本 Text' }],
     demoCode: (s) => {
-      return scriptedCode('IuColourfulText', [['text', `'${s.text}'`]], '  <IuColourfulText :text="text" />')
+      return scriptedCode('IuColourfulText', [['text', scriptLiteral(String(s.text))]], '  <IuColourfulText :text="text" />')
     },
     apiRows: [
       { prop: 'text', desc: '文本内容', type: 'string', def: '必填' },
@@ -1240,7 +1264,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: { label: 'Hover Me' },
     controls: [{ kind: 'text', key: 'label', label: '文本 Label' }],
     demoCode: (s) => {
-      return scriptedCode('IuLetterSwap', [['label', `'${s.label}'`]], '  <IuLetterSwap :label="label" />')
+      return scriptedCode('IuLetterSwap', [['label', scriptLiteral(String(s.label))]], '  <IuLetterSwap :label="label" />')
     },
     apiRows: [
       { prop: 'label', desc: '文本内容', type: 'string', def: '必填' },
@@ -1289,12 +1313,12 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
     demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['colorFrom', `'${s.colorFrom}'`],
-        ['colorTo', `'${s.colorTo}'`],
+        ['colorFrom', scriptLiteral(String(s.colorFrom))],
+        ['colorTo', scriptLiteral(String(s.colorTo))],
         ['duration', String(s.duration)],
       ]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border p-6">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; padding: 24px">',
         '    <IuBorderBeam :color-from="colorFrom" :color-to="colorTo" :duration="duration" />',
         '    <p>Border Beam 内容</p>',
         '  </div>',
@@ -1315,11 +1339,11 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden h-40 border">',
-        '    <span class="absolute inset-0">',
+        '  <div style="position: relative; overflow: hidden; height: 160px; border: 1px solid #8884">',
+        '    <span style="position: absolute; inset: 0">',
         '      <IuMeteors />',
         '    </span>',
-        '    <p class="p-6">Meteor Shower</p>',
+        '    <p style="padding: 24px">Meteor Shower</p>',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuMeteors', [], body)
@@ -1336,8 +1360,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <FlickeringGrid',
-        '    class="absolute inset-0 z-0 [mask-image:radial-gradient(450px_circle_at_center,white,transparent)]"',
+        '  <IuFlickeringGrid',
+        '    style="position: absolute; inset: 0; z-index: 0; mask-image: radial-gradient(450px circle at center, white, transparent)"',
         '    :square-size="4"',
         '    :grid-gap="4"',
         '    color="#60a5fa"',
@@ -1345,7 +1369,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    :flicker-chance="0.1"',
         '  />',
       ].join('\n')
-      return scriptedCode('FlickeringGrid', [], body)
+      return scriptedCode('IuFlickeringGrid', [], body)
     },
     apiRows: [
       { prop: 'squareSize', desc: '方块大小（px）', type: 'number', def: '4' },
@@ -1367,7 +1391,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    first-image="/before.jpg"',
         '    second-image="/after.jpg"',
         '    :slide-mode="\'drag\'"',
-        '    class="h-80"',
+        '    style="height: 320px"',
         '  />',
       ].join('\n')
       return scriptedCode('IuCompare', [], body)
@@ -1394,7 +1418,7 @@ export const COMPONENTS: ComponentMeta[] = [
       ]
       const body = [
         '  <IuLens :zoom-factor="zoomFactor" :lens-size="lensSize" is-static>',
-        '    <img src="/image.jpg" alt="" class="w-full" />',
+        '    <img src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800" alt="" style="width: 100%" />',
         '  </IuLens>',
       ].join('\n')
       return scriptedCode('IuLens', consts, body)
@@ -1464,7 +1488,7 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
     demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['particleColor', `'${s.particleColor}'`],
+        ['particleColor', scriptLiteral(String(s.particleColor))],
         ['minSize', String(s.minSize)],
         ['maxSize', String(s.maxSize)],
       ]
@@ -1498,7 +1522,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'sparklesCount', label: '星星数量 Sparkles Count', step: 1 },
     ],
     demoCode: (s) => {
-      return scriptedCode('IuSparklesText', [['text', `'${s.text}'`], ['sparklesCount', String(s.sparklesCount)]],
+      return scriptedCode('IuSparklesText', [['text', scriptLiteral(String(s.text))], ['sparklesCount', String(s.sparklesCount)]],
         '  <IuSparklesText :text="text" :sparkles-count="sparklesCount" />')
     },
     apiRows: [
@@ -1518,7 +1542,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'switch', key: 'enableOnHover', label: '仅悬停触发 onHover' },
     ],
     demoCode: (s) => {
-      const consts: Array<[string, string]> = [['text', `'${s.text}'`], ['speed', String(s.speed)]]
+      const consts: Array<[string, string]> = [['text', scriptLiteral(String(s.text))], ['speed', String(s.speed)]]
       const body = s.enableOnHover
         ? '  <IuTextGlitch :text="text" :speed="speed" enable-on-hover />'
         : '  <IuTextGlitch :text="text" :speed="speed" />'
@@ -1540,7 +1564,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'strokeWidth', label: '描边宽度 Stroke Width', step: 0.25 },
     ],
     demoCode: (s) => {
-      const consts: Array<[string, string]> = [['text', `'${s.text}'`], ['strokeWidth', String(s.strokeWidth)]]
+      const consts: Array<[string, string]> = [['text', scriptLiteral(String(s.text))], ['strokeWidth', String(s.strokeWidth)]]
       const body = [
         '  <div style="width: 100%; max-width: 560px">',
         '    <IuTextHoverEffect :text="text" :stroke-width="strokeWidth" />',
@@ -1682,7 +1706,7 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <div style="position: relative; height: 240px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">',
         '    <p style="padding: 24px; font-size: 14px; line-height: 2">底部内容逐渐模糊 — Progressive Blur</p>',
-        '    <IuProgressiveBlur class="absolute bottom-0 left-0 right-0 h-3/5" />',
+        '    <IuProgressiveBlur style="position: absolute; bottom: 0; left: 0; right: 0; height: 60%" />',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuProgressiveBlur', [], body)
@@ -1701,10 +1725,10 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const stepsConst = "[\n    { text: '连接数据库', afterText: '数据库已连接' },\n    { text: '初始化模型', afterText: '模型就绪' },\n    { text: '启动服务', afterText: '服务运行中' },\n  ]"
       const body = [
-        '  <IuMultiStepLoader :steps="steps" :loading="loading" :prevent-close="preventClose" @close="loading = false" />',
+        '  <IuMultiStepLoader :steps="steps" :loading="loading" :prevent-close="preventClose" @close="loading = false" @complete="loading = false" />',
         '  <button @click="loading = true">启动加载流程</button>',
       ].join('\n')
-      return scriptedCode('IuMultiStepLoader', [['loading', 'false'], ['preventClose', s.preventClose ? 'true' : 'false'], ['steps', stepsConst]], body)
+      return scriptedCode('IuMultiStepLoader', [['loading', 'ref(false)'], ['preventClose', s.preventClose ? 'true' : 'false'], ['steps', stepsConst]], body, ['ref'])
     },
     apiRows: [
       { prop: 'steps', desc: '步骤数组（text / afterText / duration / action）', type: 'Step[]', def: '必填' },
@@ -1728,9 +1752,9 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuDirectionAwareHover',
         '    image-url="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600"',
-        '    class="h-72 max-w-md"',
+        '    style="height: 288px; max-width: 448px"',
         '  >',
-        '    <div class="p-6">',
+        '    <div style="padding: 24px">',
         '      <h3>Direction Aware</h3>',
         '      <p>内容从鼠标进入的方向滑入。</p>',
         '    </div>',
@@ -1756,13 +1780,13 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
     demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['color1', `'${s.color1}'`],
-        ['color2', `'${s.color2}'`],
+        ['color1', scriptLiteral(String(s.color1))],
+        ['color2', scriptLiteral(String(s.color2))],
         ['duration', String(s.duration)],
       ]
       const body = [
-        '  <IuNeonBorder :color1="color1" :color2="color2" :duration="duration" class="rounded-xl p-8 text-center">',
-        '    <p class="m-0 text-sm font-medium">Neon Border 内容</p>',
+        '  <IuNeonBorder :color1="color1" :color2="color2" :duration="duration" style="border-radius: 12px; padding: 32px; text-align: center">',
+        '    <p style="margin: 0; font-size: 14px; font-weight: 500">Neon Border 内容</p>',
         '  </IuNeonBorder>',
       ].join('\n')
       return scriptedCode('IuNeonBorder', consts, body)
@@ -1781,10 +1805,10 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuFloatingCard class="max-w-sm">',
-        '    <div class="p-6">',
-        '      <h3 class="m-0 text-lg font-bold">Floating Card</h3>',
-        '      <p class="mt-2 mb-0 text-sm opacity-70">鼠标悬停时卡片 3D 倾斜并出现眩光。</p>',
+        '  <IuFloatingCard style="max-width: 384px">',
+        '    <div style="padding: 24px">',
+        '      <h3 style="margin: 0; font-size: 18px; font-weight: 700">Floating Card</h3>',
+        '      <p style="margin-top: 8px; margin-bottom: 0; font-size: 14px; opacity: 0.7">鼠标悬停时卡片 3D 倾斜并出现眩光。</p>',
         '    </div>',
         '  </IuFloatingCard>',
       ].join('\n')
@@ -1805,13 +1829,9 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'interval', label: '切换间隔 Interval（毫秒）', step: 500 },
     ],
     demoCode: (s) => {
-      const words = `[${String(s.words)
-        .split(',')
-        .map((w) => `'${w.trim()}'`)
-        .filter((w) => w !== "''")
-        .join(', ')}]`
+      const words = String(s.words).split(',').map((word) => word.trim()).filter(Boolean)
       const body = '  <span style="font-size: 24px; font-weight: 700">打造<IuContainerTextFlip :words="words" :interval="interval" />的界面</span>'
-      return scriptedCode('IuContainerTextFlip', [['words', words], ['interval', String(s.interval)]], body)
+      return scriptedCode('IuContainerTextFlip', [['words', scriptLiteral(words)], ['interval', String(s.interval)]], body)
     },
     apiRows: [
       { prop: 'words', desc: '轮换词数组', type: 'string[]', def: '["better", "modern", "beautiful", "awesome"]' },
@@ -1825,8 +1845,8 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: { placeholder: '请输入邮箱地址' },
     controls: [{ kind: 'text', key: 'placeholder', label: '占位符 Placeholder' }],
     demoCode: (s) => {
-      const body = '  <IuIInput :placeholder="placeholder" style="width: 320px" />'
-      return scriptedCode('IuIInput', [['placeholder', `'${s.placeholder}'`]], body)
+      const body = '  <IuIInput v-bind="inputAttrs" />'
+      return scriptedCode('IuIInput', [['inputAttrs', `{ placeholder: ${scriptLiteral(String(s.placeholder))}, type: 'email', style: 'width: 320px' }`]], body)
     },
     apiRows: [
       { prop: 'modelValue / v-model', desc: '输入值', type: 'string | number', def: '—' },
@@ -1847,13 +1867,13 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuTimeline :items="items" title="项目大事记" description="滚动页面查看进度线。">',
         '    <template #start>',
-        '      <div class="pb-20"><h4>项目启动</h4><p>完成核心组件 20 个。</p></div>',
+        '      <div style="padding-bottom: 80px"><h4>项目启动</h4><p>完成核心组件 20 个。</p></div>',
         '    </template>',
         '    <template #growth>',
-        '      <div class="pb-20"><h4>生态扩展</h4><p>组件库规模翻倍。</p></div>',
+        '      <div style="padding-bottom: 80px"><h4>生态扩展</h4><p>组件库规模翻倍。</p></div>',
         '    </template>',
         '    <template #now>',
-        '      <div class="pb-20"><h4>持续演进</h4><p>全量对齐上游。</p></div>',
+        '      <div style="padding-bottom: 80px"><h4>持续演进</h4><p>全量对齐上游。</p></div>',
         '    </template>',
         '  </IuTimeline>',
       ].join('\n')
@@ -1876,7 +1896,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuTracingBeam>',
-        '    <div class="p-6 space-y-6">',
+        '    <div style="padding: 24px; display: grid; gap: 24px">',
         '      <h3>滚动追踪光束</h3>',
         '      <p>光束随页面滚动逐渐点亮，顶部节点随之变色。</p>',
         '      <p>把任意长内容放进默认插槽即可。</p>',
@@ -1902,14 +1922,14 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
     demoCode: (s) => {
       const consts: Array<[string, string]> = [
-        ['color', `'${s.color}'`],
+        ['color', scriptLiteral(String(s.color))],
         ['borderWidth', String(s.borderWidth)],
         ['duration', String(s.duration)],
       ]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border p-8 text-center">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; padding: 32px; text-align: center">',
         '    <IuGlowBorder :color="color" :border-width="borderWidth" :duration="duration" />',
-        '    <p class="m-0 text-sm font-medium">Glow Border 内容</p>',
+        '    <p style="margin: 0; font-size: 14px; font-weight: 500">Glow Border 内容</p>',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuGlowBorder', consts, body)
@@ -1929,9 +1949,9 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative rounded-2xl border p-8 text-center">',
+        '  <div style="position: relative; border-radius: 16px; border: 1px solid #8884; padding: 32px; text-align: center">',
         '    <IuGlowingEffect :proximity="80" :spread="40" :disabled="false" :blur="0" />',
-        '    <p class="m-0 text-sm font-medium">鼠标靠近时卡面出现辉光</p>',
+        '    <p style="margin: 0; font-size: 14px; font-weight: 500">鼠标靠近时卡面出现辉光</p>',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuGlowingEffect', [], body)
@@ -1982,11 +2002,11 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuAnimatedTabs :tabs="tabs" v-model="active">',
         '    <template #content="{ tab }">',
-        '      <div class="p-4 text-sm">当前：{{ tab.value }}</div>',
+        '      <div style="padding: 16px; font-size: 14px">当前：{{ tab.value }}</div>',
         '    </template>',
         '  </IuAnimatedTabs>',
       ].join('\n')
-      return scriptedCode('IuAnimatedTabs', [['tabs', tabsConst], ['active', "'home'"]], body)
+      return scriptedCode('IuAnimatedTabs', [['tabs', tabsConst], ['active', "ref('home')"]], body, ['ref'])
     },
     apiRows: [
       { prop: 'tabs', desc: '标签数组（title / value）', type: 'AnimatedTab[]', def: '必填' },
@@ -2009,9 +2029,9 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const imgsConst = "[\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800',\n    'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800',\n  ]"
       const body = [
-        '  <IuImagesSlider :images="images" class="h-72 rounded-xl">',
+        '  <IuImagesSlider :images="images" style="height: 288px; border-radius: 12px">',
         '    <template #overlay>',
-        '      <div class="p-6 text-white text-lg font-bold">叠加内容</div>',
+        '      <div style="padding: 24px; color: white; font-size: 18px; font-weight: 700">叠加内容</div>',
         '    </template>',
         '  </IuImagesSlider>',
       ].join('\n')
@@ -2037,7 +2057,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    </IuConfettiButton>',
         '  </IuConfetti>',
       ].join('\n')
-      return scriptedCode('IuConfetti', [], body)
+      return scriptedCode('IuConfetti, IuConfettiButton', [], body)
     },
     apiRows: [
       { prop: 'options', desc: '彩带参数（particleCount / spread 等）', type: 'ConfettiOptions', def: '—' },
@@ -2056,10 +2076,10 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuContainerScroll>',
         '    <template #title>',
-        '      <h3 class="text-center text-2xl font-bold">滚动体验旋转展开</h3>',
+        '      <h3 style="text-align: center; font-size: 24px; font-weight: 700">滚动体验旋转展开</h3>',
         '    </template>',
-        '    <div class="h-96 rounded-2xl border bg-gradient-to-b from-indigo-100 to-white dark:from-zinc-800 dark:to-zinc-900">',
-        '      <p class="p-8 text-center text-sm">卡片随页面滚动旋转入场</p>',
+        '    <div style="height: 384px; border-radius: 16px; border: 1px solid #8884; background: linear-gradient(#e0e7ff, #fff)">',
+        '      <p style="padding: 32px; text-align: center; font-size: 14px">卡片随页面滚动旋转入场</p>',
         '    </div>',
         '  </IuContainerScroll>',
       ].join('\n')
@@ -2085,7 +2105,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    :elements="elements"',
         '    initial-selected-id="4"',
         '    :initial-expanded-items="[\'1\', \'2\']"',
-        '    class="h-64 overflow-auto rounded-lg border p-2"',
+        '    style="height: 256px; overflow: auto; border-radius: 8px; border: 1px solid #8884; padding: 8px"',
         '  />',
       ].join('\n')
       return scriptedCode('IuTree', [['elements', elsConst]], body)
@@ -2105,14 +2125,14 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuDock class="rounded-2xl border p-2">',
-        '    <IuDockIcon title="主页">🏠</IuDockIcon>',
-        '    <IuDockIcon title="文档">📄</IuDockIcon>',
+        '  <IuDock style="border-radius: 16px; border: 1px solid #8884; padding: 8px">',
+        '    <IuDockIcon><span role="img" aria-label="主页">🏠</span></IuDockIcon>',
+        '    <IuDockIcon><span role="img" aria-label="文档">📄</span></IuDockIcon>',
         '    <IuDockSeparator />',
-        '    <IuDockIcon title="设置">⚙️</IuDockIcon>',
+        '    <IuDockIcon><span role="img" aria-label="设置">⚙️</span></IuDockIcon>',
         '  </IuDock>',
       ].join('\n')
-      return scriptedCode('IuDock', [], body)
+      return scriptedCode('IuDock, IuDockIcon, IuDockSeparator', [], body)
     },
     apiRows: [
       { prop: 'magnification', desc: '放大后的图标尺寸（px）', type: 'number', def: '60' },
@@ -2161,13 +2181,13 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuBook color="indigo" size="md" is-static>',
         '    <template #header>',
-        '      <span class="text-xs opacity-70">inspira-ui-components</span>',
+        '      <span style="font-size: 12px; opacity: 0.7">inspira-ui-components</span>',
         '    </template>',
         '    <template #title>',
-        '      <h4 class="m-0 text-xl font-bold">Vue 动效组件集</h4>',
+        '      <h4 style="margin: 0; font-size: 20px; font-weight: 700">Vue 动效组件集</h4>',
         '    </template>',
         '    <template #description>',
-        '      <p class="m-0 text-xs opacity-80">悬停翻开封面查看内容。</p>',
+        '      <p style="margin: 0; font-size: 12px; opacity: 0.8">悬停翻开封面查看内容。</p>',
         '    </template>',
         '  </IuBook>',
       ].join('\n')
@@ -2192,8 +2212,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuLampEffect class="min-h-64 rounded-xl">',
-        '    <h3 class="z-10 text-center text-2xl font-semibold text-white">Lamp Effect</h3>',
+        '  <IuLampEffect style="min-height: 256px; border-radius: 12px">',
+        '    <h3 style="z-index: 10; text-align: center; font-size: 24px; font-weight: 600; color: white">Lamp Effect</h3>',
         '  </IuLampEffect>',
       ].join('\n')
       return scriptedCode('IuLampEffect', [], body)
@@ -2212,7 +2232,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuIPhone15ProMockup :width="300" :height="610" class="drop-shadow-xl">',
+        '  <IuIPhone15ProMockup :width="300" :height="610" style="filter: drop-shadow(0 8px 10px #0003)">',
         '    <img',
         '      src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600"',
         '      alt=""',
@@ -2271,13 +2291,13 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuCardStack :total-cards="3" class="h-96">',
-        '    <IuCardStackItem :index="0" class="rounded-xl border p-6">第一张</IuCardStackItem>',
-        '    <IuCardStackItem :index="1" class="rounded-xl border p-6">第二张</IuCardStackItem>',
-        '    <IuCardStackItem :index="2" class="rounded-xl border p-6">第三张</IuCardStackItem>',
+        '  <IuCardStack :total-cards="3" style="height: 384px">',
+        '    <IuCardStackItem :index="0" style="border-radius: 12px; border: 1px solid #8884; padding: 24px">第一张</IuCardStackItem>',
+        '    <IuCardStackItem :index="1" style="border-radius: 12px; border: 1px solid #8884; padding: 24px">第二张</IuCardStackItem>',
+        '    <IuCardStackItem :index="2" style="border-radius: 12px; border: 1px solid #8884; padding: 24px">第三张</IuCardStackItem>',
         '  </IuCardStack>',
       ].join('\n')
-      return scriptedCode('IuCardStack', [], body)
+      return scriptedCode('IuCardStack, IuCardStackItem', [], body)
     },
     apiRows: [
       { prop: 'totalCards', desc: '卡片总数', type: 'number', def: '必填' },
@@ -2326,7 +2346,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const cardsConst = `[\n    { logo: 'https://picsum.photos/seed/g1/200' },\n    { logo: 'https://picsum.photos/seed/g2/200' },\n    { logo: 'https://picsum.photos/seed/g3/200' },\n    { logo: 'https://picsum.photos/seed/g4/200' },\n  ]`
-      const body = '  <IuAnimateGrid :cards="cards" class="max-w-md" />'
+      const body = '  <IuAnimateGrid :cards="cards" style="max-width: 448px" />'
       return scriptedCode('IuAnimateGrid', [['cards', cardsConst]], body)
     },
     apiRows: [
@@ -2345,9 +2365,9 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="flex h-40 items-center justify-center rounded-xl border" style="cursor: none">',
+        '  <div style="display: flex; height: 160px; align-items: center; justify-content: center; border-radius: 12px; border: 1px solid #8884; cursor: none">',
         '    <IuSmoothCursor />',
-        '    <span class="text-sm opacity-70">移动鼠标，弹簧光标跟随</span>',
+        '    <span style="font-size: 14px; opacity: 0.7">移动鼠标，弹簧光标跟随</span>',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuSmoothCursor', [], body)
@@ -2370,7 +2390,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const consts = [['waveWidth', String(s.waveWidth)], ['blur', String(s.blur)], ['waveOpacity', String(s.waveOpacity)]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuWavyBackground :wave-width="waveWidth" :blur="blur" :wave-opacity="waveOpacity" />',
         '  </div>',
       ].join('\n')
@@ -2393,8 +2413,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
-        '    <IuVortex base-hue="220" style="position: absolute; inset: 0" />',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
+        '    <IuVortex :base-hue="220" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuVortex', [], body)
@@ -2418,9 +2438,9 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'text', key: 'starColor', label: '星星颜色 Star Color' },
     ],
     demoCode: (s) => {
-      const consts = [['factor', String(s.factor)], ['speed', String(s.speed)], ['starColor', "'" + s.starColor + "'"]]
+      const consts = [['factor', String(s.factor)], ['speed', String(s.speed)], ['starColor', scriptLiteral(String(s.starColor))]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; background: #000; height: 280px">',
         '    <IuStarsBackground :factor="factor" :speed="speed" :star-color="starColor" />',
         '  </div>',
       ].join('\n')
@@ -2439,7 +2459,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; background: #000; height: 280px">',
         '    <IuBlackHoleBackground style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2461,9 +2481,9 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'count', label: '数量 Count', step: 10 },
     ],
     demoCode: (s) => {
-      const consts = [['color', "'" + s.color + "'"], ['count', String(s.count)]]
+      const consts = [['color', scriptLiteral(String(s.color))], ['count', String(s.count)]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; background: #000; height: 280px">',
         '    <IuFallingStarsBg :color="color" :count="count" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2486,7 +2506,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const consts = [['hue', String(s.hue)], ['saturation', String(s.saturation)], ['brightness', String(s.brightness)]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuSilkBackground :hue="hue" :saturation="saturation" :brightness="brightness" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2510,7 +2530,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const consts = [['hue', String(s.hue)], ['saturation', String(s.saturation)]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuSingularityBackground :hue="hue" :saturation="saturation" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2530,7 +2550,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuThunderstormBackground style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2549,7 +2569,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuStractiumBackground style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2571,9 +2591,9 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'speed', label: '速度 Speed', step: 0.5 },
     ],
     demoCode: (s) => {
-      const consts = [['color', "'" + s.color + "'"], ['quantity', String(s.quantity)], ['speed', String(s.speed)]]
+      const consts = [['color', scriptLiteral(String(s.color))], ['quantity', String(s.quantity)], ['speed', String(s.speed)]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border bg-slate-900" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; background: #0f172a; height: 280px">',
         '    <IuSnowfallBg :color="color" :quantity="quantity" :speed="speed" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2595,7 +2615,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'select', key: 'rotateDirection', label: '旋转方向 Direction', options: [{ label: 'right', value: 'right' }, { label: 'left', value: 'left' }] },
     ],
     demoCode: (s) => {
-      const consts = [['label', "'" + s.label + "'"], ['rotateDirection', "'" + s.rotateDirection + "'"]]
+      const consts = [['label', scriptLiteral(String(s.label))], ['rotateDirection', scriptLiteral(String(s.rotateDirection))]]
       const body = '  <IuScrewText :label="label" :rotate-direction="rotateDirection" style="font-size: 34px; font-weight: 800" />'
       return scriptedCode('IuScrewText', consts, body)
     },
@@ -2624,7 +2644,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    />',
         '  </div>',
       ].join('\n')
-      return scriptedCode('IuVariableText', [['container', 'useTemplateRef(\'container\')']], body)
+      return scriptedCode('IuVariableText', [['container', 'useTemplateRef<HTMLElement>(\'container\')']], body, ['useTemplateRef'])
     },
     apiRows: [
       { prop: 'label', desc: '文本内容', type: 'string', def: '必填' },
@@ -2661,13 +2681,13 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div ref="container" class="h-40 overflow-auto rounded-xl border">',
-        '    <div class="h-80 p-6">',
+        '  <div ref="container" style="height: 160px; overflow: auto; border-radius: 12px; border: 1px solid #8884">',
+        '    <div style="height: 320px; padding: 24px">',
         '      <IuScrollSwapText :container-ref="container" text="向下滚动" style="font-size: 28px; font-weight: 700" />',
         '    </div>',
         '  </div>',
       ].join('\n')
-      return scriptedCode('IuScrollSwapText', [['container', 'useTemplateRef(\'container\')']], body)
+      return scriptedCode('IuScrollSwapText', [['container', 'useTemplateRef<HTMLElement>(\'container\')']], body, ['useTemplateRef'])
     },
     apiRows: [
       { prop: 'containerRef', desc: '滚动容器（useTemplateRef）', type: 'MaybeComputedElementRef', def: '必填' },
@@ -2689,8 +2709,8 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const consts = [['width', String(s.width)], ['height', String(s.height)], ['minScratchPercentage', String(s.minScratchPercentage)]]
       const body = [
-        '  <IuScratchToReveal :width="width" :height="height" :min-scratch-percentage="minScratchPercentage" @complete="onComplete">',
-        '    <div class="flex size-full items-center justify-center text-lg font-bold">🎉 恭喜中奖</div>',
+        '  <IuScratchToReveal :width="width" :height="height" :min-scratch-percentage="minScratchPercentage">',
+        '    <div style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 18px; font-weight: 700">🎉 恭喜中奖</div>',
         '  </IuScratchToReveal>',
       ].join('\n')
       return scriptedCode('IuScratchToReveal', consts, body)
@@ -2738,23 +2758,21 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuPathMarquee',
         '    :path="path"',
-        '    text="Inspira UI · 动效组件 · Inspira UI · 动效组件"',
         '    :base-velocity="2"',
         '    :show-path="false"',
-        '  />',
+        '  >Inspira UI · 动效组件 · Inspira UI · 动效组件</IuPathMarquee>',
       ].join('\n')
       return scriptedCode('IuPathMarquee', [['path', pathD]], body)
     },
     apiRows: [
       { prop: 'path', desc: 'SVG 路径（d 属性）', type: 'string', def: '必填' },
-      { prop: 'text', desc: '循环文字（默认取插槽）', type: 'string', def: '—' },
       { prop: 'baseVelocity', desc: '基础速度', type: 'number', def: '—' },
       { prop: 'direction', desc: '方向', type: "'normal' | 'reverse'", def: "'normal'" },
       { prop: 'slowdownOnHover', desc: '悬停减速', type: 'boolean', def: '—' },
       { prop: 'useScrollVelocity', desc: '滚动加减速联动', type: 'boolean', def: '—' },
       { prop: 'showPath', desc: '显示路径参考线', type: 'boolean', def: '—' },
     ],
-    slotRows: [{ prop: 'default', desc: '循环内容（text 为空时使用）', type: '—', def: '—' }],
+    slotRows: [{ prop: 'default', desc: '循环内容', type: '—', def: '—' }],
   },
   {
     importName: 'IuVanishingInput', name: 'VanishingInput', zh: '消失输入框',
@@ -2763,7 +2781,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const phConst = "[\n    '输入点什么…',\n    '按下回车见证消失',\n  ]"
-      const body = '  <IuVanishingInput :placeholders="placeholders" @submit="onSubmit" />'
+      const body = '  <IuVanishingInput :placeholders="placeholders" />'
       return scriptedCode('IuVanishingInput', [['placeholders', phConst]], body)
     },
     apiRows: [
@@ -2781,8 +2799,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuSVGMask class="h-80" :size="40" :reveal-size="600">',
-        '    <img src="/image.jpg" alt="" class="size-full object-cover" />',
+        '  <IuSVGMask style="height: 320px" :size="40" :reveal-size="600">',
+        '    <img src="https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800" alt="" style="width: 100%; height: 100%; object-fit: cover" />',
         '  </IuSVGMask>',
       ].join('\n')
       return scriptedCode('IuSVGMask', [], body)
@@ -2803,9 +2821,9 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'select', key: 'orientation', label: '方向 Orientation', options: [{ label: 'diagonal', value: 'diagonal' }, { label: 'horizontal', value: 'horizontal' }, { label: 'vertical', value: 'vertical' }] },
     ],
     demoCode: (s) => {
-      const consts = [['size', String(s.size)], ['orientation', "'" + s.orientation + "'"]]
+      const consts = [['size', String(s.size)], ['orientation', scriptLiteral(String(s.orientation))]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 240px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 240px">',
         '    <IuScales :size="size" :orientation="orientation" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -2828,7 +2846,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'switch', key: 'animate', label: '抖动动画 animate' },
     ],
     demoCode: (s) => {
-      const consts = [['textColor', "'" + s.textColor + "'"], ['strokeColor', "'" + s.strokeColor + "'"], ['shadowColor', "'" + s.shadowColor + "'"], ['animate', s.animate ? 'true' : 'false']]
+      const consts = [['textColor', scriptLiteral(String(s.textColor))], ['strokeColor', scriptLiteral(String(s.strokeColor))], ['shadowColor', scriptLiteral(String(s.shadowColor))], ['animate', s.animate ? 'true' : 'false']]
       const body = [
         '  <IuText3d',
         '    :text-color="textColor"',
@@ -2866,10 +2884,11 @@ export const COMPONENTS: ComponentMeta[] = [
     ],
     demoCode: (s) => {
       const body = [
-        '  <div ref="container" class="relative flex h-56 w-full max-w-md items-center justify-between rounded-xl border p-4">',
-        '    <div ref="from" class="size-14 rounded-xl border bg-slate-900" />',
-        '    <div ref="to" class="size-14 rounded-xl border bg-slate-900" />',
+        '  <div ref="container" style="position: relative; display: flex; height: 224px; width: 100%; max-width: 448px; align-items: center; justify-content: space-between; border-radius: 12px; border: 1px solid #8884; padding: 16px">',
+        '    <div ref="from" style="width: 56px; height: 56px; border-radius: 12px; border: 1px solid #8884; background: #0f172a" />',
+        '    <div ref="to" style="width: 56px; height: 56px; border-radius: 12px; border: 1px solid #8884; background: #0f172a" />',
         '    <IuAnimatedBeam',
+        '      v-if="container && from && to"',
         '      :container-ref="container"',
         '      :from-ref="from"',
         '      :to-ref="to"',
@@ -2879,7 +2898,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    />',
         '  </div>',
       ].join('\n')
-      return scriptedCode('IuAnimatedBeam', [['container', 'useTemplateRef(\'container\')'], ['from', 'useTemplateRef(\'from\')'], ['to', 'useTemplateRef(\'to\')'], ['curvature', String(s.curvature)], ['gradientStartColor', String(s.gradientStartColor)], ['gradientStopColor', String(s.gradientStopColor)]], body)
+      return scriptedCode('IuAnimatedBeam', [['container', 'useTemplateRef<HTMLElement>(\'container\')'], ['from', 'useTemplateRef<HTMLElement>(\'from\')'], ['to', 'useTemplateRef<HTMLElement>(\'to\')'], ['curvature', String(s.curvature)], ['gradientStartColor', scriptLiteral(String(s.gradientStartColor))], ['gradientStopColor', scriptLiteral(String(s.gradientStopColor))]], body, ['useTemplateRef'])
     },
     apiRows: [
       { prop: 'containerRef / fromRef / toRef', desc: '容器与两个端点元素（useTemplateRef）', type: 'HTMLElement', def: '必填' },
@@ -2898,13 +2917,13 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuAppleCardCarousel>',
-        '    <IuAppleCarouselItem v-for="(card, i) in cards" :key="i" :index="i" @card-close="onClose">',
+        '    <IuAppleCarouselItem v-for="(card, i) in cards" :key="i" :index="i">',
         '      <IuAppleCard :card="card" :index="i" />',
         '    </IuAppleCarouselItem>',
         '  </IuAppleCardCarousel>',
       ].join('\n')
-      const cardsConst = "[\n    { src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800', title: '第一张' },\n    { src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800', title: '第二张' },\n  ]"
-      return scriptedCode('IuAppleCardCarousel', [['cards', cardsConst], ['onClose', '() => {}']], body)
+      const cardsConst = "[\n    { src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800', title: '第一张', category: '风景' },\n    { src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800', title: '第二张', category: '风景' },\n  ]"
+      return scriptedCode('IuAppleCardCarousel, IuAppleCarouselItem, IuAppleCard', [['cards', cardsConst]], body)
     },
     apiRows: [
       { prop: 'initialScroll', desc: '初始滚动位置', type: 'number', def: '0' },
@@ -2920,7 +2939,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: {},
     controls: [],
     demoCode: (s) => {
-      const itemsConst = "[\n    { id: 'a', type: 'image', src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600' },\n    { id: 'b', type: 'image', src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600' },\n  ]"
+      const itemsConst = "[\n    { id: 'a', type: 'image' as const, src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=600' },\n    { id: 'b', type: 'image' as const, src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=600' },\n  ]"
       const body = [
         '  <IuCubeCarousel',
         '    :items="items"',
@@ -2965,9 +2984,9 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuFeyCards',
-        '    img-src="..."',
-        '    main-img="..."',
-        '    idle-img="..."',
+        '    :img-src="imgSrc"',
+        '    :main-img="mainImg"',
+        '    :idle-img="idleImg"',
         '  />',
       ].join('\n')
       return scriptedCode('IuFeyCards', [['imgSrc', '["https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500", "https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500"]'], ['mainImg', "'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500'"], ['idleImg', "'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500'"]], body)
@@ -2989,8 +3008,8 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuFileUpload',
-        '    class="max-w-md"',
-        '    @change="onFilesChange"',
+        '    style="max-width: 448px"',
+        '    @on-change="onFilesChange"',
         '  />',
       ].join('\n')
       return scriptedCode('IuFileUpload', [['onFilesChange', '(files: File[]) => console.log(files)']], body)
@@ -2998,7 +3017,7 @@ export const COMPONENTS: ComponentMeta[] = [
     apiRows: [
       { prop: 'class', desc: '容器样式', type: 'string', def: '—' },
     ],
-    eventRows: [{ prop: 'change', desc: '选择的文件变化', type: '(files: File[])', def: '—' }],
+    eventRows: [{ prop: 'onChange', desc: '选择的文件变化', type: '(files: File[])', def: '—' }],
     note: '配套子组件 IuFileUploadGrid 用于展示已选文件',
   },
   {
@@ -3010,11 +3029,11 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuLogoOrigami :duration="1.5" :delay="2.5">',
         '    <IuLogoOrigamiItem v-for="img in logos" :key="img">',
-        '      <img :src="img" alt="logo" class="size-full object-contain" />',
+        '      <img :src="img" alt="logo" style="width: 100%; height: 100%; object-fit: contain" />',
         '    </IuLogoOrigamiItem>',
         '  </IuLogoOrigami>',
       ].join('\n')
-      return scriptedCode('IuLogoOrigami', [['logos', "['/logo-1.svg', '/logo-2.svg', '/logo-3.svg', '/logo-4.svg']"]], body)
+      return scriptedCode('IuLogoOrigami, IuLogoOrigamiItem', [['logos', "['https://cdn.simpleicons.org/vuedotjs', 'https://cdn.simpleicons.org/vite', 'https://cdn.simpleicons.org/typescript', 'https://cdn.simpleicons.org/github']"]], body)
     },
     apiRows: [
       { prop: 'duration', desc: '翻转时长（秒）', type: 'number', def: '1.5' },
@@ -3028,7 +3047,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: {},
     controls: [],
     demoCode: (s) => {
-      const dataConst = "[\n    { month: '11月', date: 11, day: '周二', events: [{ title: '发布 v1.0', time: '10:00' }] },\n    { month: '11月', date: 12, day: '周三' },\n    { month: '11月', date: 13, day: '周四', events: [{ title: '评审会', time: '15:00' }] },\n  ]"
+      const dataConst = "[\n    { month: '11月', date: 11, day: '周二', events: [{ title: '发布 v1.0', day: '周二', time: '10:00' }] },\n    { month: '11月', date: 12, day: '周三' },\n    { month: '11月', date: 13, day: '周四', events: [{ title: '评审会', day: '周四', time: '15:00' }] },\n  ]"
       const body = [
         '  <IuSpringCalendar',
         '    :calendar-data="calendarData"',
@@ -3051,9 +3070,9 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuWarpBackground style="position: absolute; inset: 0" />',
-        '    <p class="relative z-10 grid h-full place-items-center text-sm">Warp Background</p>',
+        '    <p style="position: relative; z-index: 10; display: grid; height: 100%; place-items: center; font-size: 14px">Warp Background</p>',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuWarpBackground', [], body)
@@ -3074,11 +3093,9 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuGlobe',
-        '    class="mx-auto aspect-square max-w-md"',
-        '    :globe-color="[0.2, 0.2, 0.2]"',
-        '    :marker-color="[1, 0.5, 0]"',
-        '  />',
+        '  <div style="position: relative; margin-inline: auto; aspect-ratio: 1; max-width: 448px">',
+        '    <IuGlobe :config="{ baseColor: [0.2, 0.2, 0.2], markerColor: [1, 0.5, 0] }" />',
+        '  </div>',
       ].join('\n')
       return scriptedCode('IuGlobe', [], body)
     },
@@ -3104,7 +3121,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    :swatches="[' + "'#6366f1', '#ec4899', '#f59e0b'" + ']"',
         '  />',
       ].join('\n')
-      return scriptedCode('IuColorPicker', [['color', "'" + s.color + "'"], ['type', "'" + s.type + "'"], ['swatches', "['#6366f1', '#ec4899', '#f59e0b']"]], body)
+      return scriptedCode('IuColorPicker', [['color', scriptLiteral(String(s.color))], ['type', scriptLiteral(String(s.type))], ['swatches', "['#6366f1', '#ec4899', '#f59e0b']"]], body)
     },
     apiRows: [
       { prop: 'value / v-model:value', desc: '当前颜色', type: 'string | HsvaColor | RgbaColor …', def: '—' },
@@ -3139,12 +3156,11 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuMorphingTabs',
-        '    :tabs="[\'home\', \'search\', \'settings\']"',
-        '    :active-tab="activeTab"',
-        '    @click="activeTab = $event"',
+        '    :tabs="tabs"',
+        '    v-model:active-tab="activeTab"',
         '  />',
       ].join('\n')
-      return scriptedCode('IuMorphingTabs', [['tabs', "['home', 'search', 'settings']"], ['activeTab', "'" + s.activeTab + "'"]], body)
+      return scriptedCode('IuMorphingTabs', [['tabs', "['home', 'search', 'settings']"], ['activeTab', `ref(${scriptLiteral(String(s.activeTab))})`]], body, ['ref'])
     },
     apiRows: [
       { prop: 'tabs', desc: '标签名数组', type: 'string[]', def: '必填' },
@@ -3152,7 +3168,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'margin', desc: '标签间距', type: 'number', def: '—' },
       { prop: 'blurStdDeviation', desc: '背景模糊强度', type: 'number', def: '—' },
     ],
-    eventRows: [{ prop: 'click', desc: '标签点击', type: '(tab: string)', def: '—' }],
+    eventRows: [{ prop: 'update:activeTab', desc: '选中标签变化', type: '(tab: string)', def: '—' }],
   },
   {
     importName: 'IuAnimatedLogoCloud', name: 'AnimatedLogoCloud', zh: '动画 Logo 云',
@@ -3163,7 +3179,7 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuAnimatedLogoCloud title="受团队信任" :logos="logos" />',
       ].join('\n')
-      return scriptedCode('IuAnimatedLogoCloud', [['logos', "[{ name: 'Vue', path: '/vue.svg' }, { name: 'Vite', path: '/vite.svg' }, { name: 'TS', path: '/ts.svg' }]"]], body)
+      return scriptedCode('IuAnimatedLogoCloud', [['logos', "[{ name: 'Vue', path: 'https://cdn.simpleicons.org/vuedotjs' }, { name: 'Vite', path: 'https://cdn.simpleicons.org/vite' }, { name: 'TS', path: 'https://cdn.simpleicons.org/typescript' }]"]], body)
     },
     apiRows: [
       { prop: 'logos', desc: 'Logo 数组（name / path）', type: 'Logo[]', def: '内置默认' },
@@ -3178,7 +3194,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = '  <IuIconLogoCloud :logos="logos" />'
-      return scriptedCode('IuIconLogoCloud', [['logos', "[{ name: 'Vue', path: '/vue.svg' }, { name: 'Vite', path: '/vite.svg' }]"]], body)
+      return scriptedCode('IuIconLogoCloud', [['logos', "[{ name: 'Vue', path: 'https://cdn.simpleicons.org/vuedotjs' }, { name: 'Vite', path: 'https://cdn.simpleicons.org/vite' }]"]], body)
     },
     apiRows: [
       { prop: 'logos', desc: 'Logo 数组', type: 'Logo[]', def: '内置默认' },
@@ -3191,7 +3207,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = '  <IuStaticLogoCloud :logos="logos" />'
-      return scriptedCode('IuStaticLogoCloud', [['logos', "[{ name: 'Vue', path: '/vue.svg' }]"]], body)
+      return scriptedCode('IuStaticLogoCloud', [['logos', "[{ name: 'Vue', path: 'https://cdn.simpleicons.org/vuedotjs' }]"]], body)
     },
     apiRows: [
       { prop: 'logos', desc: 'Logo 数组', type: 'Logo[]', def: '内置默认' },
@@ -3204,7 +3220,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const itemsConst = "[\n    { src: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=800' },\n    { src: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=800' },\n  ]"
-      const body = '  <IuPhotoGallery :items="items" class="max-w-lg" />'
+      const body = '  <IuPhotoGallery :items="items" style="max-width: 512px" />'
       return scriptedCode('IuPhotoGallery', [['items', itemsConst]], body)
     },
     apiRows: [
@@ -3232,11 +3248,13 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuCircularGallery',
-        '    text="Inspira UI"',
-        '    text-color="#ffffff"',
-        '    class="h-96 rounded-xl border"',
-        '  />',
+        '  <div style="display: grid; place-items: center; height: 280px">',
+        '    <IuCircularGallery pause-on-hover>',
+        '      <span>Vue</span>',
+        '      <span>Inspira UI</span>',
+        '      <span>TypeScript</span>',
+        '    </IuCircularGallery>',
+        '  </div>',
       ].join('\n')
       return scriptedCode('IuCircularGallery', [], body)
     },
@@ -3246,6 +3264,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'direction', desc: '排列方向', type: "'normal' | 'reverse'", def: "'normal'" },
       { prop: 'pauseOnHover', desc: '悬停暂停', type: 'boolean', def: 'false' },
     ],
+    slotRows: [{ prop: 'default', desc: '沿圆周排列的子元素', type: '—', def: '—' }],
   },
   {
     importName: 'IuSafariMockup', name: 'SafariMockup', zh: 'Safari 样机',
@@ -3276,18 +3295,14 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuTextRevealCard',
-        '      text="把鼠标移过来"',
-        '      reveal-text="星光为你揭示答案"',
-        '    :stars-count="80"',
-        '  >',
-        '    <template #subtitle>✦</template>',
+        '  <IuTextRevealCard :stars-count="80">',
+        '    <template #text>把鼠标移过来</template>',
+        '    <template #revealText>星光为你揭示答案</template>',
         '  </IuTextRevealCard>',
       ].join('\n')
       return scriptedCode('IuTextRevealCard', [], body)
     },
     apiRows: [
-      { prop: 'text / revealText', desc: '前/后两段文字', type: 'string', def: '—' },
       { prop: 'starsCount', desc: '星星数量', type: 'number', def: '—' },
     ],
     slotRows: [
@@ -3301,7 +3316,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="h-48 overflow-auto rounded-xl border p-6">',
+        '  <div style="height: 192px; overflow: auto; border-radius: 12px; border: 1px solid #8884; padding: 24px">',
         '    <IuTextScrollReveal text="滚动这段文字试试" style="font-size: 20px; font-weight: 700" />',
         '  </div>',
       ].join('\n')
@@ -3319,7 +3334,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuVideoText',
-        '    src="https://example.com/hero.mp4"',
+        '    src="https://cdn.pixabay.com/video/2023/10/08/184118-874843721_tiny.mp4"',
         '    font-size="18vw"',
         '    font-weight="900"',
         '  />',
@@ -3342,16 +3357,15 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuHaloSearch',
-        '    class="max-w-md"',
-        '    placeholder="搜索组件…"',
+        '    style="max-width: 448px"',
         '  />',
       ].join('\n')
       return scriptedCode('IuHaloSearch', [], body)
     },
     apiRows: [
-      { prop: 'placeholder', desc: '占位文案（透传 input）', type: 'string', def: '—' },
+      { prop: 'class', desc: '搜索框容器样式', type: "HTMLAttributes['class']", def: '—' },
     ],
-    slotRows: [{ prop: 'default', desc: '搜索框下方内容', type: '—', def: '—' }],
+
   },
   {
     importName: 'IuParallaxFloat', name: 'ParallaxFloat', zh: '视差浮动',
@@ -3360,15 +3374,16 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuParallaxFloat class="h-72 rounded-xl border" :sensitivity="0.2">',
-        '    <IuParallaxFloatElement :sensitivity="0.3" class="p-4 text-lg font-bold">前景层</IuParallaxFloatElement>',
-        '    <IuParallaxFloatElement :sensitivity="0.1" class="p-4 opacity-60">背景层</IuParallaxFloatElement>',
+        '  <IuParallaxFloat style="height: 288px; border-radius: 12px; border: 1px solid #8884" :sensitivity="0.2">',
+        '    <IuParallaxFloatElement :depth="0.3" style="padding: 16px; font-size: 18px; font-weight: 700">前景层</IuParallaxFloatElement>',
+        '    <IuParallaxFloatElement :depth="0.1" style="padding: 16px; opacity: 0.6">背景层</IuParallaxFloatElement>',
         '  </IuParallaxFloat>',
       ].join('\n')
-      return scriptedCode('IuParallaxFloat', [], body)
+      return scriptedCode('IuParallaxFloat, IuParallaxFloatElement', [], body)
     },
     apiRows: [
       { prop: 'sensitivity', desc: '整体视差灵敏度', type: 'number', def: '—' },
+      { prop: 'IuParallaxFloatElement.depth', desc: '分层元素的移动深度', type: 'number', def: '—' },
       { prop: 'easingFactor', desc: '缓动系数', type: 'number', def: '—' },
     ],
     slotRows: [{ prop: 'default', desc: 'IuParallaxFloatElement 分层元素', type: '—', def: '—' }],
@@ -3380,9 +3395,9 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuOrbit class="size-64" :duration="20" :radius="80" reverse>',
-        '    <span class="size-4 rounded-full bg-emerald-500" />',
-        '    <span class="size-3 rounded-full bg-sky-500" />',
+        '  <IuOrbit style="width: 256px; height: 256px" :duration="20" :radius="80" direction="reverse">',
+        '    <span style="width: 16px; height: 16px; border-radius: 9999px; background: #10b981" />',
+        '    <span style="width: 12px; height: 12px; border-radius: 9999px; background: #0ea5e9" />',
         '  </IuOrbit>',
       ].join('\n')
       return scriptedCode('IuOrbit', [], body)
@@ -3403,9 +3418,9 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div style="cursor: none" class="grid h-40 place-items-center rounded-xl border">',
+        '  <div style="display: grid; height: 160px; place-items: center; border-radius: 12px; border: 1px solid #8884; cursor: none">',
         '    <IuSleekLineCursor />',
-        '    <span class="text-sm opacity-70">移动鼠标查看拖尾</span>',
+        '    <span style="font-size: 14px; opacity: 0.7">移动鼠标查看拖尾</span>',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuSleekLineCursor', [], body)
@@ -3429,9 +3444,9 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'quantity', label: '数量 Quantity', step: 10 },
     ],
     demoCode: (s) => {
-      const consts = [['color', "'" + s.color + "'"], ['quantity', String(s.quantity)]]
+      const consts = [['color', scriptLiteral(String(s.color))], ['quantity', String(s.quantity)]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border bg-neutral-900" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; background: #171717; height: 280px">',
         '    <IuParticlesBg :color="color" :quantity="quantity" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -3450,7 +3465,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuIconCloud :images="images" class="h-72" />',
+        '  <IuIconCloud :images="images" style="height: 288px" />',
       ].join('\n')
       const imgsConst = "[\n    'https://cdn.simpleicons.org/vuedotjs/4FC08D',\n    'https://cdn.simpleicons.org/typescript/3178C6',\n    'https://cdn.simpleicons.org/vite/646CFF',\n    'https://cdn.simpleicons.org/pnpm/F9AD00',\n  ]"
       return scriptedCode('IuIconCloud', [['images', imgsConst]], body)
@@ -3467,14 +3482,14 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'gridSize', label: '网格尺寸 Grid Size', step: 1 },
     ],
     demoCode: (s) => {
-      const consts = [['src', "'" + s.src + "'"], ['gridSize', String(s.gridSize)]]
+      const consts = [['src', scriptLiteral(String(s.src))], ['gridSize', String(s.gridSize)]]
       const body = [
         '  <IuDitherShader',
         '    :src="src"',
         '    :grid-size="gridSize"',
         '    dither-mode="bayer"',
         '    color-mode="original"',
-        '    class="h-72 rounded-xl"',
+        '    style="height: 288px; border-radius: 12px"',
         '  />',
       ].join('\n')
       return scriptedCode('IuDitherShader', consts, body)
@@ -3494,16 +3509,16 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative h-72 overflow-hidden rounded-xl border">',
+        '  <div style="position: relative; height: 288px; overflow: hidden; border-radius: 12px; border: 1px solid #8884">',
         '    <IuFluidCursor',
-        '      sim-resolution="128"',
-        '      dye-resolution="512"',
+        '      :sim-resolution="128"',
+        '      :dye-resolution="512"',
         '      :density-dissipation="97"',
         '      :velocity-dissipation="2"',
         '      :pressure="0.8"',
         '      :curl="20"',
         '    />',
-        '    <p class="pointer-events-none relative z-10 grid h-full place-items-center text-sm opacity-70">在区域内移动鼠标</p>',
+        '    <p style="pointer-events: none; position: relative; z-index: 10; display: grid; height: 100%; place-items: center; font-size: 14px; opacity: 0.7">在区域内移动鼠标</p>',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuFluidCursor', [], body)
@@ -3528,7 +3543,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    :displace="0.5"',
         '    :blur="11"',
         '  >',
-        '    <div class="grid size-full place-items-center text-sm font-medium">Liquid Glass</div>',
+        '    <div style="display: grid; width: 100%; height: 100%; place-items: center; font-size: 14px; font-weight: 500">Liquid Glass</div>',
         '  </IuLiquidGlass>',
       ].join('\n')
       return scriptedCode('IuLiquidGlass', [], body)
@@ -3549,7 +3564,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuLiquidLogo',
-        '    image-url="/logo.svg"',
+        '    image-url="https://cdn.simpleicons.org/vuedotjs/ffffff"',
         '    :speed="0.15"',
         '    :pattern-scale="2.7"',
         '    :liquid="1.35"',
@@ -3570,14 +3585,14 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: {},
     controls: [],
     demoCode: (s) => {
-      const fragConst = "'void main() { … }' // 自定义片元着色器"
+      const fragConst = scriptLiteral(htmlCanvasShader)
       const body = [
         '  <IuHtmlInCanvas',
         '    :shader-code="shaderCode"',
-        '    :mouse-enabled="true"',
-        '    class="h-72 rounded-xl border"',
+        '    interactive',
+        '    style="height: 288px; border-radius: 12px; border: 1px solid #8884"',
         '  >',
-        '    <div class="p-8 text-lg font-bold">这里的内容会进入 WebGL</div>',
+        '    <div style="padding: 32px; font-size: 18px; font-weight: 700">这里的内容会进入 WebGL</div>',
         '  </IuHtmlInCanvas>',
       ].join('\n')
       return scriptedCode('IuHtmlInCanvas', [['shaderCode', fragConst]], body)
@@ -3587,7 +3602,7 @@ export const COMPONENTS: ComponentMeta[] = [
       { prop: 'vertexShaderCode / uniforms', desc: '顶点着色器 / uniform 注入', type: 'string / object', def: '—' },
       { prop: 'frameRate / pixelRatio', desc: '帧率 / 像素比', type: 'number', def: '—' },
       { prop: 'paused / autoPause', desc: '手动暂停 / 无人交互自动暂停', type: 'boolean', def: '—' },
-      { prop: 'mouseEnabled / mouseDamping', desc: '鼠标注入与阻尼', type: 'boolean / number', def: '—' },
+      { prop: 'interactive / mouseDamping', desc: '鼠标注入与阻尼', type: 'boolean / number', def: '—' },
     ],
     slotRows: [{ prop: 'default', desc: '被渲染进画布的 DOM', type: '—', def: '—' }],
   },
@@ -3598,8 +3613,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuHtmlAscii class="h-72 rounded-xl border" :cell-size="8">',
-        '    <div class="p-8 text-lg font-bold">ASCII 化的内容</div>',
+        '  <IuHtmlAscii style="height: 288px; border-radius: 12px; border: 1px solid #8884" :cell-size="8">',
+        '    <div style="padding: 32px; font-size: 18px; font-weight: 700">ASCII 化的内容</div>',
         '  </IuHtmlAscii>',
       ].join('\n')
       return scriptedCode('IuHtmlAscii', [], body)
@@ -3618,8 +3633,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuHtmlBlaze class="h-72 rounded-xl border">',
-        '    <div class="p-8 text-lg font-bold">燃烧的内容</div>',
+        '  <IuHtmlBlaze style="height: 288px; border-radius: 12px; border: 1px solid #8884">',
+        '    <div style="padding: 32px; font-size: 18px; font-weight: 700">燃烧的内容</div>',
         '  </IuHtmlBlaze>',
       ].join('\n')
       return scriptedCode('IuHtmlBlaze', [], body)
@@ -3636,8 +3651,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuHtmlChromatic class="h-72 rounded-xl border">',
-        '    <div class="p-8 text-lg font-bold">色差漂移的内容</div>',
+        '  <IuHtmlChromatic style="height: 288px; border-radius: 12px; border: 1px solid #8884">',
+        '    <div style="padding: 32px; font-size: 18px; font-weight: 700">色差漂移的内容</div>',
         '  </IuHtmlChromatic>',
       ].join('\n')
       return scriptedCode('IuHtmlChromatic', [], body)
@@ -3654,8 +3669,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuHtmlCloth class="h-72 rounded-xl border">',
-        '    <div class="p-8 text-lg font-bold">布料波动的内容</div>',
+        '  <IuHtmlCloth style="height: 288px; border-radius: 12px; border: 1px solid #8884">',
+        '    <div style="padding: 32px; font-size: 18px; font-weight: 700">布料波动的内容</div>',
         '  </IuHtmlCloth>',
       ].join('\n')
       return scriptedCode('IuHtmlCloth', [], body)
@@ -3672,8 +3687,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuHtmlDrag class="h-72 rounded-xl border" :strength="0.6">',
-        '    <div class="p-8 text-lg font-bold">可拖拽扭曲的内容</div>',
+        '  <IuHtmlDrag style="height: 288px; border-radius: 12px; border: 1px solid #8884" :strength="0.6">',
+        '    <div style="padding: 32px; font-size: 18px; font-weight: 700">可拖拽扭曲的内容</div>',
         '  </IuHtmlDrag>',
       ].join('\n')
       return scriptedCode('IuHtmlDrag', [], body)
@@ -3691,8 +3706,8 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuHtmlLiquid class="h-72 rounded-xl border">',
-        '    <div class="p-8 text-lg font-bold">液态扭曲的内容</div>',
+        '  <IuHtmlLiquid style="height: 288px; border-radius: 12px; border: 1px solid #8884">',
+        '    <div style="padding: 32px; font-size: 18px; font-weight: 700">液态扭曲的内容</div>',
         '  </IuHtmlLiquid>',
       ].join('\n')
       return scriptedCode('IuHtmlLiquid', [], body)
@@ -3710,15 +3725,15 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const imgsConst = "[\n    'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=300',\n    'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=300',\n  ]"
       const body = [
-        '  <div class="relative h-72 overflow-hidden rounded-xl border">',
-        '    <IuImageTrailCursor :images="images" :variant="4" />',
+        '  <div style="position: relative; height: 288px; overflow: hidden; border-radius: 12px; border: 1px solid #8884">',
+        '    <IuImageTrailCursor :images="images" variant="type4" />',
         '  </div>',
       ].join('\n')
       return scriptedCode('IuImageTrailCursor', [['images', imgsConst]], body)
     },
     apiRows: [
       { prop: 'images', desc: '拖尾图片数组', type: 'string[]', def: '—' },
-      { prop: 'variant', desc: '拖尾动画变体（1-16）', type: 'VariantType', def: '—' },
+      { prop: 'variant', desc: '拖尾动画变体（type1 至 type7）', type: 'VariantType', def: '—' },
     ],
   },
   {
@@ -3730,13 +3745,13 @@ export const COMPONENTS: ComponentMeta[] = [
       { kind: 'number', key: 'particleSize', label: '粒子尺寸 Particle Size', step: 0.2 },
     ],
     demoCode: (s) => {
-      const consts = [['imageSrc', "'" + s.imageSrc + "'"], ['particleSize', String(s.particleSize)]]
+      const consts = [['imageSrc', scriptLiteral(String(s.imageSrc))], ['particleSize', scriptLiteral(String(s.particleSize))]]
       const body = [
         '  <IuParticleImage',
         '    :image-src="imageSrc"',
         '    :particle-size="particleSize"',
         '    mouse-force="30"',
-        '    class="h-72 rounded-xl border"',
+        '    style="height: 288px; border-radius: 12px; border: 1px solid #8884"',
         '  />',
       ].join('\n')
       return scriptedCode('IuParticleImage', consts, body)
@@ -3764,7 +3779,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '    :items="items"',
         '    :bend="-3"',
         '    text-color="#ffffff"',
-        '    class="h-96 rounded-xl border"',
+        '    style="height: 384px; border-radius: 12px; border: 1px solid #8884"',
         '  />',
       ].join('\n')
       return scriptedCode('IuBendingGallery', [['items', itemsConst]], body)
@@ -3783,7 +3798,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuBubblesBg style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -3806,7 +3821,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const consts = [['hue', String(s.hue)], ['saturation', String(s.saturation)], ['chroma', String(s.chroma)]]
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuNeuralBg :hue="hue" :saturation="saturation" :chroma="chroma" style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -3824,7 +3839,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; background: #000; height: 280px">',
         '    <IuParticleWhirlpoolBg style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -3864,7 +3879,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuCosmicPortal class="h-96 rounded-xl" />',
+        '  <IuCosmicPortal style="height: 384px; border-radius: 12px" />',
       ].join('\n')
       return scriptedCode('IuCosmicPortal', [], body)
     },
@@ -3881,7 +3896,7 @@ export const COMPONENTS: ComponentMeta[] = [
     demoCode: (s) => {
       const body = [
         '  <IuGithubGlobe',
-        '    class="mx-auto aspect-square max-w-lg"',
+        '    style="margin-inline: auto; aspect-ratio: 1; max-width: 512px"',
         '    :data="[{ order: 0, startLat: 39.9, startLng: 116.4, endLat: 35.6, endLng: 139.7, arcAlt: 0.3, color: \'#8B5CF6\' }]"',
         '  />',
       ].join('\n')
@@ -3899,19 +3914,19 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: {},
     controls: [],
     demoCode: (s) => {
-      const cardsConst = "[\n    { id: 'a', image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500' },\n    { id: 'b', image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500' },\n  ]"
+      const cardsConst = "[\n    { title: '第一张', badge: 'NEW', tags: ['WebGL'], date: '2025-11-11', image: 'https://images.unsplash.com/photo-1677696791882-47344f63ceb5?w=500' },\n    { title: '第二张', badge: '', tags: [], date: '2025-11-12', image: 'https://images.unsplash.com/photo-1677696792100-3b0a6f0c3a27?w=500' },\n  ]"
       const body = [
         '  <IuInfiniteGrid',
         '    :card-data="cards"',
-        '    :options="{ tileWidth: 300, tileHeight: 200 }"',
-        '    class="h-96 rounded-xl border"',
+        '    :options="{ tileSize: 3, gridCols: 3 }"',
+        '    style="height: 384px; border-radius: 12px; border: 1px solid #8884"',
         '  />',
       ].join('\n')
       return scriptedCode('IuInfiniteGrid', [['cards', cardsConst]], body)
     },
     apiRows: [
-      { prop: 'cardData', desc: '卡片数据（id / image 等）', type: 'CardData[]', def: '必填' },
-      { prop: 'options', desc: '网格配置（tileWidth / tileHeight / buffer 等）', type: 'Partial<InfiniteGridOptions>', def: '—' },
+      { prop: 'cardData', desc: '卡片数据（title / badge / tags / date / image）', type: 'CardData[]', def: '必填' },
+      { prop: 'options', desc: '网格配置（tileSize / gridCols / gridRows 等）', type: 'Partial<InfiniteGridOptions>', def: '—' },
       { prop: 'onTilesLoaded', desc: '瓦片加载完成回调', type: '() => void', def: '—' },
     ],
     note: '基于 ogl + gsap InertiaPlugin，拖拽 / 滚轮缩放',
@@ -3923,7 +3938,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border bg-black" style="height: 320px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; background: #000; height: 320px">',
         '    <IuLightSpeed style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -3941,7 +3956,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuLiquidBackground style="position: absolute; inset: 0" />',
         '  </div>',
       ].join('\n')
@@ -3959,7 +3974,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative overflow-hidden rounded-xl border" style="height: 280px">',
+        '  <div style="position: relative; overflow: hidden; border-radius: 12px; border: 1px solid #8884; height: 280px">',
         '    <IuRibbonBackground',
         '      :colors="[\'#4f46e5\', \'#0ea5e9\', \'#ec4899\']"',
         '      :speed="0.5"',
@@ -3984,7 +3999,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <IuScrollIsland title="滚动进度" :height="64" class="max-w-md" />',
+        '  <IuScrollIsland title="滚动进度" :height="64" style="max-width: 448px" />',
       ].join('\n')
       return scriptedCode('IuScrollIsland', [], body)
     },
@@ -4004,7 +4019,7 @@ export const COMPONENTS: ComponentMeta[] = [
         '  <IuShaderToy',
         '    shader-code="void mainImage(out vec4 c, vec2 uv) { c = vec4(uv, abs(sin(uTime)), 1.0); }"',
         '    :mouse-mode="\'hover\'"',
-        '    class="h-72 rounded-xl border"',
+        '    style="height: 288px; border-radius: 12px; border: 1px solid #8884"',
         '  />',
       ].join('\n')
       return scriptedCode('IuShaderToy', [], body)
@@ -4025,7 +4040,7 @@ export const COMPONENTS: ComponentMeta[] = [
       const body = [
         '  <IuSpline',
         '        scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"',
-        '    class="h-96 rounded-xl border"',
+        '    style="height: 384px; border-radius: 12px; border: 1px solid #8884"',
         '  />',
       ].join('\n')
       return scriptedCode('IuSpline', [], body)
@@ -4042,7 +4057,7 @@ export const COMPONENTS: ComponentMeta[] = [
     controls: [],
     demoCode: (s) => {
       const body = [
-        '  <div class="relative h-72 overflow-hidden rounded-xl border" style="cursor: none">',
+        '  <div style="position: relative; height: 288px; overflow: hidden; border-radius: 12px; border: 1px solid #8884; cursor: none">',
         '    <IuTailedCursor',
         '      :colors="[\'#fe0c0c\', \'#b70cf e\', \'#0c46fe\']"',
         '      :base-thickness="2"',
@@ -4084,20 +4099,20 @@ export const COMPONENTS: ComponentMeta[] = [
     demoState: {},
     controls: [],
     demoCode: (s) => {
-      const dotsConst = "[\n    order: 0, start: { lat: 39.9, lng: 116.4 }, end: { lat: 35.6, lng: 139.7 }, arcAlt: 0.3, color: '#8B5CF6',\n    { start: { lat: 40.7, lng: -73.9 }, end: { lat: 51.5, lng: -0.1 } },\n  ]"
+      const dotsConst = "[\n    { start: { lat: 39.9, lng: 116.4 }, end: { lat: 35.6, lng: 139.7 } },\n    { start: { lat: 40.7, lng: -73.9 }, end: { lat: 51.5, lng: -0.1 } },\n  ]"
       const body = [
         '  <IuWorldMap',
         '        :dots="dots"',
         '    map-color="#3B82F6"',
         '    map-bg-color="#0a0a0a"',
         '    line-color="#8B5CF6"',
-        '    class="h-96"',
+        '    style="height: 384px"',
         '  />',
       ].join('\n')
       return scriptedCode('IuWorldMap', [['dots', dotsConst]], body)
     },
     apiRows: [
-      { prop: 'dots', desc: '连线数组（start / end 经纬度）', type: 'Dot[]', def: '必填' },
+      { prop: 'dots', desc: '连线数组（start / end 经纬度）', type: 'Dot[]', def: '[]' },
       { prop: 'mapColor / mapBgColor', desc: '地图点阵 / 底色', type: 'string', def: '必填' },
       { prop: 'lineColor', desc: '连线颜色', type: 'string', def: '—' },
     ],
@@ -4107,13 +4122,22 @@ export const COMPONENTS: ComponentMeta[] = [
 
 ]
 
+export const COMPONENTS = registry.map((entry) => {
+  const componentPath = entry.slug.startsWith('logo-cloud-') ? 'logo-cloud' : entry.slug
+  return {
+    ...entry,
+    demoCode: (state: Parameters<ComponentMeta['demoCode']>[0]) =>
+      entry.demoCode(state).replace(
+        "from 'inspira-ui-components'",
+        `from 'inspira-ui-components/components/${componentPath}'`,
+      ),
+  }
+})
+
 export const getComponent = (slug: string): ComponentMeta | undefined =>
   COMPONENTS.find((c) => c.slug === slug)
 
 export const componentCount = COMPONENTS.length
-
-/** 真实包版本（顶栏展示，不虚构） */
-export { version as packageVersion } from 'inspira-ui-components'
 
 export const REPO_URL = 'https://github.com/Mayday4671/inspira-ui-components'
 export const PACKAGE_NAME = 'inspira-ui-components'

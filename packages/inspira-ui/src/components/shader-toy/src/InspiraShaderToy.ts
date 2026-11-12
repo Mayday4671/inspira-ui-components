@@ -1,5 +1,4 @@
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，three/ogl 类型过严
-import { Camera, Geometry, Mesh, Program, Renderer, Transform } from "ogl";
+import { Camera, Geometry, Mesh, Program, Renderer } from "ogl";
 
 export interface ShaderConfig {
   source: string;
@@ -27,7 +26,6 @@ export type MouseMode = "click" | "hover";
 export class InspiraShaderToy {
   private renderer: Renderer;
   private camera: Camera;
-  private scene: Transform;
   private geometry: Geometry;
   private program: Program | null = null;
   private mesh: Mesh | null = null;
@@ -137,6 +135,7 @@ export class InspiraShaderToy {
     mouseMode?: MouseMode,
     fps?: number,
     pixelRatio = 1,
+    onContextLost?: () => void,
   ) {
     if (mouseMode) {
       this._mouseMode = mouseMode;
@@ -146,22 +145,28 @@ export class InspiraShaderToy {
     }
     this.setPixelRatio(pixelRatio);
 
-    // Create renderer with WebGL 2 context
-    this.renderer = new Renderer({
-      width: this.getSafeWidth(),
-      height: this.getSafeHeight(),
-      dpr: this._pixelRatio,
+    const canvas = document.createElement('canvas');
+    const contextOptions = {
       alpha: true,
       depth: false,
       stencil: false,
       antialias: true,
-      powerPreference: "high-performance",
-    });
+      premultipliedAlpha: false,
+      preserveDrawingBuffer: false,
+      powerPreference: "high-performance" as const,
+    };
 
-    // Ensure WebGL 2 context
-    if (!this.renderer.gl || !(this.renderer.gl instanceof WebGL2RenderingContext)) {
+    // OGL falls back to WebGL 1, while these shaders require GLSL ES 3.0.
+    if (!canvas.getContext('webgl2', contextOptions)) {
       throw new Error("WebGL 2 not supported");
     }
+    this.renderer = new Renderer({
+      ...contextOptions,
+      canvas,
+      width: this.getSafeWidth(),
+      height: this.getSafeHeight(),
+      dpr: this._pixelRatio,
+    });
 
     // Append canvas to container
     this.container.appendChild(this.renderer.gl.canvas);
@@ -169,9 +174,6 @@ export class InspiraShaderToy {
     // Setup camera (orthographic for full-screen quad)
     this.camera = new Camera(this.renderer.gl);
     this.camera.position.z = 1;
-
-    // Setup scene
-    this.scene = new Transform();
 
     // Setup geometry (full-screen quad)
     this.geometry = new Geometry(this.renderer.gl, {
@@ -182,6 +184,10 @@ export class InspiraShaderToy {
     });
 
     this.setup();
+    this.addEventListener(canvas, 'webglcontextlost', () => {
+      this.dispose();
+      onContextLost?.();
+    });
   }
 
   private setup(): void {
@@ -614,6 +620,7 @@ export class InspiraShaderToy {
   }
 
   public dispose(): void {
+    if (this.disposed) return;
     this.disposed = true;
     this.pause();
     this.resizeObserver?.disconnect();
@@ -625,9 +632,9 @@ export class InspiraShaderToy {
     this.mesh = null;
     this.geometry.remove();
 
-    if (this.renderer.gl.canvas.parentElement) {
-      this.renderer.gl.canvas.parentElement.removeChild(this.renderer.gl.canvas);
-    }
+    const { gl } = this.renderer;
+    if (!gl.isContextLost()) gl.getExtension('WEBGL_lose_context')?.loseContext();
+    gl.canvas.remove();
   }
 
   // Getters and Setters

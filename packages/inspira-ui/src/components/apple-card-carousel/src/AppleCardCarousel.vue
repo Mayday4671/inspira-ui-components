@@ -7,6 +7,7 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { computed, onMounted, provide, ref, watch } from "vue";
 import { CarouselKey } from "./AppleCarouselContext";
 defineOptions({ name: 'IuAppleCardCarousel' })
@@ -96,21 +97,25 @@ provide(CarouselKey, {
     </div>
     <div class="mr-10 flex justify-end gap-2">
       <button
+        type="button"
+        aria-label="Scroll cards left"
         class="relative z-40 flex size-10 items-center justify-center rounded-full bg-gray-100 disabled:opacity-50"
         :disabled="!canScrollLeft"
         @click="scrollLeft"
       >
-        <Icon
+        <ComponentIcon
           name="tabler:arrow-narrow-left"
           class="size-6 text-gray-500"
         />
       </button>
       <button
+        type="button"
+        aria-label="Scroll cards right"
         class="relative z-40 flex size-10 items-center justify-center rounded-full bg-gray-100 disabled:opacity-50"
         :disabled="!canScrollRight"
         @click="scrollRight"
       >
-        <Icon
+        <ComponentIcon
           name="tabler:arrow-narrow-right"
           class="size-6 text-gray-500"
         />

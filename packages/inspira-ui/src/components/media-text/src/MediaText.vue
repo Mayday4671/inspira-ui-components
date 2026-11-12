@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { UseInViewOptions } from "motion-v";
+import type { UseInViewOptions, VariantType } from "../../motion-types";
 import type { HTMLAttributes } from "vue";
 
 export type MediaTextMediaType = "image" | "video";
@@ -7,8 +7,8 @@ export type MediaTextMediaType = "image" | "video";
 export type MediaTextTrigger = "hover" | "ref" | "inView";
 
 export interface MediaTextVariants {
-  initial?: Record<string, unknown>;
-  animate?: Record<string, unknown>;
+  initial?: VariantType;
+  animate?: VariantType;
 }
 
 export interface Props {
@@ -34,13 +34,9 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，motion-v 类型过严
 import { cn } from '../../../utils';
 import { Motion, useInView } from "motion-v";
 import { computed, ref } from "vue";
-
-
-
 
 defineOptions({ name: 'IuMediaText', inheritAttrs: false });
 
@@ -66,6 +62,10 @@ const componentRef = ref<HTMLElement | null>(null);
 const isHovered = ref(false);
 const isAnimating = ref(false);
 const isInView = useInView(componentRef, props.useInViewOptions);
+const variants = computed(() => ({
+  initial: props.animationVariants.initial ?? {},
+  animate: props.animationVariants.animate ?? {},
+}));
 
 const shouldAnimate = computed(() => {
   if (props.triggerType === "hover") return isHovered.value;
@@ -91,17 +91,15 @@ defineExpose({ animate, reset });
     @pointerenter="props.triggerType === 'hover' && (isHovered = true)"
     @pointerleave="props.triggerType === 'hover' && (isHovered = false)"
   >
-    <Motion
-      :as="props.as"
-      layout
-      :class="props.leftTextClass"
-    >
-      {{ props.firstText }}
+    <Motion as-child layout>
+      <component :is="props.as" :class="props.leftTextClass">
+        {{ props.firstText }}
+      </component>
     </Motion>
 
     <Motion
       :class="props.mediaContainerClass"
-      :variants="props.animationVariants"
+      :variants="variants"
       initial="initial"
       :animate="shouldAnimate ? 'animate' : 'initial'"
     >
@@ -123,12 +121,10 @@ defineExpose({ animate, reset });
       />
     </Motion>
 
-    <Motion
-      :as="props.as"
-      layout
-      :class="props.rightTextClass"
-    >
-      {{ props.secondText }}
+    <Motion as-child layout>
+      <component :is="props.as" :class="props.rightTextClass">
+        {{ props.secondText }}
+      </component>
     </Motion>
   </div>
 </template>

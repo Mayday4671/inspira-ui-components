@@ -21,14 +21,17 @@
   },
   "homepage": "https://github.com/Mayday4671/inspira-ui-components#readme",
   "type": "module",
-  "main": "./dist/inspira-ui.cjs",
+  "main": "./dist/inspira-ui.mjs",
   "module": "./dist/inspira-ui.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/inspira-ui.mjs",
-      "require": "./dist/inspira-ui.cjs"
+      "import": "./dist/inspira-ui.mjs"
+    },
+    "./components/*": {
+      "types": "./dist/components/*/index.d.ts",
+      "import": "./dist/components/*/index.mjs"
     },
     "./dist/index.css": "./dist/index.css",
     "./package.json": "./package.json"
@@ -40,10 +43,9 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "vite build && node scripts/gen-css.mjs",
+    "build": "vite build",
     "test": "vitest",
-    "typecheck": "vue-tsc --noEmit",
-    "gen-css": "node scripts/gen-css.mjs"
+    "typecheck": "vue-tsc --noEmit"
   },
   "peerDependencies": {
     "vue": ">=3.5.0"
@@ -61,6 +63,7 @@
     "cobe": "^2.0.1",
     "dotted-map": "^3.1.0",
     "gsap": "^3.15.1",
+    "motion-dom": "^13.1.1",
     "motion-v": "^2.3.0",
     "ogl": "^1.0.11",
     "postprocessing": "^6.39.6",

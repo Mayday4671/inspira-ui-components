@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils'
-import { computed, nextTick, ref, useId, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import { IuAnimatedModal, IuAnimatedModalBody } from '../../animated-modal'
 import type { DialogExposes, DialogProps } from './dialog-types'
 
@@ -49,68 +49,93 @@ const isLoading = computed(() => props.loading || internalLoading.value)
 const panelWidth = computed(() =>
   typeof props.width === 'number' ? `${props.width}px` : props.width,
 )
+const slots = defineSlots<{
+  default?(): unknown
+  header?(): unknown
+  footer?(props: { loading: boolean; confirm: () => Promise<void>; cancel: () => Promise<void> }): unknown
+}>()
 const titleId = `iu-dialog-title-${useId()}`
 const descriptionId = `iu-dialog-description-${useId()}`
-const shouldRenderContent = computed(() => !props.destroyOnClose || props.modelValue)
-let closePromise: Promise<void> | undefined
+
+interface CloseAttempt {
+  promise: Promise<void>
+  resolve: () => void
+  running: boolean
+}
+
+let pendingClose: CloseAttempt | undefined
+let openCycle = 0
+let closeRequested = false
+
+function requestClose() {
+  const cycle = openCycle
+  closeRequested = true
+  emit('update:modelValue', false)
+  void nextTick(() => {
+    if (cycle === openCycle) closeRequested = false
+  })
+}
+
+function finishClose(attempt: CloseAttempt, approved: boolean) {
+  if (pendingClose !== attempt) return
+  pendingClose = undefined
+  if (approved && props.modelValue) requestClose()
+  attempt.resolve()
+}
 
 function open() {
   if (!props.modelValue) emit('update:modelValue', true)
 }
 
 function close(): Promise<void> {
-  if (!props.modelValue) return Promise.resolve()
-  if (closePromise) return closePromise
+  if (!props.modelValue || closeRequested) return Promise.resolve()
+  if (pendingClose?.running) return pendingClose.promise
+  if (pendingClose) finishClose(pendingClose, false)
 
   if (!props.beforeClose) {
-    emit('update:modelValue', false)
+    requestClose()
     return Promise.resolve()
   }
 
-  closePromise = new Promise<void>((resolve) => {
-    let doneCalled = false
-    const done = () => {
-      if (doneCalled) return
-      doneCalled = true
-      emit('update:modelValue', false)
-      closePromise = undefined
-      resolve()
-    }
+  let resolve!: () => void
+  const promise = new Promise<void>((complete) => { resolve = complete })
+  const attempt = { promise, resolve, running: true }
+  pendingClose = attempt
 
-    try {
-      const result = props.beforeClose?.(done)
-      if (result instanceof Promise) {
-        result.catch(() => {
-          closePromise = undefined
-          resolve()
-        })
-      }
-    } catch {
-      closePromise = undefined
-      resolve()
+  try {
+    const result = props.beforeClose(() => finishClose(attempt, true))
+    if (result) {
+      void Promise.resolve(result).then(
+        () => { attempt.running = false },
+        () => finishClose(attempt, false),
+      )
+    } else {
+      attempt.running = false
     }
-  })
+  } catch {
+    finishClose(attempt, false)
+  }
 
-  return closePromise
+  return promise
 }
 
 async function handleConfirm() {
   if (isLoading.value) return
+  const cycle = openCycle
   emit('confirm')
 
   if (props.confirm) {
     internalLoading.value = true
     try {
-      const result = await props.confirm()
-      if (result !== false) await close()
+      if ((await props.confirm()) === false) return
     } catch {
       // 提交失败保持弹窗打开，由调用方提示错误
+      return
     } finally {
-      internalLoading.value = false
+      if (cycle === openCycle) internalLoading.value = false
     }
-  } else {
-    await close()
   }
+  if (cycle === openCycle) await close()
 }
 
 async function handleCancel() {
@@ -121,15 +146,21 @@ async function handleCancel() {
 
 watch(
   () => props.modelValue,
-  async (value) => {
+  (value, previous) => {
+    openCycle++
+    closeRequested = false
+    if (pendingClose) finishClose(pendingClose, false)
+    internalLoading.value = false
     if (value) emit('open')
-    else emit('close')
-    await nextTick()
-    if (props.modelValue !== value) return
-    if (value) emit('opened')
-    else emit('closed')
+    else if (previous) emit('close')
   },
+  { immediate: true, flush: 'sync' },
 )
+
+onBeforeUnmount(() => {
+  openCycle++
+  if (pendingClose) finishClose(pendingClose, false)
+})
 
 defineExpose<DialogExposes>({ open, close, handleConfirm, handleCancel })
 </script>
@@ -138,15 +169,18 @@ defineExpose<DialogExposes>({ open, close, handleConfirm, handleCancel })
   <IuAnimatedModal v-model:open="visible" :close-on-esc="closeOnPressEscape && !isLoading">
     <IuAnimatedModalBody
       :show-close="showClose"
+      :disable-close="isLoading"
+      :destroy-on-close="destroyOnClose"
       :close-on-outside="closeOnClickModal && !isLoading"
       :z-index="zIndex"
       :teleport-to="teleportTo"
       :width="panelWidth"
       :class="cn('w-auto', props.class)"
-      :aria-labelledby="titleId"
-      :aria-describedby="description ? descriptionId : undefined"
+      :aria-labelledby="title || slots.header ? titleId : undefined"
+      :aria-describedby="description && !slots.header ? descriptionId : undefined"
+      @after-enter="emit('opened')"
+      @after-leave="emit('closed')"
     >
-      <template v-if="shouldRenderContent">
       <!-- 标题区 -->
       <div :id="titleId" class="flex flex-col gap-1.5 p-6 pb-0">
         <slot name="header">
@@ -166,7 +200,7 @@ defineExpose<DialogExposes>({ open, close, handleConfirm, handleCancel })
 
       <!-- 底部操作区 -->
       <div
-        v-if="confirmText || cancelText"
+        v-if="confirmText || cancelText || slots.footer"
         class="flex items-center justify-end gap-3 border-t border-neutral-200/60 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-900/60"
       >
         <slot name="footer" :loading="isLoading" :confirm="handleConfirm" :cancel="handleCancel">
@@ -201,7 +235,6 @@ defineExpose<DialogExposes>({ open, close, handleConfirm, handleCancel })
           </button>
         </slot>
       </div>
-      </template>
     </IuAnimatedModalBody>
   </IuAnimatedModal>
 </template>

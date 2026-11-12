@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { computed, inject, toRefs } from 'vue'
 import type { FileProps, TreeContextProps } from './tree-context';
 import { cn } from '../../../utils';
@@ -43,8 +44,9 @@ function onClickHandler() {
     "
     @click="onClickHandler"
   >
-    <Icon
+    <ComponentIcon
       :name="fileIcon"
+      fallback="lucide:file"
       size="16"
     />
     <span class="select-none">{{ name }}</span>

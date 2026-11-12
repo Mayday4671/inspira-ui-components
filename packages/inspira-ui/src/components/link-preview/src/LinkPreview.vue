@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref } from 'vue'
 import type { CSSProperties } from "vue";
 import { cn } from '../../../utils';
 defineOptions({ name: 'IuLinkPreview' })
@@ -38,6 +38,7 @@ const isVisible = ref(false);
 const isLoading = ref(true);
 const preview = ref<HTMLElement | null>(null);
 const hasPopped = ref(false);
+let popTimer: ReturnType<typeof setTimeout> | undefined;
 
 // Generate preview URL
 const previewSrc = computed(() => {
@@ -106,13 +107,15 @@ function handleMouseMove(event: MouseEvent) {
 }
 
 function showPreview() {
+  if (isVisible.value) return;
   isVisible.value = true;
-  setTimeout(() => {
+  popTimer = setTimeout(() => {
     hasPopped.value = true;
   }, 50);
 }
 
 function hidePreview() {
+  clearTimeout(popTimer);
   isVisible.value = false;
   hasPopped.value = false;
 }
@@ -120,20 +123,24 @@ function hidePreview() {
 function handleImageLoad() {
   isLoading.value = false;
 }
+
+onBeforeUnmount(() => clearTimeout(popTimer));
 </script>
 
 <template>
   <div :class="cn(`relative inline-block`, props.class)">
     <!-- Trigger -->
-    <NuxtLink
-      :to="url"
+    <a
+      :href="url || undefined"
       :class="cn(`text-black dark:text-white`, props.linkClass)"
       @mousemove="handleMouseMove"
       @mouseenter="showPreview"
       @mouseleave="hidePreview"
+      @focus="showPreview"
+      @blur="hidePreview"
     >
       <slot />
-    </NuxtLink>
+    </a>
 
     <!-- Preview -->
     <div

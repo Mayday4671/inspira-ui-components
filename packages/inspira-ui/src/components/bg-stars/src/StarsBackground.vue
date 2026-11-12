@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { SpringOptions } from "motion-v";
+import type { SpringOptions } from "motion-dom";
 
 export interface StarsBackgroundProps {
   factor?: number;

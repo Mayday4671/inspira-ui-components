@@ -1,8 +1,10 @@
 <script lang="ts" setup>
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { computed, inject, toRefs } from 'vue'
 import type { FolderProps, TreeContextProps } from './tree-context';
 import { cn } from '../../../utils';
 import { TREE_CONTEXT_SYMBOL } from './tree-context';
+import TreeIndicator from './TreeIndicator.vue';
 defineOptions({ name: 'IuFolder' })
 
 const props = withDefaults(defineProps<FolderProps>(), {
@@ -42,14 +44,16 @@ function onTriggerClick() {
       "
       @click="onTriggerClick"
     >
-      <Icon
+      <ComponentIcon
         v-if="isExpanded"
         :name="openIcon"
+        fallback="lucide:folder-open"
         size="16"
       />
-      <Icon
+      <ComponentIcon
         v-else
         :name="closeIcon"
+        fallback="lucide:folder"
         size="16"
       />
 

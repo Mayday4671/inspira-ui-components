@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，three/ogl 类型过严
 import {
   Clock,
   Color,

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { SplineEventName } from "@splinetool/runtime";
-import { Application } from "@splinetool/runtime";
+import type { Application, SplineEventName } from "@splinetool/runtime";
 import { useDebounceFn, useIntersectionObserver } from "@vueuse/core";
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from "vue";
 import ParentSize from "./ParentSize.vue";
@@ -34,13 +33,16 @@ const emit = defineEmits([
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const isLoading = ref(false);
+const loadFailed = ref(false);
 const splineApp = shallowRef<Application | null>(null);
 const isVisible = ref(true);
 
-let cleanup: () => void = () => {};
+let request: AbortController | undefined;
+let removeListeners: (() => void) | undefined;
 
 const parentSizeStyles = computed(() => ({
   overflow: "hidden",
+  position: "relative",
   ...props.style,
 }));
 
@@ -68,82 +70,81 @@ const { stop: stopIntersectionObserver } = useIntersectionObserver(
   { threshold: 0.1 },
 );
 
-function eventHandler(name: SplineEventName, handler?: (e: any) => void) {
-  if (!handler || !splineApp.value) return;
-  const debouncedHandler = useDebounceFn(handler, 50, { maxWait: 100 });
-  splineApp.value.addEventListener(name, debouncedHandler);
-  return () => splineApp.value?.removeEventListener(name, debouncedHandler);
+function disposeApplication() {
+  request?.abort();
+  request = undefined;
+  removeListeners?.();
+  removeListeners = undefined;
+  splineApp.value?.dispose();
+  splineApp.value = null;
 }
 
-async function initSpline() {
-  if (!canvasRef.value) return;
+const splineEvents = {
+  mouseDown: "spline-mouse-down",
+  mouseUp: "spline-mouse-up",
+  mouseHover: "spline-mouse-hover",
+  keyDown: "spline-key-down",
+  keyUp: "spline-key-up",
+  start: "spline-start",
+  lookAt: "spline-look-at",
+  follow: "spline-follow",
+  scroll: "spline-scroll",
+} as const satisfies Partial<Record<SplineEventName, string>>;
 
+async function initialize() {
+  const canvas = canvasRef.value;
+  if (!canvas) return;
+
+  disposeApplication();
+  request = new AbortController();
+  const { signal } = request;
   isLoading.value = true;
+  loadFailed.value = false;
 
   try {
-    // Clean up previous instance if exists
-    if (splineApp.value) {
-      splineApp.value.dispose();
-      splineApp.value = null;
-    }
-
     // P1: 按需动态加载 runtime（Babylon 依赖树不进主包）
-    const { Application } = await import("@splinetool/runtime")
-    splineApp.value = new Application(canvasRef.value, {
+    const { Application } = await import("@splinetool/runtime");
+    if (signal.aborted) return;
+
+    const application = new Application(canvas, {
       renderOnDemand: props.renderOnDemand,
     });
+    splineApp.value = application;
+    await application.load(props.scene, undefined, { signal });
+    if (signal.aborted) return;
 
-    await splineApp.value.load(props.scene);
-
-    // Set up event listeners
-    const cleanUpFns = [
-      eventHandler("mouseDown", (e: any) => emit("spline-mouse-down", e)),
-      eventHandler("mouseUp", (e: any) => emit("spline-mouse-up", e)),
-      eventHandler("mouseHover", (e: any) => emit("spline-mouse-hover", e)),
-      eventHandler("keyDown", (e: any) => emit("spline-key-down", e)),
-      eventHandler("keyUp", (e: any) => emit("spline-key-up", e)),
-      eventHandler("start", (e: any) => emit("spline-start", e)),
-      eventHandler("lookAt", (e: any) => emit("spline-look-at", e)),
-      eventHandler("follow", (e: any) => emit("spline-follow", e)),
-      eventHandler("scroll", (e: any) => emit("spline-scroll", e)),
-    ].filter(Boolean);
-
-    isLoading.value = false;
-    props.onLoad?.(splineApp.value);
-
-    return () => {
-      cleanUpFns.forEach((fn) => fn?.());
+    const listeners = Object.keys(splineEvents).map((key) => {
+      const name = key as keyof typeof splineEvents;
+      const listener = useDebounceFn((event) => {
+        if (!signal.aborted) emit(splineEvents[name], event);
+      }, 50, { maxWait: 100 });
+      application.addEventListener(name, listener);
+      return { name, listener };
+    });
+    removeListeners = () => {
+      for (const { name, listener } of listeners) application.removeEventListener(name, listener);
     };
-  } catch (err) {
-    console.error("Spline initialization error:", err);
-    emit("error", err);
+
     isLoading.value = false;
-    return () => {};
+    props.onLoad?.(application);
+  } catch (err) {
+    if (signal.aborted) return;
+    disposeApplication();
+    loadFailed.value = true;
+    isLoading.value = false;
+    emit("error", err);
   }
 }
 
-async function initialize() {
-  cleanup();
-  cleanup = (await initSpline()) ?? (() => {});
-}
+onMounted(initialize);
 
-onMounted(async () => {
-  await initialize();
-
-  // Reinitialize when becoming visible again
-  watch(isVisible, (visible) => {
-    if (visible) {
-      initialize();
-    }
-  });
+watch(isVisible, (visible) => {
+  if (visible) void initialize();
 });
 
 onUnmounted(() => {
   stopIntersectionObserver();
-  if (splineApp.value) {
-    splineApp.value.dispose();
-    splineApp.value = null;
-  }
+  disposeApplication();
 });
 </script>
 
@@ -158,6 +159,9 @@ onUnmounted(() => {
         ref="canvasRef"
         :style="canvasStyle"
       />
+      <span v-if="loadFailed" role="status" class="pointer-events-none absolute inset-0 grid place-items-center">
+        3D scene unavailable
+      </span>
       <slot v-if="isLoading" />
     </template>
   </ParentSize>

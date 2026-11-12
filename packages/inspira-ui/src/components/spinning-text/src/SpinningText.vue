@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Transition, Variant } from 'motion-v'
+import type { Transition, Variant } from 'motion-dom'
 
 export interface CircularTextProps {
   text: string;

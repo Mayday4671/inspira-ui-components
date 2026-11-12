@@ -261,9 +261,7 @@ describe('documentation information architecture (SPA redesign)', () => {
   it('header keeps truthful version and repository metadata', async () => {
     const registry = await readFile(registryPath, 'utf8')
     expect(registry).toContain("export const REPO_URL = 'https://github.com/Mayday4671/inspira-ui-components'")
-    // 版本号来自库的真实导出，不硬编码虚构
-    expect(registry).toContain("export { version as packageVersion } from 'inspira-ui-components'")
     const header = await readFile(resolve(docsRoot, 'src/components/AppHeader.vue'), 'utf8')
-    expect(header).toContain('packageVersion')
+    expect(header).toContain("import { version as packageVersion } from 'inspira-ui-components/package.json'")
   })
 })

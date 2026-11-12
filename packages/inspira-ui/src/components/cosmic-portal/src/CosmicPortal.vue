@@ -17,7 +17,6 @@ export interface PortalParams {
 </script>
 
 <script setup lang="ts">
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，three/ogl 类型过严
 import { onMounted, onUnmounted, ref } from 'vue'
 import { cn } from '../../../utils';
 import * as THREE from "three";
@@ -76,26 +75,23 @@ let fxaaPass: ShaderPass;
 let clock: THREE.Clock;
 
 // Portal objects
-let meshes: THREE.Object3D[] = [];
-let materials: THREE.Material[] = [];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let portalMaterials: any[] = [];
+const meshes: (THREE.Mesh | THREE.Points)[] = [];
+const materials: THREE.Material[] = [];
+const portalMaterials: Pick<THREE.ShaderMaterial, "uniforms">[] = [];
 const portalLights: THREE.Light[] = [];
 let animationId: number;
 let time = 0;
 
 let resizeObserver: ResizeObserver;
 
-function initThreeJS() {
-  if (!canvasRef.value) return;
-
+function initThreeJS(canvas: HTMLCanvasElement) {
   // Scene setup
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0a0015);
   scene.fog = new THREE.FogExp2(0x1a0033, 0.001);
 
   // Camera setup - get container dimensions first
-  const container = canvasRef.value.parentElement;
+  const container = canvas.parentElement;
   const width = container ? container.clientWidth : window.innerWidth;
   const height = container ? container.clientHeight : window.innerHeight;
 
@@ -123,7 +119,7 @@ function initThreeJS() {
 
   // Renderer setup - use the container dimensions
   renderer = new THREE.WebGLRenderer({
-    canvas: canvasRef.value,
+    canvas,
     antialias: true,
     powerPreference: "high-performance",
   });
@@ -134,7 +130,7 @@ function initThreeJS() {
   renderer.toneMappingExposure = 1.2;
 
   // Controls
-  controls = new OrbitControls(camera, canvasRef.value);
+  controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.autoRotate = true;
@@ -165,10 +161,8 @@ function initThreeJS() {
   clock = new THREE.Clock();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function addPortalShader(material: any) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  material.onBeforeCompile = (shader: any) => {
+function addPortalShader(material: THREE.Material) {
+  material.onBeforeCompile = (shader) => {
     shader.uniforms.time = { value: 0 };
     shader.uniforms.pulseTime = { value: -1000 };
     shader.uniforms.portalSpeed = { value: 8.0 };
@@ -516,9 +510,9 @@ function createPortalScene() {
   // Clean up existing meshes
   meshes.forEach((mesh) => scene.remove(mesh));
   materials.forEach((mat) => mat.dispose());
-  meshes = [];
-  materials = [];
-  portalMaterials = [];
+  meshes.length = 0;
+  materials.length = 0;
+  portalMaterials.length = 0;
 
   // Create portal components
   createCosmicBackground();
@@ -572,7 +566,7 @@ function animate() {
   });
 
   materials.forEach((mat) => {
-    if (mat.uniforms) {
+    if (mat instanceof THREE.ShaderMaterial) {
       if (mat.uniforms.time) mat.uniforms.time.value = time;
       if (mat.uniforms.dimensionShift)
         mat.uniforms.dimensionShift.value = params.value.dimensionShift;
@@ -596,14 +590,15 @@ function animate() {
     mesh.rotation.x += delta * speed * 0.1;
 
     // Animate particle positions
-    if (mesh.material && mesh.material.type === "PointsMaterial") {
-      const positions = mesh.geometry.attributes.position.array;
+    if (mesh instanceof THREE.Points) {
+      const position = mesh.geometry.attributes.position;
+      const positions = position.array;
       for (let j = 0; j < positions.length; j += 3) {
         positions[j] += Math.sin(time + j) * 0.001;
         positions[j + 1] += Math.cos(time + j) * 0.001;
         positions[j + 2] += Math.sin(time * 0.7 + j) * 0.001;
       }
-      mesh.geometry.attributes.position.needsUpdate = true;
+      position.needsUpdate = true;
     }
   });
 
@@ -676,14 +671,17 @@ defineExpose({
 });
 
 onMounted(() => {
-  initThreeJS();
+  const canvas = canvasRef.value;
+  if (!canvas) return;
+
+  initThreeJS(canvas);
   createPortalScene();
   // Use ResizeObserver instead of window resize
-  if (canvasRef.value?.parentElement) {
+  if (canvas.parentElement) {
     resizeObserver = new ResizeObserver(() => {
       handleResize();
     });
-    resizeObserver.observe(canvasRef.value.parentElement);
+    resizeObserver.observe(canvas.parentElement);
   }
   animate();
 });

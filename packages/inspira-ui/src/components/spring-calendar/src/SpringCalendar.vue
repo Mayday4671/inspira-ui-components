@@ -16,9 +16,11 @@ export interface CalendarDay {
 </script>
 
 <script setup lang="ts">
+import ComponentIcon from '../../internal/ComponentIcon.vue'
 import { cn } from '../../../utils';
 import { Motion, MotionConfig } from "motion-v";
 import { ref } from "vue";
+import TextMorph from "./TextMorph.vue";
 defineOptions({ name: 'IuSpringCalendar' })
 
 
@@ -73,7 +75,7 @@ function setActive(index: number) {
           :initial="{ x: 10, opacity: 0 }"
           :animate="{ x: 0, opacity: 1 }"
         >
-          <Icon name="lucide:calendar" />
+          <ComponentIcon name="lucide:calendar" />
           <span class="font-medium">Upcoming Events</span>
         </Motion>
 

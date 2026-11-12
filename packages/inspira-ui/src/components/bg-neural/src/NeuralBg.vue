@@ -10,7 +10,6 @@ export interface Props {
 </script>
 
 <script setup lang="ts">
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，three/ogl 类型过严
 import { cn } from '../../../utils';
 import { Camera, Mesh, Plane, Program, Renderer, Transform } from "ogl";
 import { onMounted, onUnmounted, ref, watch } from "vue";

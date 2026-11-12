@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { UseInViewOptions } from "motion-v";
+import type { UseInViewOptions } from "../../motion-types";
 import type { HTMLAttributes } from "vue";
 
 export type HighlightDirection = "ltr" | "rtl" | "ttb" | "btt";

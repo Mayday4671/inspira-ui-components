@@ -1,4 +1,4 @@
-import type { MotionValue } from "motion-v";
+import type { MotionValue } from "motion-dom";
 import type { InjectionKey } from "vue";
 
 export interface CardStackContext {

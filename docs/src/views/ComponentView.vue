@@ -40,7 +40,15 @@ function resetPreview() {
   toast('演示参数已重置')
 }
 
-const code = computed(() => meta.value.demoCode(state))
+const code = computed(() => {
+  const codeState = { ...state }
+  for (const [key, defaultValue] of Object.entries(meta.value.demoState)) {
+    if (typeof defaultValue === 'number' && typeof codeState[key] !== 'number') {
+      codeState[key] = defaultValue
+    }
+  }
+  return meta.value.demoCode(codeState)
+})
 
 const categoryIcon = computed(
   () =>
@@ -52,7 +60,7 @@ const categoryIcon = computed(
 const tocLinks: Array<[string, string]> = [
   ['section-preview', '实时演示'],
   ['section-install', '安装与引入'],
-  ['section-api', 'API 属性'],
+  ['section-api', 'API'],
   ['section-accessibility', '交互与无障碍'],
 ]
 
@@ -174,7 +182,7 @@ function onControlEnter(e: KeyboardEvent) {
     <div v-if="meta.note" class="hint"><strong>提示</strong>：{{ meta.note }}</div>
 
     <!-- API -->
-    <h2 id="section-api" class="h2">API 属性</h2>
+    <h2 id="section-api" class="h2">API</h2>
     <div style="overflow-x: auto">
       <table class="api-table">
         <thead>
@@ -226,12 +234,36 @@ function onControlEnter(e: KeyboardEvent) {
             <tr>
               <th style="width: 20%">插槽</th>
               <th>说明</th>
+              <th style="width: 30%">作用域</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="row in meta.slotRows" :key="row.prop">
               <td><code>{{ row.prop }}</code></td>
               <td>{{ row.desc }}</td>
+              <td>{{ row.type }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+
+    <template v-if="meta.exposeRows?.length">
+      <h3 class="h3">实例方法</h3>
+      <div style="overflow-x: auto">
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th style="width: 20%">方法</th>
+              <th>说明</th>
+              <th style="width: 30%">签名</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in meta.exposeRows" :key="row.prop">
+              <td><code>{{ row.prop }}</code></td>
+              <td>{{ row.desc }}</td>
+              <td>{{ row.type }}</td>
             </tr>
           </tbody>
         </table>

@@ -1,0 +1,8 @@
+@layer docs-theme, docs-utilities;
+@import 'tailwindcss/theme.css' layer(docs-theme);
+
+@custom-variant dark (&:is(.dark *));
+
+@layer docs-utilities {
+  @tailwind utilities;
+}

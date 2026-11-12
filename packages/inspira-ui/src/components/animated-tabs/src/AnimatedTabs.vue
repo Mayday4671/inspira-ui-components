@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AnimatedTabsFadeInDiv from './AnimatedTabsFadeInDiv.vue'
 import { computed, onScopeDispose, ref, useId, watch } from 'vue'
 import { motion } from 'motion-v'
 import type { AnimatedTab } from "./types";

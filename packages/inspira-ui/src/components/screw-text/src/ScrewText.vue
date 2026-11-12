@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Transition } from "motion-v";
+import type { Transition } from "motion-dom";
 import type { HTMLAttributes } from "vue";
 
 export type RotateDirection = "top" | "right" | "bottom" | "left";

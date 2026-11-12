@@ -6,17 +6,24 @@
  */
 import { computed } from 'vue'
 import {
+  IuAnimateGrid,
   IuAnimatedBeam,
   IuAnimatedCircularProgressBar,
+  IuAnimatedList,
+  IuAnimatedLogoCloud,
+  IuAnimatedModal,
+  IuAnimatedModalBody,
+  IuAnimatedModalContent,
+  IuAnimatedModalTrigger,
   IuAnimatedTabs,
   IuAnimatedTestimonials,
   IuAnimatedTooltip,
-  IuAnimateGrid,
   IuAuroraBackground,
   IuBalanceSlider,
   IuBendingGallery,
   IuBentoGrid,
   IuBlackHoleBackground,
+  IuBlurReveal,
   IuBook,
   IuBorderBeam,
   IuBoxReveal,
@@ -33,6 +40,7 @@ import {
   IuCompare,
   IuConfetti,
   IuConfettiButton,
+  IuContainerScroll,
   IuContainerTextFlip,
   IuCosmicPortal,
   IuCubeCarousel,
@@ -70,16 +78,16 @@ import {
   IuHtmlInCanvas,
   IuHtmlLiquid,
   IuHyperText,
+  IuIInput,
+  IuIPhone15ProMockup,
   IuIconCloud,
   IuIconLogoCloud,
-  IuIInput,
+  IuImageTrailCursor,
   IuImagesBadge,
   IuImagesSlider,
-  IuImageTrailCursor,
   IuInfiniteGrid,
   IuInteractiveGridPattern,
   IuInteractiveHoverButton,
-  IuIPhone15ProMockup,
   IuLampEffect,
   IuLens,
   IuLetterPullup,
@@ -105,8 +113,8 @@ import {
   IuParallaxFloat,
   IuParallaxFloatElement,
   IuParticleImage,
-  IuParticlesBg,
   IuParticleWhirlpoolBg,
+  IuParticlesBg,
   IuPathMarquee,
   IuPatternBackground,
   IuPhotoGallery,
@@ -116,6 +124,7 @@ import {
   IuRibbonBackground,
   IuRipple,
   IuRippleButton,
+  IuSVGMask,
   IuSafariMockup,
   IuScales,
   IuScratchToReveal,
@@ -138,7 +147,6 @@ import {
   IuStaticLogoCloud,
   IuStatistic,
   IuStractiumBackground,
-  IuSVGMask,
   IuTailedCursor,
   IuTestimonialSlider,
   IuTetris,
@@ -163,9 +171,9 @@ import {
   IuWarpBackground,
   IuWavyBackground,
   IuWorldMap,
-} from 'inspira-ui-components'
+} from './preview-components'
 import { ref } from 'vue'
-import type { PreviewKind } from '../data/registry'
+import { htmlCanvasShader, type PreviewKind } from '../data/registry'
 
 const props = defineProps<{ kind: PreviewKind }>()
 
@@ -348,7 +356,7 @@ const auroraHeight = '128px'
     </div>
 
     <div v-else-if="kind === 'pattern'" class="scaled-box" style="width: 230px; height: 130px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border)">
-      <IuPatternBackground variant="grid" :animate="true" direction="top" :speed="(12000 as any)" style="position: absolute; inset: 0">
+      <IuPatternBackground variant="grid" :animate="true" direction="top" :speed="10000" style="position: absolute; inset: 0">
         <span style="font-size: 13px; font-weight: 750">Pattern Background</span>
       </IuPatternBackground>
     </div>
@@ -759,7 +767,7 @@ const auroraHeight = '128px'
     </div>
 
     <div v-else-if="kind === 'pmarq'" class="scaled-box" style="width: 220px; height: 120px">
-      <IuPathMarquee path="M 10 60 C 80 10, 150 110, 210 60" text="路径循环 ·" :base-velocity="2" :show-path="false" style="width: 100%" />
+      <IuPathMarquee path="M 10 60 C 80 10, 150 110, 210 60" :base-velocity="2" :show-path="false" style="width: 100%">路径循环 ·</IuPathMarquee>
     </div>
 
     <div v-else-if="kind === 'vinput'" class="scaled-box" style="width: 210px; display: grid; place-items: center">
@@ -889,8 +897,8 @@ const auroraHeight = '128px'
       />
     </div>
 
-    <div v-else-if="kind === 'cgal'" class="scaled-box" style="width: 220px; height: 140px; border-radius: 10px; overflow: hidden; position: relative">
-      <IuCircularGallery :radius="120" text="GALLERY" text-color="#6366f1" style="position: absolute; inset: 0; pointer-events: none" />
+    <div v-else-if="kind === 'cgal'" class="scaled-box" style="width: 220px; height: 140px; border-radius: 10px; overflow: hidden; display: grid; place-items: center">
+      <IuCircularGallery :radius="70"><span>Vue</span><span>Inspira UI</span><span>TypeScript</span></IuCircularGallery>
     </div>
 
     <div v-else-if="kind === 'safari'" class="scaled-box" style="width: 220px; height: 140px; overflow: hidden">
@@ -904,7 +912,10 @@ const auroraHeight = '128px'
     </div>
 
     <div v-else-if="kind === 'trcard'" class="scaled-box" style="width: 220px; height: 140px">
-      <IuTextRevealCard text="移过来" reveal-text="✦ 星幕揭示" :stars-count="40" style="pointer-events: none; scale: 0.8" />
+      <IuTextRevealCard :stars-count="40" style="pointer-events: none; scale: 0.8">
+        <template #text>移过来</template>
+        <template #revealText>✦ 星幕揭示</template>
+      </IuTextRevealCard>
     </div>
 
     <div v-else-if="kind === 'tsrev'" class="scaled-box" style="width: 220px; height: 120px; border: 1px solid var(--border); border-radius: 10px; overflow-y: auto">
@@ -920,17 +931,17 @@ const auroraHeight = '128px'
     </div>
 
     <div v-else-if="kind === 'hsearch'" class="scaled-box" style="width: 210px; display: grid; place-items: center">
-      <IuHaloSearch placeholder="搜索…" style="width: 190px" />
+      <IuHaloSearch style="width: 190px" />
     </div>
 
     <div v-else-if="kind === 'pfloat'" class="scaled-box" style="width: 210px; height: 120px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px">
       <IuParallaxFloat style="height: 100%; width: 100%; display: grid; place-items: center">
-        <IuParallaxFloatElement :sensitivity="0.3" style="font-size: 12px; font-weight: 700">视差层</IuParallaxFloatElement>
+        <IuParallaxFloatElement :depth="0.3" style="font-size: 12px; font-weight: 700">视差层</IuParallaxFloatElement>
       </IuParallaxFloat>
     </div>
 
     <div v-else-if="kind === 'orbitp'" class="scaled-box" style="width: 210px; height: 130px; display: grid; place-items: center">
-      <IuOrbit class="size-32" :duration="12" :radius="42" reverse>
+      <IuOrbit class="size-32" :duration="12" :radius="42" direction="reverse">
         <span class="rounded-full bg-emerald-500" style="width: 10px; height: 10px" />
         <span class="rounded-full bg-sky-500" style="width: 8px; height: 8px" />
       </IuOrbit>
@@ -972,7 +983,7 @@ const auroraHeight = '128px'
     </div>
 
     <div v-else-if="kind === 'hincanvas'" class="scaled-box" style="width: 210px; height: 130px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border)">
-      <IuHtmlInCanvas shader-code="void main() { vec4 c = texture2D(uTexture, vUv); gl_FragColor = vec4(c.r, c.g, c.b, 1.0); }" class="h-full">
+      <IuHtmlInCanvas :shader-code="htmlCanvasShader" class="h-full">
         <div style="padding: 14px; font-size: 13px; font-weight: 700">WebGL 化内容</div>
       </IuHtmlInCanvas>
     </div>

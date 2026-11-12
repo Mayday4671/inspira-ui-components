@@ -16,6 +16,7 @@ export interface VortexProps {
 </script>
 
 <script setup lang="ts">
+import { Motion } from 'motion-v'
 import { ref, shallowRef, useTemplateRef } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { cn } from '../../../utils';

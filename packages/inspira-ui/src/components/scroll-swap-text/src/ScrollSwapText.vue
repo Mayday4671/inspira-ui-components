@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { MaybeComputedElementRef } from "@vueuse/core";
+import type { MaybeComputedElementRef } from "../../motion-types";
 import type {HTMLAttributes, MaybeRef, VNode } from "vue";
 
 export type ScrollSwapTextOffset = [string, string];

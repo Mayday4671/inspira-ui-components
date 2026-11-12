@@ -106,6 +106,10 @@ onMounted(() => {
       props.mouseMode,
       props.frameRate,
       props.pixelRatio,
+      () => {
+        shader = undefined;
+        emit("error", "WebGL context lost");
+      },
     );
   } catch (error) {
     emit("error", error instanceof Error ? error.message : "Failed to initialize WebGL");

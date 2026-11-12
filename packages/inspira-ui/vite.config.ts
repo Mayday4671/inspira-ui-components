@@ -2,7 +2,9 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts'
+import { vueOptions } from './scripts/vue-options'
 import { iuTailwindPlugin, libTailwindOptions } from './scripts/iu-tailwind-plugin.mjs'
+import { emitOglDeclarations, resolveDeclarationImports } from './scripts/declaration-imports'
 
 const r = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
@@ -12,17 +14,21 @@ export default defineConfig({
     include: ['src/**/*.spec.ts'],
   },
   plugins: [
-    vue(),
-    // 自定义 Tailwind 编译管线（替代 @tailwindcss/vite —— 其扫描阶段丢失 dark: 候选）
+    vue(vueOptions),
     iuTailwindPlugin(libTailwindOptions),
-    dts({ tsconfigPath: r('./tsconfig.json'), entryRoot: 'src' }),
+    dts({
+      tsconfigPath: r('./tsconfig.json'),
+      entryRoot: 'src',
+      exclude: ['src/**/__tests__/**', 'src/**/*.spec.ts', 'src/library.ts'],
+      beforeWriteFile: resolveDeclarationImports(r('./src/'), r('./dist/')),
+      afterBuild: () => emitOglDeclarations(r('./dist/')),
+    }),
   ],
   build: {
     lib: {
-      entry: r('./src/index.ts'),
-      name: 'InspiraUI',
-      formats: ['es', 'cjs'],
-      fileName: (format) => (format === 'es' ? 'inspira-ui.mjs' : 'inspira-ui.cjs'),
+      entry: r('./src/library.ts'),
+      formats: ['es'],
+      cssFileName: 'index',
     },
     outDir: 'dist',
     minify: true,
@@ -33,10 +39,9 @@ export default defineConfig({
           id,
         ),
       output: {
-        assetFileNames: (assetInfo) =>
-          assetInfo.names?.some((n) => n.endsWith('.css'))
-            ? 'index.css'
-            : 'assets/[name][extname]',
+        preserveModules: true,
+        preserveModulesRoot: r('./src/'),
+        entryFileNames: ({ name }) => name === 'library' ? 'inspira-ui.mjs' : '[name].mjs',
       },
     },
   },

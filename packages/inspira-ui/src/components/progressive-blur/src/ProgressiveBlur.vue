@@ -1,22 +1,11 @@
 <script lang="ts">
 import { GRADIENT_ANGLES, type ProgressiveBlurProps } from './types'
 
-export interface Props extends ProgressiveBlurProps {
-  direction?: ProgressiveBlurDirection
-  blurLayers?: number
-  class?: string
-  blurIntensity?: number
-}
+export type Props = ProgressiveBlurProps
 </script>
-
-
-
 <script lang="ts" setup>
-// @ts-nocheck — 上游 Nuxt 源码忠实移植，motion-v 类型过严
-
-import { Motion } from "motion-v";
 import { computed, useAttrs } from "vue";
-defineOptions({ name: 'IuProgressiveBlur' })
+defineOptions({ name: 'IuProgressiveBlur', inheritAttrs: false })
 
 const props = withDefaults(defineProps<Props>(), {
   direction: "bottom",
@@ -60,29 +49,20 @@ const getGradientStyle = (index: number) => {
   <div
     :class="[!hasPositionClass && 'relative', props.class]"
     :style="{
-      maskImage: getGradientStyle(layers),
-      webkitMaskImage: getGradientStyle(layers),
       backdropFilter: `blur(${layers * props.blurIntensity}px)`,
     }"
     v-bind="attrs"
   >
-    <Motion
+    <div
       v-for="index in layers"
       :key="index"
-      as="div"
       class="pointer-events-none absolute inset-0 rounded-[inherit]"
-      :style="{
-        maskImage: getGradientStyle(index),
-        webkitMaskImage: getGradientStyle(index),
-        backdropFilter: `blur(${(index - 1) * props.blurIntensity}px)`,
-      }"
-      v-bind="attrs"
+      :style="getGradientStyle(index)"
     />
     <div
       class="pointer-events-none absolute inset-0 rounded-[inherit]"
       :style="{
-        maskImage: getGradientStyle(layers),
-        webkitMaskImage: getGradientStyle(layers),
+        ...getGradientStyle(layers),
         backdropFilter: `blur(${layers * props.blurIntensity}px)`,
       }"
     />

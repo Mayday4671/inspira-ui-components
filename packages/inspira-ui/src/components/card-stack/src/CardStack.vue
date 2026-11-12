@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue'
 import { useScroll } from 'motion-v'
-import type { UseScrollOptions } from "motion-v";
+import type { UseScrollOptions } from "../../motion-types";
 import type { HTMLAttributes } from "vue";
 import { cn } from '../../../utils';
 import { CardStackKey } from "./CardStackContext";
