@@ -22,7 +22,7 @@ import type {
   ScrollState,
   TileClickEventDetail,
   TileUserData,
-} from "./types.ts";
+} from "./types";
 import { gsap } from "gsap";
 
 /**

@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { createApp, defineComponent, h } from 'vue'
+import InspiraUI from '../../index'
 import * as components from '../index'
 
 /**
@@ -48,5 +50,31 @@ describe('withInstall registration contract', () => {
       if (!names.includes(key)) mismatched.push(`${key} -> [${names.join(', ')}]`)
     }
     expect(mismatched, `注册名与导出名不一致: ${mismatched.join(', ')}`).toEqual([])
+  })
+
+  it('real Vue app: app.use(InspiraUI) registers every export under a valid name', () => {
+    const app = createApp(defineComponent(() => () => h('div')))
+    app.use(InspiraUI as never)
+    const registered = Object.keys(app._context.components)
+    // 全部键为有效标识符（非 undefined/null/空串）
+    expect(registered.length).toBeGreaterThanOrEqual(190)
+    for (const key of registered) {
+      expect(typeof key, `非法注册键: ${String(key)}`).toBe('string')
+      expect((key as string).length).toBeGreaterThan(0)
+    }
+    // 抽查：各批次代表性组件都能按名解析到组件定义
+    for (const name of [
+      'IuShimmerButton', // 批次1
+      'IuLetterSwap', // 批次2（defineOptions 合并修复对象）
+      'IuSparkles', // 批次3
+      'IuDock', // 批次4
+      'IuWavyBackground', // 批次5
+      'IuGlobe', // 批次6
+      'IuFluidCursor', // 批次7a
+      'IuCosmicPortal', // 批次7b
+    ]) {
+      const resolved = app._context.components[name]
+      expect(resolved, `${name} 未在真实 app 中注册`).toBeTruthy()
+    }
   })
 })

@@ -7,5 +7,5 @@ export default IuParallaxFloat
 export const IuParallaxFloatElement = withInstall(Comp1)
 
 export type { Props as ParallaxFloatProps } from './src/ParallaxFloat.vue'
-export type { ParallaxFloatContext } from './src/ParallaxFloatContext.ts'
+export type { ParallaxFloatContext } from './src/ParallaxFloatContext'
 export type { Props as ParallaxFloatElementProps } from './src/ParallaxFloatElement.vue'

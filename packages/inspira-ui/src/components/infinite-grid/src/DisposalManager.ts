@@ -22,7 +22,7 @@ import type { Camera, Renderer, RenderTarget, Transform } from "ogl";
 import type { EventHandler } from "./EventHandler";
 import type { GridManager } from "./GridManager";
 import type { CustomPostProcessShader } from "./PostProcessShader";
-import type { CardTexturePair, TileGroupData } from "./types.ts";
+import type { CardTexturePair, TileGroupData } from "./types";
 import { Mesh } from "ogl";
 
 /**

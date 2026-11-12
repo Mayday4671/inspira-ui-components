@@ -6,4 +6,4 @@ export const IuAnimatedTabs = withInstall(Comp0)
 export default IuAnimatedTabs
 export const IuAnimatedTabsFadeInDiv = withInstall(Comp1)
 
-export type { AnimatedTab } from './src/types.ts'
+export type { AnimatedTab } from './src/types'

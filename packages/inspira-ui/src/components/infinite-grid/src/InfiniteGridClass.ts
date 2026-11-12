@@ -37,7 +37,7 @@ import type {
   ScrollState,
   TileGroupData,
   Viewport,
-} from "./types.ts";
+} from "./types";
 import { gsap } from "gsap";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
 import { Camera, Raycast, Renderer, RenderTarget, Transform, Vec2 } from "ogl";

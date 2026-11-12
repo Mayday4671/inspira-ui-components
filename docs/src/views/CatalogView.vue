@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import UiIcon from '../components/UiIcon.vue'
-import CatalogPreview from '../components/CatalogPreview.vue'
+import LazyPreview from '../components/LazyPreview.vue'
 import DocsShell from '../components/DocsShell.vue'
 import { CATEGORIES, COMPONENTS, componentCount } from '../data/registry'
 
@@ -67,7 +67,7 @@ function clearFilters() {
           :to="`/component/${c.slug}`"
         >
           <div class="catalog-visual">
-            <CatalogPreview :kind="c.preview" />
+            <LazyPreview :kind="c.preview" />
           </div>
           <div class="catalog-info">
             <h3>{{ c.name }}</h3>

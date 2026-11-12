@@ -4,4 +4,4 @@ import Comp0 from './src/LightSpeed.vue'
 export const IuLightSpeed = withInstall(Comp0)
 export default IuLightSpeed
 
-export type { Distortion, Distortions, Colors, LightSpeedOptions, LightSpeedProps } from './src/LightSpeedApp.ts'
+export type { Distortion, Distortions, Colors, LightSpeedOptions, LightSpeedProps } from './src/LightSpeedApp'

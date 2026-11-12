@@ -9,4 +9,4 @@ export const IuDockIcon = withInstall(Comp1)
 export const IuDockSeparator = withInstall(Comp2)
 
 export type { DockProps } from './src/Dock.vue'
-export type { DataOrientation, Direction } from './src/types.ts'
+export type { DataOrientation, Direction } from './src/types'

@@ -2,7 +2,7 @@
 import { IuShimmerButton } from 'inspira-ui-components'
 import { useRouter } from 'vue-router'
 import UiIcon from '../components/UiIcon.vue'
-import CatalogPreview from '../components/CatalogPreview.vue'
+import LazyPreview from '../components/LazyPreview.vue'
 import { COMPONENTS, getComponent } from '../data/registry'
 
 const router = useRouter()
@@ -90,7 +90,7 @@ function goShimmer() {
       <div class="feature-grid">
         <router-link v-for="c in featured" :key="c.slug" class="feature-card" :to="`/component/${c.slug}`">
           <div class="feature-preview">
-            <CatalogPreview :kind="c.preview" />
+            <LazyPreview :kind="c.preview" />
           </div>
           <div class="feature-meta">
             <h3>{{ c.name }}</h3>

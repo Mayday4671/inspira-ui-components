@@ -10,4 +10,4 @@ export const IuFolder = withInstall(Comp1)
 export const IuFile = withInstall(Comp2)
 export const IuTreeIndicator = withInstall(Comp3)
 
-export type { TreeViewElement, TreeProps, TreeContextProps, BaseItemProps, FolderProps, FileProps } from './src/tree-context.ts'
+export type { TreeViewElement, TreeProps, TreeContextProps, BaseItemProps, FolderProps, FileProps } from './src/tree-context'

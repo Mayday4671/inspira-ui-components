@@ -33,6 +33,7 @@ export class InspiraShaderToy {
   private mesh: Mesh | null = null;
   private resizeObserver?: ResizeObserver;
   private animationFrameId = 0;
+  private disposed = false;
   private removeEventListeners: (() => void)[] = [];
 
   // Timing
@@ -428,7 +429,7 @@ export class InspiraShaderToy {
   private animate = (): void => {
     this.animationFrameId = 0;
 
-    if (!this.isPlaying) return;
+    if (this.disposed || !this.isPlaying) return;
 
     let shouldDraw = true;
 
@@ -444,7 +445,13 @@ export class InspiraShaderToy {
     }
 
     if (shouldDraw) {
-      this.draw();
+      // 绘制异常时终止本实例循环：错误风暴会拖垮宿主应用的渲染调度
+      try {
+        this.draw();
+      } catch {
+        this.pause();
+        return;
+      }
     }
 
     this.animationFrameId = requestAnimationFrame(this.animate);
@@ -593,6 +600,7 @@ export class InspiraShaderToy {
   }
 
   public play(): void {
+    if (this.disposed) return;
     if (!this.isPlaying) {
       this.isPlaying = true;
       const now = Date.now();
@@ -606,6 +614,7 @@ export class InspiraShaderToy {
   }
 
   public dispose(): void {
+    this.disposed = true;
     this.pause();
     this.resizeObserver?.disconnect();
     this.resizeObserver = undefined;
