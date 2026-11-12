@@ -2,12 +2,13 @@
 
 Inspira UI 风格的 **Vue 3 动效组件库** —— 参考 [Element Plus](https://element-plus.org) 的库架构打造，可发布为 npm 包直接调用。
 
-组件移植自 [Inspira UI](https://inspira-ui.com)（MIT 协议），首批收录 20 个高通用性轻量组件（纯 CSS + motion-v，无 WebGL 重依赖）。
+组件移植自 [Inspira UI](https://inspira-ui.com)（MIT 协议），**已全量对齐上游 155 个组件**（159 个文档页 / 195 个导出）：按钮、卡片、文本动画、轮播画廊、表单交互、动态背景，到 WebGL 重型特效（three.js / ogl / Spline）。重型依赖均声明为 dependencies 并 external，不打进主包。
 
 ## 特性
 
 - **Element Plus 式接入**：`app.use(InspiraUI)` 全量注册 `Iu` 前缀组件；也支持具名导入按需使用（tree-shaking 友好）
-- **配置解决八成，插槽兜底两成**：IuDialog 传一个 `confirm` 函数自动管 loading 与关闭；按钮统一 `size / loading / disabled / block`；IuCard3D 一行代码出卡片（三件套保留精细控制）
+- **配置优先，插槽兜底**：IuDialog 传一个 `confirm` 函数自动管 loading 与关闭；按钮统一 `size / loading / disabled / block`；IuCard3D 一行代码出卡片（三件套保留精细控制）。
+  注：统一 API 契约（size/loading、reducedMotion 等）当前覆盖第一批 22 个深度封装组件，批次 2-7 组件保持上游原汁 Props
 - **自包含 CSS**：产物 `dist/index.css` 由 Tailwind v4 编译而成，使用方**零 Tailwind 依赖**，import 即用
 - **CSS 变量主题**：设计令牌收敛为 `--iu-*` 变量（对标 `--el-*`），覆盖变量即换肤；`.dark` 类即开暗色
 - **完整 TypeScript 类型**：含 Props 类型导出与 Volar `GlobalComponents` 全局提示
@@ -46,16 +47,21 @@ import { IuShimmerButton, IuAnimatedModal, IuNumberTicker } from 'inspira-ui-com
 
 完整文档（安装 / 快速上手 / 主题定制 / 每个组件的示例与 API 表格）见 `docs/` 文档站。
 
-## 首批组件（22 个）
+## 组件清单（159 个文档页）
 
-| 分类 | 组件 |
+完整清单、实时演示与 API 表格见文档站「组件」页（`pnpm dev:docs` 后访问 `/#/components`）。
+
+代表性组件：
+
+| 分类 | 代表 |
 | ---- | ---- |
-| 按钮 | InteractiveHoverButton · RainbowButton · RippleButton · GradientButton · ShimmerButton（统一 size/loading/disabled/block + variant 预设） |
-| 卡片 | Card3D（快捷模式 + 三件套） · CardSpotlight · FlipCard · GlareCard |
-| 文本动画 | NumberTicker · TypewriterText · FlipWords · TextGenerateEffect · BlurReveal |
-| 交互 | **Dialog（confirm 函数自动管 loading/关闭）** · AnimatedModal（五件套） · AnimatedTooltip · Marquee · BentoGrid |
-| 数据展示 | **Statistic（数字滚动 + 前后缀 + 涨跌幅）** |
-| 背景 | AuroraBackground · PatternBackground |
+| 按钮 | InteractiveHoverButton · RainbowButton · ShimmerButton（统一 size/loading/disabled/block） |
+| 卡片 | Card3D（快捷模式 + 三件套） · AppleCardCarousel · CardStack |
+| 文本动画 | NumberTicker · TypewriterText · MorphingText · Text3d |
+| 表单交互 | **Dialog（confirm 自动管 loading/关闭）** · ColorPicker · FileUpload · VanishingInput |
+| 数据展示 | **Statistic** · GithubGlobe · WorldMap · Timeline |
+| 动态背景 | AuroraBackground · SilkBackground · Vortex · ThunderstormBackground |
+| WebGL 特效 | CosmicPortal · LightSpeed · InfiniteGrid · Spline（重依赖 external） |
 
 ## Monorepo 结构
 

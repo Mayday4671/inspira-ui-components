@@ -13,6 +13,7 @@ export interface InteractiveGridPatternProps {
 
 <script lang="ts" setup>
 import { computed, ref } from "vue";
+defineOptions({ name: 'IuInteractiveGridPattern' })
 
 const props = withDefaults(defineProps<InteractiveGridPatternProps>(), {
   width: 40,

@@ -3,6 +3,7 @@ import { computed, inject, toRefs } from 'vue'
 import type { FolderProps, TreeContextProps } from './tree-context';
 import { cn } from '../../../utils';
 import { TREE_CONTEXT_SYMBOL } from './tree-context';
+defineOptions({ name: 'IuFolder' })
 
 const props = withDefaults(defineProps<FolderProps>(), {
   isSelectable: true,

@@ -31,7 +31,7 @@ type StaggerOrigin = "first" | "last" | "center" | number;
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuLetterSwap', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   animation: "forward" as AnimationMode,

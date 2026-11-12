@@ -13,6 +13,7 @@ export interface Props {
 import { cn } from '../../../utils';
 import { onBeforeUnmount, onMounted, provide, ref } from "vue";
 import { PARALLAX_FLOAT_KEY } from "./ParallaxFloatContext";
+defineOptions({ name: 'IuParallaxFloat' })
 
 
 const props = withDefaults(defineProps<Props>(), {

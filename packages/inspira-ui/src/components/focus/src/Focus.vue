@@ -15,6 +15,7 @@ export interface FocusProps {
 import { Motion } from 'motion-v';
 import { useIntervalFn } from '@vueuse/core';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
+defineOptions({ name: 'IuFocus' })
 
 
 

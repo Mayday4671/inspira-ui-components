@@ -14,6 +14,7 @@ export interface StarsBackgroundProps {
 import { cn } from '../../../utils';
 import { motion, useMotionValue, useSpring } from "motion-v";
 import { computed, onMounted, ref, watch } from "vue";
+defineOptions({ name: 'IuStarsBackground' })
 
 
 const props = withDefaults(defineProps<StarsBackgroundProps>(), {

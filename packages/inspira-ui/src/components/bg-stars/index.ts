@@ -3,3 +3,5 @@ import Comp0 from './src/StarsBackground.vue'
 
 export const IuStarsBackground = withInstall(Comp0)
 export default IuStarsBackground
+
+export type { StarsBackgroundProps } from './src/StarsBackground.vue'

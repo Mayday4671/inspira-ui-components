@@ -9,6 +9,7 @@ export interface Props {
 
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuExpandableGallery' })
 
 
 const props = defineProps<Props>();

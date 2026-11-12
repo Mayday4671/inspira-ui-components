@@ -20,6 +20,7 @@ export interface ConfettiProps {
 <script setup lang="ts">
 import { onMounted, onUnmounted, provide, ref } from 'vue'
 import { create } from "canvas-confetti";
+defineOptions({ name: 'IuConfetti' })
 
 
 const props = defineProps<ConfettiProps>();

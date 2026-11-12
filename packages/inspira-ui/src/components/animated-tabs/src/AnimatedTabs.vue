@@ -3,6 +3,7 @@ import { computed, onScopeDispose, ref, useId, watch } from 'vue'
 import { motion } from 'motion-v'
 import type { AnimatedTab } from "./types";
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuAnimatedTabs' })
 const props = withDefaults(
   defineProps<{
     tabs: AnimatedTab[];

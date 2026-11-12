@@ -7,6 +7,7 @@ import {
   MOUSE_Y_INJECTION_KEY,
   ORIENTATION_INJECTION_KEY,
 } from "./injectionKeys";
+defineOptions({ name: 'IuDockIcon' })
 
 const iconRef = ref<HTMLDivElement | null>(null);
 

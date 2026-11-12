@@ -21,6 +21,7 @@ export interface Props {
 import { computed, ref, watch } from 'vue'
 import { useInView, Motion } from 'motion-v'
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuHighlightText' })
 
 
 const props = withDefaults(defineProps<Props>(), {

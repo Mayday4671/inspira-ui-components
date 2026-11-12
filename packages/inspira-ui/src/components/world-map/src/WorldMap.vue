@@ -19,6 +19,7 @@ export interface Props {
 import { computed } from 'vue'
 import DottedMap from "dotted-map";
 import { Motion } from "motion-v";
+defineOptions({ name: 'IuWorldMap' })
 
 
 const props = withDefaults(defineProps<Props>(), {

@@ -25,10 +25,11 @@ export default defineConfig({
       fileName: (format) => (format === 'es' ? 'inspira-ui.mjs' : 'inspira-ui.cjs'),
     },
     outDir: 'dist',
+    minify: true,
     cssCodeSplit: false,
     rollupOptions: {
       external: (id) =>
-        /^(vue|@vue|motion-v|@vueuse|clsx|tailwind-merge|class-variance-authority)(\/|$)/.test(
+        /^(vue|@vue|motion-v|motion-dom|@vueuse|clsx|tailwind-merge|class-variance-authority|@splinetool\/runtime|three|three-globe|ogl|gsap|postprocessing|cobe|simplex-noise|dotted-map|theme-colors|@uiw\/color-convert|@number-flow\/vue|canvas-confetti|vue-use-spring)(\/|$)/.test(
           id,
         ),
       output: {

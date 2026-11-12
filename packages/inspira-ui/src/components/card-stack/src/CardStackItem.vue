@@ -15,7 +15,7 @@ import { cn } from '../../../utils';
 import { CardStackKey } from "./CardStackContext";
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuCardStackItem', inheritAttrs: false });
 
 const props = defineProps<Props>();
 const context = inject(CardStackKey, null);

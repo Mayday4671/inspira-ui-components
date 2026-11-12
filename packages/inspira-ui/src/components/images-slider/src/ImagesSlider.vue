@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useIntervalFn, onKeyStroke, useSwipe } from '@vueuse/core'
 import type { PropType, Ref } from "vue";
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuImagesSlider' })
 const props = defineProps({
   images: {
     type: Array as PropType<string[]>,

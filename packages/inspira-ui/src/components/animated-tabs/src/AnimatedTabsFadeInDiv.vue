@@ -2,6 +2,7 @@
 import { motion } from 'motion-v'
 import type { AnimatedTab } from "./types";
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuAnimatedTabsFadeInDiv' })
 const props = defineProps<{
   id: string;
   className?: string;

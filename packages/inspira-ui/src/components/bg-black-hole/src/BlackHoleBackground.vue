@@ -62,6 +62,7 @@ export interface Props {
 <script lang="ts" setup>
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { motion } from "motion-v";
+defineOptions({ name: 'IuBlackHoleBackground' })
 
 
 

@@ -14,6 +14,7 @@ export interface Props {
 <script setup lang="ts">
 import { Motion, useInView } from "motion-v";
 import { computed, onUnmounted, ref, watch } from "vue";
+defineOptions({ name: 'IuEncryptedText' })
 
 const props = withDefaults(defineProps<Props>(), {
   revealDelayMs: 50,

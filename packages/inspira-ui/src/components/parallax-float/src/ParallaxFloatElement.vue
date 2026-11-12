@@ -11,6 +11,7 @@ export interface Props {
 import { cn } from '../../../utils';
 import { inject, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { PARALLAX_FLOAT_KEY } from "./ParallaxFloatContext";
+defineOptions({ name: 'IuParallaxFloatElement' })
 
 
 const props = withDefaults(defineProps<Props>(), {

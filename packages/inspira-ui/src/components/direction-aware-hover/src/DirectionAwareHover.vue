@@ -13,6 +13,7 @@ export interface Props {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { computed, onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuDirectionAwareHover' })
 
 const props = withDefaults(defineProps<Props>(), {
   childrenClass: undefined,

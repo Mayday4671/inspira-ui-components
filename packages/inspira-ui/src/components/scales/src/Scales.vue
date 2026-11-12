@@ -12,6 +12,7 @@ export interface Props {
 
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuScales' })
 
 
 const { orientation = "diagonal", size = 10, color, ...props } = defineProps<Props>();

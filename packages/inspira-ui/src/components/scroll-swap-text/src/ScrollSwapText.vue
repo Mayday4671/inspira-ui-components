@@ -29,7 +29,7 @@ import { ref, useSlots } from "vue";
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuScrollSwapText', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   as: "span",

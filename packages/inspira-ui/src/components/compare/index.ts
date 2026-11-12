@@ -3,3 +3,5 @@ import Comp from './src/Compare.vue'
 
 export const IuCompare = withInstall(Comp)
 export default IuCompare
+
+export type { Props as CompareProps } from './src/Compare.vue'

@@ -12,6 +12,7 @@ export interface Props {
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
 import { variantMap } from "./trail-variants";
+defineOptions({ name: 'IuImageTrailCursor' })
 
 
 

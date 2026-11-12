@@ -3,3 +3,5 @@ import Comp from './src/BoxReveal.vue'
 
 export const IuBoxReveal = withInstall(Comp)
 export default IuBoxReveal
+
+export type { BoxRevealProps } from './src/BoxReveal.vue'

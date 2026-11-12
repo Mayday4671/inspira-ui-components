@@ -10,6 +10,7 @@ export interface Props {
 
 <script lang="ts" setup>
 import { computed } from "vue";
+defineOptions({ name: 'IuScrollWord' })
 
 
 const props = defineProps<Props>();

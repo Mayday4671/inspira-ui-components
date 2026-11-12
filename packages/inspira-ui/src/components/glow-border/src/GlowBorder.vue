@@ -13,6 +13,7 @@ export interface Props {
 <script setup lang="ts">
 import { computed } from 'vue'
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuGlowBorder' })
 
 const props = withDefaults(defineProps<Props>(), {
   borderRadius: 10,

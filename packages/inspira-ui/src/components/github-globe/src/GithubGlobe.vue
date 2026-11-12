@@ -69,6 +69,7 @@ import ThreeGlobe from "three-globe";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { onMounted, ref, watch } from "vue";
 import contries from "./globe.json";
+defineOptions({ name: 'IuGithubGlobe' })
 
 
 

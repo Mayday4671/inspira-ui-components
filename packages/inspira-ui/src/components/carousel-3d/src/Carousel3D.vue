@@ -17,6 +17,7 @@ import { cn } from '../../../utils';
 import { animate } from "motion-v";
 import * as THREE from "three";
 import { CSS3DObject, CSS3DRenderer } from "three/addons/renderers/CSS3DRenderer.js";
+defineOptions({ name: 'IuCarousel3D' })
 
 
 const props = withDefaults(defineProps<Props>(), {

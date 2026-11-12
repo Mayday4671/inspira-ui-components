@@ -13,6 +13,7 @@ import type { VNode } from "vue"
 import { cn } from '../../../utils';
 import { Motion } from "motion-v";
 import { onBeforeUnmount, onMounted, ref, useSlots, watchEffect } from "vue";
+defineOptions({ name: 'IuLogoOrigami' })
 
 
 const props = withDefaults(defineProps<LogoOrigamiProps>(), {

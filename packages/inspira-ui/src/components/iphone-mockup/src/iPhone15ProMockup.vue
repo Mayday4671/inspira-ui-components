@@ -10,6 +10,7 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
+defineOptions({ name: 'IuIPhone15ProMockup' })
 // eslint-disable-next-line check-file/filename-naming-convention
 
 withDefaults(defineProps<Props>(), {

@@ -59,7 +59,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuCubeCarousel', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   debug: false,

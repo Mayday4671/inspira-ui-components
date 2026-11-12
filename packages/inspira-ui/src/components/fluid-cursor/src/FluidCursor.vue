@@ -64,6 +64,7 @@ export interface DoubleFBO {
 import { h } from 'vue'
 import { cn } from '../../../utils';
 import { onMounted, ref, watch } from "vue";
+defineOptions({ name: 'IuFluidCursor' })
 
 
 

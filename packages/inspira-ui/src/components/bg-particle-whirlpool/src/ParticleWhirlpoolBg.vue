@@ -23,6 +23,7 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuParticleWhirlpoolBg' })
 
 const props = defineProps({
   particleCount: {

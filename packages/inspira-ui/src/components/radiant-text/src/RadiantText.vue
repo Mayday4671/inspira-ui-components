@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils';
 import { computed } from "vue";
+defineOptions({ name: 'IuRadiantText' })
 
 const props = defineProps({
   duration: {

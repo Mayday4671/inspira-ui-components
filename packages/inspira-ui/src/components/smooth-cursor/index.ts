@@ -5,3 +5,5 @@ import Comp1 from './src/DefaultCursor.vue'
 export const IuSmoothCursor = withInstall(Comp0)
 export default IuSmoothCursor
 export const IuDefaultCursor = withInstall(Comp1)
+
+export type { Position as SmoothCursorPosition, SmoothCursorProps } from './src/SmoothCursor.vue'

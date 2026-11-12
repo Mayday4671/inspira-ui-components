@@ -51,7 +51,7 @@ import { HtmlInCanvasRenderer, supportsHtmlInCanvas } from "./HtmlInCanvasRender
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuHtmlInCanvas', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   uniforms: () => ({}),

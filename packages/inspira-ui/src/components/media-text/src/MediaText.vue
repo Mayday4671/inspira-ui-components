@@ -42,7 +42,7 @@ import { computed, ref } from "vue";
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuMediaText', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   as: "p",

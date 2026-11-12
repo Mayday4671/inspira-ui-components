@@ -20,6 +20,7 @@ export interface Props {
 import { onMounted, ref, watch } from 'vue'
 import { useDebounceFn, useMouseInElement } from '@vueuse/core'
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuAnimateGrid' })
 
 
 

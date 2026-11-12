@@ -19,6 +19,7 @@ export interface CircularTextProps {
 import { cn } from '../../../utils';
 import { computed } from 'vue'
 import { Motion } from 'motion-v';
+defineOptions({ name: 'IuSpinningText' })
 
 const props = withDefaults(defineProps<CircularTextProps>(), {
   duration: 10,

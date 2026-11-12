@@ -8,6 +8,7 @@ export interface BookDescriptionProps {
 
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuBookDescription' })
 
 
 defineProps<BookDescriptionProps>();

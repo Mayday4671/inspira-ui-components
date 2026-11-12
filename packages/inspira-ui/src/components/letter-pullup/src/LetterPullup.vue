@@ -11,6 +11,7 @@ export interface LetterPullupProps {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { Motion } from "motion-v";
+defineOptions({ name: 'IuLetterPullup' })
 
 
 

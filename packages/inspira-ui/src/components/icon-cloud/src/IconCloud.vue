@@ -2,6 +2,7 @@
 import type { IconCloudProps, SphereIcon } from './icon-cloud-types';
 import { cn } from '../../../utils';
 import { onBeforeUnmount, onMounted, reactive, ref, watchEffect } from "vue";
+defineOptions({ name: 'IuIconCloud' })
 
 const props = defineProps<IconCloudProps>();
 

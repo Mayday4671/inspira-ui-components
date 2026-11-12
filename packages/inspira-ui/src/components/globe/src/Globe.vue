@@ -16,6 +16,7 @@ import { cn } from '../../../utils';
 import createGlobe from "cobe";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useSpring } from "vue-use-spring";
+defineOptions({ name: 'IuGlobe' })
 
 
 const props = withDefaults(defineProps<GlobeProps>(), {

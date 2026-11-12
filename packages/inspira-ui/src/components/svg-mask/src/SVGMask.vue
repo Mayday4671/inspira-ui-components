@@ -11,6 +11,7 @@ export interface Props {
 <script lang="ts" setup>
 import { cn } from '../../../utils';
 import { computed, ref } from "vue";
+defineOptions({ name: 'IuSVGMask' })
 
 
 const props = withDefaults(defineProps<Props>(), {

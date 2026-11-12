@@ -3,6 +3,7 @@
 import { cn } from '../../../utils';
 import { useDebounceFn, useResizeObserver } from "@vueuse/core";
 import { computed, reactive, ref, useAttrs } from "vue";
+defineOptions({ name: 'IuSplineParentSize' })
 
 const props = defineProps({
   class: String,

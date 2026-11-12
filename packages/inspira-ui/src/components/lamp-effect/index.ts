@@ -3,3 +3,5 @@ import Comp0 from './src/LampEffect.vue'
 
 export const IuLampEffect = withInstall(Comp0)
 export default IuLampEffect
+
+export type { LampEffectProps } from './src/LampEffect.vue'

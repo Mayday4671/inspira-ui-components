@@ -16,17 +16,25 @@ export default defineConfig(({ mode }) => {
     vue(),
     // 自定义管线：demo 自身工具类（含 dark:）正确生成
     iuTailwindPlugin({
-      stylesId: 'E:/My_Project/inspira-ui-components/playground/src/assets/tw.css'.replace(/\/g, '/'),
-      base: 'E:/My_Project/inspira-ui-components/playground/src/assets/',
-      sourceDirs: ['E:/My_Project/inspira-ui-components/playground/src'],
+      stylesId: fileURLToPath(new URL('./src/assets/tw.css', import.meta.url)),
+      base: fileURLToPath(new URL('./src/assets/', import.meta.url)),
+      sourceDirs: [fileURLToPath(new URL('./src', import.meta.url))],
     }),
   ],
     resolve: {
-      alias: {
-        'inspira-ui-components': useDist
-          ? fileURLToPath(new URL('../packages/inspira-ui/dist/inspira-ui.mjs', import.meta.url))
-          : fileURLToPath(new URL('../packages/inspira-ui/src/index.ts', import.meta.url)),
-      },
+      // 精确匹配产物 CSS（避免裸包名 alias 把子路径错误替换 —— 同 docs 配置）
+      alias: [
+        {
+          find: 'inspira-ui-components/dist/index.css',
+          replacement: fileURLToPath(new URL('../packages/inspira-ui/dist/index.css', import.meta.url)),
+        },
+        {
+          find: /^inspira-ui-components$/,
+          replacement: useDist
+            ? fileURLToPath(new URL('../packages/inspira-ui/dist/inspira-ui.mjs', import.meta.url))
+            : fileURLToPath(new URL('../packages/inspira-ui/src/index.ts', import.meta.url)),
+        },
+      ],
     },
     build: {
       outDir: useDist ? 'dist-consumer' : 'dist',

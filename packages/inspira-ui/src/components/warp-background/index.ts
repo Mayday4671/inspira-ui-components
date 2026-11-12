@@ -5,3 +5,6 @@ import Comp1 from './src/Beam.vue'
 export const IuWarpBackground = withInstall(Comp0)
 export default IuWarpBackground
 export const IuWarpBeam = withInstall(Comp1)
+
+export type { Props as BeamProps } from './src/Beam.vue'
+export type { Props as WarpBackgroundProps } from './src/WarpBackground.vue'

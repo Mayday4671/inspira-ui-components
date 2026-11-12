@@ -16,6 +16,7 @@ export interface Props {
 import { useTemplateRef } from 'vue'
 import { useRafFn } from "@vueuse/core";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+defineOptions({ name: 'IuSparkles' })
 
 interface Particle {
   x: number;

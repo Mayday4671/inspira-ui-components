@@ -4,6 +4,7 @@ import type { HTMLAttributes } from "vue";
 import { cn } from '../../../utils';
 import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
 import { onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuLiquidBackground' })
 
 const props = defineProps<{ class?: HTMLAttributes["class"] }>();
 

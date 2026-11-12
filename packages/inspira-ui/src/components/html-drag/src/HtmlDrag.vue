@@ -17,6 +17,7 @@ export interface Props {
 import { cn } from '../../../utils';
 import { computed } from "vue";
 import { IuHtmlInCanvas as HtmlInCanvas } from '../..';
+defineOptions({ name: 'IuHtmlDrag' })
 
 const props = withDefaults(defineProps<Props>(), {
   autoPause: true,

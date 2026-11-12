@@ -19,6 +19,7 @@ export interface Props {
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { Motion } from 'motion-v'
 
+defineOptions({ name: 'IuAnimatedTestimonials' })
 const props = withDefaults(defineProps<Props>(), {
   testimonials: () => [],
   autoplay: () => false,

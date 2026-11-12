@@ -22,6 +22,7 @@ import {
   BOOK_SHADOW_SIZE_MAP as shadowSizeMap,
   BOOK_SIZE_MAP as sizeMap,
 } from './book-maps';
+defineOptions({ name: 'IuBook' })
 
 
 const props = withDefaults(defineProps<BookProps>(), {

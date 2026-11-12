@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuMeteors' })
 defineProps({
   count: {
     type: Number,

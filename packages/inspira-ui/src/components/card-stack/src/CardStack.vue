@@ -13,7 +13,7 @@ export interface Props {
   class?: HTMLAttributes["class"];
 }
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuCardStack', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   scaleMultiplier: 0.03,

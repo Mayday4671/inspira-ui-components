@@ -16,6 +16,7 @@ export interface Props {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { Comment, computed, Fragment, isVNode, ref, useSlots } from "vue";
+defineOptions({ name: 'IuCircularGallery' })
 
 
 

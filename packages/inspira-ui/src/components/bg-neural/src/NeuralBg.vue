@@ -14,6 +14,7 @@ export interface Props {
 import { cn } from '../../../utils';
 import { Camera, Mesh, Plane, Program, Renderer, Transform } from "ogl";
 import { onMounted, onUnmounted, ref, watch } from "vue";
+defineOptions({ name: 'IuNeuralBg' })
 
 
 const props = withDefaults(defineProps<Props>(), {

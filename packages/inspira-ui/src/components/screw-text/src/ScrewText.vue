@@ -32,7 +32,7 @@ import { stagger, useAnimate } from "motion-v";
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuScrewText', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   as: "p",

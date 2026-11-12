@@ -17,6 +17,7 @@ export interface Props {
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+defineOptions({ name: 'IuBalanceSlider' })
 const props = withDefaults(defineProps<Props>(), {
   initialValue: 50,
   minShiftLimit: 40,

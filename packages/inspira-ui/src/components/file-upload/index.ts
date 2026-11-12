@@ -5,3 +5,6 @@ import Comp1 from './src/FileUploadGrid.vue'
 export const IuFileUpload = withInstall(Comp0)
 export default IuFileUpload
 export const IuFileUploadGrid = withInstall(Comp1)
+
+export type { FileUploadProps } from './src/FileUpload.vue'
+export type { FileUploadGridProps } from './src/FileUploadGrid.vue'

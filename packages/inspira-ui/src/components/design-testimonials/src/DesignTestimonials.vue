@@ -19,6 +19,7 @@ export interface TestimonialItem {
 import { useTemplateRef } from 'vue'
 import { AnimatePresence, Motion, useMotionValue, useSpring, useTransform } from "motion-v";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+defineOptions({ name: 'IuDesignTestimonials' })
 
 
 

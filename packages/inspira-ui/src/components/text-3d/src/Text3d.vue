@@ -18,6 +18,7 @@ export interface Props {
 <script lang="ts" setup>
 import { cn } from '../../../utils';
 import { computed } from "vue";
+defineOptions({ name: 'IuText3d' })
 
 
 const props = withDefaults(defineProps<Props>(), {

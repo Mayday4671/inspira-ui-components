@@ -5,7 +5,7 @@ import { cn } from '../../../utils';
 import { useVModel } from "@vueuse/core";
 import { computed, ref } from "vue";
 
-defineOptions({
+defineOptions({ name: 'IuIInput',
   inheritAttrs: false,
 });
 

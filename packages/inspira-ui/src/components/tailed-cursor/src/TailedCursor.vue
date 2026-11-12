@@ -20,6 +20,7 @@ export interface RibbonsProps {
 <script setup lang="ts">
 import { Color, Polyline, Renderer, Transform, Vec3 } from "ogl";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+defineOptions({ name: 'IuTailedCursor' })
 
 
 const props = withDefaults(defineProps<RibbonsProps>(), {

@@ -12,6 +12,7 @@ export interface Props {
 
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuSilkBackground' })
 
 
 const props = withDefaults(defineProps<Props>(), {

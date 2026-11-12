@@ -3,6 +3,7 @@ import { onMounted, provide, ref, toRefs } from 'vue'
 import type { TreeContextProps, TreeProps, TreeViewElement } from './tree-context';
 import { cn } from '../../../utils';
 import { TREE_CONTEXT_SYMBOL } from './tree-context';
+defineOptions({ name: 'IuTree' })
 
 const props = withDefaults(defineProps<TreeProps>(), {
   indicator: true,

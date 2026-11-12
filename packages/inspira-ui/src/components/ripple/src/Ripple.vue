@@ -14,7 +14,7 @@ export interface Props {
 
 
 <script setup lang="ts">
-
+defineOptions({ name: 'IuRipple' })
 withDefaults(defineProps<Props>(), {
   baseCircleSize: 210,
   baseCircleOpacity: 0.24,

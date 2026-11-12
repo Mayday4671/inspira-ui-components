@@ -26,6 +26,7 @@ export interface Props {
 <script setup lang="ts">
 import { useDevicePixelRatio, useMouse } from "@vueuse/core";
 import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+defineOptions({ name: 'IuParticlesBg' })
 
 
 

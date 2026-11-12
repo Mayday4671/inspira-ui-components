@@ -11,6 +11,7 @@ export interface Props {
 import { cn } from '../../../utils';
 import { Motion } from "motion-v";
 import { computed, onMounted, ref, useSlots } from "vue";
+defineOptions({ name: 'IuAnimatedList' })
 
 
 

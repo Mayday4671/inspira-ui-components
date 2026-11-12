@@ -10,14 +10,6 @@ export interface Sparkle {
   scale: number;
   lifespan: number;
 }
-</script>
-
-
-<script setup lang="ts">
-import { cn } from '../../../utils';
-import { Motion } from "motion-v";
-import { onMounted, onUnmounted, ref } from "vue";
-
 export interface Props {
   text: string;
   sparklesCount?: number;
@@ -27,6 +19,15 @@ export interface Props {
   };
   class?: string;
 }
+</script>
+
+
+<script setup lang="ts">
+import { cn } from '../../../utils';
+import { Motion } from "motion-v";
+import { onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuSparklesText' })
+
 
 const props = withDefaults(defineProps<Props>(), {
   sparklesCount: 10,

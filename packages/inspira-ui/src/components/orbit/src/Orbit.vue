@@ -3,6 +3,7 @@ import type { Props } from './orbit-constants';
 import { cn } from '../../../utils';
 import { computed } from "vue";
 import { ORBIT_DIRECTION } from './orbit-constants';
+defineOptions({ name: 'IuOrbit' })
 
 const props = withDefaults(defineProps<Props>(), {
   direction: () => ORBIT_DIRECTION.Clockwise,

@@ -2,6 +2,7 @@
 import type { HsvaColor } from "@uiw/color-convert";
 import { hsvaToRgba } from "@uiw/color-convert";
 import { computed, ref, watch } from "vue";
+defineOptions({ name: 'IuContrastRatio' })
 
 export interface ContrastRatioProps {
   color: HsvaColor;

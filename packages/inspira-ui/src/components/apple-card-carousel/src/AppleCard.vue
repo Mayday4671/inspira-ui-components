@@ -19,6 +19,7 @@ import { onClickOutside } from "@vueuse/core";
 import { AnimatePresence, Motion } from "motion-v";
 import { inject, onMounted, onUnmounted, ref, watch } from "vue";
 import { CarouselKey } from "./AppleCarouselContext";
+defineOptions({ name: 'IuAppleCard' })
 
 
 

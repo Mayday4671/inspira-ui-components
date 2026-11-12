@@ -15,9 +15,10 @@ export interface Props {
 
 
 <script lang="ts" setup>
-// @ts-nocheck
+// @ts-nocheck — 上游 Nuxt 源码忠实移植，motion-v useScroll/useTransform 类型与严格模式冲突
 import { nextTick, onMounted, ref, watch } from 'vue'
 import { Motion, useScroll, useTransform } from "motion-v";
+defineOptions({ name: 'IuTimeline' })
 
 const props = withDefaults(defineProps<Props>(), {
   items: () => [],

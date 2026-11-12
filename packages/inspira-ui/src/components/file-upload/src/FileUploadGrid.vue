@@ -8,6 +8,7 @@ export interface FileUploadGridProps {
 
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuFileUploadGrid' })
 
 
 defineProps<FileUploadGridProps>();

@@ -1,0 +1,6 @@
+dist
+node_modules
+.tools
+coverage
+*.min.*
+redesign-screenshots

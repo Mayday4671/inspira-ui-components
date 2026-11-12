@@ -23,7 +23,7 @@ export type UnderlineTextDirection = "left" | "right";
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuUnderlineText', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   as: "span",

@@ -12,6 +12,7 @@ export interface Props {
 <script lang="ts" setup>
 import { Motion } from "motion-v";
 import { computed } from "vue";
+defineOptions({ name: 'IuWarpBeam' })
 
 const props = defineProps<Props>();
 

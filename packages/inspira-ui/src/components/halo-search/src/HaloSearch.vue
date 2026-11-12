@@ -7,8 +7,7 @@ export interface Props {
 </script>
 
 <script lang="ts" setup>
-
-
+defineOptions({ name: 'IuHaloSearch' })
 const props = defineProps<Props>();
 </script>
 

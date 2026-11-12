@@ -2,6 +2,7 @@
 import { onMounted, useTemplateRef } from 'vue'
 import type { LightSpeedOptions, LightSpeedProps } from "./LightSpeedApp";
 import { defaultOptions, distortions, LightSpeedApp } from "./LightSpeedApp";
+defineOptions({ name: 'IuLightSpeed' })
 
 const props = defineProps<LightSpeedProps>();
 

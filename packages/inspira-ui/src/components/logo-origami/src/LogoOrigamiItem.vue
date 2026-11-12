@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuLogoOrigamiItem' })
 defineProps({
   class: String,
 });

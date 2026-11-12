@@ -25,7 +25,7 @@ import { computed, useSlots } from "vue";
 
 type StaggerOrigin = "first" | "last" | "center" | number;
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuBreathingText', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   as: "span",

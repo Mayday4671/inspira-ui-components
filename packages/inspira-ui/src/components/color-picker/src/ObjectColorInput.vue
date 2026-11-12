@@ -9,6 +9,7 @@ export interface ObjectColorInputProps {
 
 <script setup lang="ts">
 import { computed } from "vue";
+defineOptions({ name: 'IuObjectColorInput' })
 
 
 const props = defineProps<ObjectColorInputProps>();

@@ -7,3 +7,5 @@ export const IuAnimatedLogoCloud = withInstall(Comp0)
 export default IuAnimatedLogoCloud
 export const IuIconLogoCloud = withInstall(Comp1)
 export const IuStaticLogoCloud = withInstall(Comp2)
+
+export type { Logo, AnimateLogoCloudProps } from './src/logo-cloud-types.ts'

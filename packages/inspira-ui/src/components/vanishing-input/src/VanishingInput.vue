@@ -20,6 +20,7 @@ export interface AnimatedPixel extends PixelData {
 import { useTemplateRef } from 'vue'
 import { cn } from '../../../utils';
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+defineOptions({ name: 'IuVanishingInput' })
 
 // Define interfaces for props and data structures
 

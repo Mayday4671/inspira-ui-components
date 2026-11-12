@@ -8,6 +8,7 @@ export interface Props {
 
 <script setup lang="ts">
 import { Motion } from "motion-v";
+defineOptions({ name: 'IuAppleCarouselItem' })
 
 
 defineProps<Props>();

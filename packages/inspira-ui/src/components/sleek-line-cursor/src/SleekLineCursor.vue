@@ -32,6 +32,7 @@ export interface LineOptions {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuSleekLineCursor' })
 
 
 const props = withDefaults(defineProps<Props>(), {

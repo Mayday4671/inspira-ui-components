@@ -26,6 +26,7 @@ export interface ParticleImageProps {
 import { cn } from '../../../utils';
 import { onMounted, ref } from "vue";
 import { inspiraImageParticles } from "./inspiraImageParticles";
+defineOptions({ name: 'IuParticleImage' })
 
 
 defineProps<ParticleImageProps>();

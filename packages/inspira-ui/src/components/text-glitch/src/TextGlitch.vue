@@ -14,6 +14,7 @@ export interface Props {
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuTextGlitch' })
 
 const {
   speed = 0.5,

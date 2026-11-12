@@ -9,6 +9,7 @@ export interface ConfettiButtonProps {
 <script setup lang="ts">
 import { inject } from 'vue'
 import confetti from "canvas-confetti";
+defineOptions({ name: 'IuConfettiButton' })
 
 const props = defineProps<ConfettiButtonProps>();
 const confettiContext = inject<{ fire: (opts?: ConfettiOptions) => void }>("ConfettiContext");

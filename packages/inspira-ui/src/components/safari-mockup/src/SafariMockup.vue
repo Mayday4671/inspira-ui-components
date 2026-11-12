@@ -10,7 +10,7 @@ export interface SafariMockupProps {
 </script>
 
 <script lang="ts" setup>
-
+defineOptions({ name: 'IuSafariMockup' })
 withDefaults(defineProps<SafariMockupProps>(), {
   width: 1203,
   height: 753,

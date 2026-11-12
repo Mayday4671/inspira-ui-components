@@ -12,6 +12,7 @@ export interface Props {
 <script lang="ts" setup>
 import { cn } from '../../../utils';
 import { onMounted, onUnmounted, ref, watch } from "vue";
+defineOptions({ name: 'IuTextMorph' })
 
 const props = withDefaults(defineProps<Props>(), {
   morphTime: 1.5,

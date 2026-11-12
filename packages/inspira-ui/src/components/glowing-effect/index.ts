@@ -3,3 +3,5 @@ import Comp0 from './src/GlowingEffect.vue'
 
 export const IuGlowingEffect = withInstall(Comp0)
 export default IuGlowingEffect
+
+export type { Props as GlowingEffectProps } from './src/GlowingEffect.vue'

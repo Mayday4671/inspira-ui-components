@@ -22,6 +22,7 @@ import { onUnmounted, ref } from 'vue'
 import { useEventListener, useTimeout } from "@vueuse/core";
 import { Motion, useSpring } from "motion-v";
 import DefaultCursor from "./DefaultCursor.vue";
+defineOptions({ name: 'IuSmoothCursor' })
 
 
 const props = withDefaults(defineProps<SmoothCursorProps>(), {

@@ -1,0 +1,602 @@
+[
+ {
+  "file": "animate-grid/src/AnimateGrid.vue",
+  "name": "IuAnimateGrid"
+ },
+ {
+  "file": "animated-beam/src/AnimatedBeam.vue",
+  "name": "IuAnimatedBeam"
+ },
+ {
+  "file": "animated-circular-progressbar/src/AnimatedCircularProgressBar.vue",
+  "name": "IuAnimatedCircularProgressBar"
+ },
+ {
+  "file": "animated-list/src/AnimatedList.vue",
+  "name": "IuAnimatedList"
+ },
+ {
+  "file": "animated-tabs/src/AnimatedTabs.vue",
+  "name": "IuAnimatedTabs"
+ },
+ {
+  "file": "animated-tabs/src/AnimatedTabsFadeInDiv.vue",
+  "name": "IuAnimatedTabsFadeInDiv"
+ },
+ {
+  "file": "animated-testimonials/src/AnimatedTestimonials.vue",
+  "name": "IuAnimatedTestimonials"
+ },
+ {
+  "file": "apple-card-carousel/src/AppleCardCarousel.vue",
+  "name": "IuAppleCardCarousel"
+ },
+ {
+  "file": "apple-card-carousel/src/AppleCarouselItem.vue",
+  "name": "IuAppleCarouselItem"
+ },
+ {
+  "file": "apple-card-carousel/src/AppleCard.vue",
+  "name": "IuAppleCard"
+ },
+ {
+  "file": "apple-card-carousel/src/AppleBlurImage.vue",
+  "name": "IuAppleBlurImage"
+ },
+ {
+  "file": "balance-slider/src/BalanceSlider.vue",
+  "name": "IuBalanceSlider"
+ },
+ {
+  "file": "bending-gallery/src/BendingGallery.vue",
+  "name": "IuBendingGallery"
+ },
+ {
+  "file": "bg-black-hole/src/BlackHoleBackground.vue",
+  "name": "IuBlackHoleBackground"
+ },
+ {
+  "file": "bg-bubbles/src/BubblesBg.vue",
+  "name": "IuBubblesBg"
+ },
+ {
+  "file": "bg-falling-stars/src/FallingStarsBg.vue",
+  "name": "IuFallingStarsBg"
+ },
+ {
+  "file": "bg-neural/src/NeuralBg.vue",
+  "name": "IuNeuralBg"
+ },
+ {
+  "file": "bg-particle-whirlpool/src/ParticleWhirlpoolBg.vue",
+  "name": "IuParticleWhirlpoolBg"
+ },
+ {
+  "file": "bg-silk/src/SilkBackground.vue",
+  "name": "IuSilkBackground"
+ },
+ {
+  "file": "bg-singularity/src/SingularityBackground.vue",
+  "name": "IuSingularityBackground"
+ },
+ {
+  "file": "bg-stars/src/StarsBackground.vue",
+  "name": "IuStarsBackground"
+ },
+ {
+  "file": "bg-stractium/src/StractiumBackground.vue",
+  "name": "IuStractiumBackground"
+ },
+ {
+  "file": "bg-thunderstorm/src/ThunderstormBackground.vue",
+  "name": "IuThunderstormBackground"
+ },
+ {
+  "file": "book/src/Book.vue",
+  "name": "IuBook"
+ },
+ {
+  "file": "book/src/BookDescription.vue",
+  "name": "IuBookDescription"
+ },
+ {
+  "file": "book/src/BookHeader.vue",
+  "name": "IuBookHeader"
+ },
+ {
+  "file": "book/src/BookTitle.vue",
+  "name": "IuBookTitle"
+ },
+ {
+  "file": "border-beam/src/BorderBeam.vue",
+  "name": "IuBorderBeam"
+ },
+ {
+  "file": "box-reveal/src/BoxReveal.vue",
+  "name": "IuBoxReveal"
+ },
+ {
+  "file": "carousel-3d/src/Carousel3D.vue",
+  "name": "IuCarousel3D"
+ },
+ {
+  "file": "circular-gallery/src/CircularGallery.vue",
+  "name": "IuCircularGallery"
+ },
+ {
+  "file": "color-picker/src/ColorPicker.vue",
+  "name": "IuColorPicker"
+ },
+ {
+  "file": "color-picker/src/ContrastRatio.vue",
+  "name": "IuContrastRatio"
+ },
+ {
+  "file": "color-picker/src/ObjectColorInput.vue",
+  "name": "IuObjectColorInput"
+ },
+ {
+  "file": "colourful-text/src/ColourfulText.vue",
+  "name": "IuColourfulText"
+ },
+ {
+  "file": "compare/src/Compare.vue",
+  "name": "IuCompare"
+ },
+ {
+  "file": "confetti/src/Confetti.vue",
+  "name": "IuConfetti"
+ },
+ {
+  "file": "confetti/src/ConfettiButton.vue",
+  "name": "IuConfettiButton"
+ },
+ {
+  "file": "container-scroll/src/ContainerScroll.vue",
+  "name": "IuContainerScroll"
+ },
+ {
+  "file": "container-scroll/src/ContainerScrollCard.vue",
+  "name": "IuContainerScrollCard"
+ },
+ {
+  "file": "container-scroll/src/ContainerScrollTitle.vue",
+  "name": "IuContainerScrollTitle"
+ },
+ {
+  "file": "container-text-flip/src/ContainerTextFlip.vue",
+  "name": "IuContainerTextFlip"
+ },
+ {
+  "file": "cosmic-portal/src/CosmicPortal.vue",
+  "name": "IuCosmicPortal"
+ },
+ {
+  "file": "design-testimonials/src/DesignTestimonials.vue",
+  "name": "IuDesignTestimonials"
+ },
+ {
+  "file": "direction-aware-hover/src/DirectionAwareHover.vue",
+  "name": "IuDirectionAwareHover"
+ },
+ {
+  "file": "dither-shader/src/DitherShader.vue",
+  "name": "IuDitherShader"
+ },
+ {
+  "file": "dock/src/Dock.vue",
+  "name": "IuDock"
+ },
+ {
+  "file": "dock/src/DockIcon.vue",
+  "name": "IuDockIcon"
+ },
+ {
+  "file": "dock/src/DockSeparator.vue",
+  "name": "IuDockSeparator"
+ },
+ {
+  "file": "encrypted-text/src/EncryptedText.vue",
+  "name": "IuEncryptedText"
+ },
+ {
+  "file": "expandable-gallery/src/ExpandableGallery.vue",
+  "name": "IuExpandableGallery"
+ },
+ {
+  "file": "fey-cards/src/FeyCards.vue",
+  "name": "IuFeyCards"
+ },
+ {
+  "file": "file-tree/src/Tree.vue",
+  "name": "IuTree"
+ },
+ {
+  "file": "file-tree/src/Folder.vue",
+  "name": "IuFolder"
+ },
+ {
+  "file": "file-tree/src/File.vue",
+  "name": "IuFile"
+ },
+ {
+  "file": "file-tree/src/TreeIndicator.vue",
+  "name": "IuTreeIndicator"
+ },
+ {
+  "file": "file-upload/src/FileUpload.vue",
+  "name": "IuFileUpload"
+ },
+ {
+  "file": "file-upload/src/FileUploadGrid.vue",
+  "name": "IuFileUploadGrid"
+ },
+ {
+  "file": "flickering-grid/src/FlickeringGrid.vue",
+  "name": "IuFlickeringGrid"
+ },
+ {
+  "file": "float/src/Float.vue",
+  "name": "IuFloat"
+ },
+ {
+  "file": "floating-card/src/FloatingCard.vue",
+  "name": "IuFloatingCard"
+ },
+ {
+  "file": "fluid-cursor/src/FluidCursor.vue",
+  "name": "IuFluidCursor"
+ },
+ {
+  "file": "focus/src/Focus.vue",
+  "name": "IuFocus"
+ },
+ {
+  "file": "github-globe/src/GithubGlobe.vue",
+  "name": "IuGithubGlobe"
+ },
+ {
+  "file": "globe/src/Globe.vue",
+  "name": "IuGlobe"
+ },
+ {
+  "file": "glow-border/src/GlowBorder.vue",
+  "name": "IuGlowBorder"
+ },
+ {
+  "file": "glowing-effect/src/GlowingEffect.vue",
+  "name": "IuGlowingEffect"
+ },
+ {
+  "file": "halo-search/src/HaloSearch.vue",
+  "name": "IuHaloSearch"
+ },
+ {
+  "file": "highlight-text/src/HighlightText.vue",
+  "name": "IuHighlightText"
+ },
+ {
+  "file": "html-ascii/src/HtmlAscii.vue",
+  "name": "IuHtmlAscii"
+ },
+ {
+  "file": "html-blaze/src/HtmlBlaze.vue",
+  "name": "IuHtmlBlaze"
+ },
+ {
+  "file": "html-chromatic/src/HtmlChromatic.vue",
+  "name": "IuHtmlChromatic"
+ },
+ {
+  "file": "html-cloth/src/HtmlCloth.vue",
+  "name": "IuHtmlCloth"
+ },
+ {
+  "file": "html-drag/src/HtmlDrag.vue",
+  "name": "IuHtmlDrag"
+ },
+ {
+  "file": "html-liquid/src/HtmlLiquid.vue",
+  "name": "IuHtmlLiquid"
+ },
+ {
+  "file": "hyper-text/src/HyperText.vue",
+  "name": "IuHyperText"
+ },
+ {
+  "file": "icon-cloud/src/IconCloud.vue",
+  "name": "IuIconCloud"
+ },
+ {
+  "file": "image-trail-cursor/src/ImageTrailCursor.vue",
+  "name": "IuImageTrailCursor"
+ },
+ {
+  "file": "images-badge/src/ImagesBadge.vue",
+  "name": "IuImagesBadge"
+ },
+ {
+  "file": "images-slider/src/ImagesSlider.vue",
+  "name": "IuImagesSlider"
+ },
+ {
+  "file": "infinite-grid/src/InfiniteGrid.vue",
+  "name": "IuInfiniteGrid"
+ },
+ {
+  "file": "interactive-grid-pattern/src/InteractiveGridPattern.vue",
+  "name": "IuInteractiveGridPattern"
+ },
+ {
+  "file": "iphone-mockup/src/iPhone15ProMockup.vue",
+  "name": "IuIPhone15ProMockup"
+ },
+ {
+  "file": "lamp-effect/src/LampEffect.vue",
+  "name": "IuLampEffect"
+ },
+ {
+  "file": "lens/src/Lens.vue",
+  "name": "IuLens"
+ },
+ {
+  "file": "letter-pullup/src/LetterPullup.vue",
+  "name": "IuLetterPullup"
+ },
+ {
+  "file": "light-speed/src/LightSpeed.vue",
+  "name": "IuLightSpeed"
+ },
+ {
+  "file": "line-shadow-text/src/LineShadowText.vue",
+  "name": "IuLineShadowText"
+ },
+ {
+  "file": "link-preview/src/LinkPreview.vue",
+  "name": "IuLinkPreview"
+ },
+ {
+  "file": "liquid-background/src/LiquidBackground.vue",
+  "name": "IuLiquidBackground"
+ },
+ {
+  "file": "liquid-glass/src/LiquidGlass.vue",
+  "name": "IuLiquidGlass"
+ },
+ {
+  "file": "liquid-logo/src/LiquidLogo.vue",
+  "name": "IuLiquidLogo"
+ },
+ {
+  "file": "logo-cloud/src/AnimatedLogoCloud.vue",
+  "name": "IuAnimatedLogoCloud"
+ },
+ {
+  "file": "logo-cloud/src/IconLogoCloud.vue",
+  "name": "IuIconLogoCloud"
+ },
+ {
+  "file": "logo-cloud/src/StaticLogoCloud.vue",
+  "name": "IuStaticLogoCloud"
+ },
+ {
+  "file": "logo-origami/src/LogoOrigami.vue",
+  "name": "IuLogoOrigami"
+ },
+ {
+  "file": "logo-origami/src/LogoOrigamiItem.vue",
+  "name": "IuLogoOrigamiItem"
+ },
+ {
+  "file": "meteors/src/Meteors.vue",
+  "name": "IuMeteors"
+ },
+ {
+  "file": "morphing-tabs/src/MorphingTabs.vue",
+  "name": "IuMorphingTabs"
+ },
+ {
+  "file": "morphing-text/src/MorphingText.vue",
+  "name": "IuMorphingText"
+ },
+ {
+  "file": "multi-step-loader/src/MultiStepLoader.vue",
+  "name": "IuMultiStepLoader"
+ },
+ {
+  "file": "neon-border/src/NeonBorder.vue",
+  "name": "IuNeonBorder"
+ },
+ {
+  "file": "orbit/src/Orbit.vue",
+  "name": "IuOrbit"
+ },
+ {
+  "file": "parallax-float/src/ParallaxFloat.vue",
+  "name": "IuParallaxFloat"
+ },
+ {
+  "file": "parallax-float/src/ParallaxFloatElement.vue",
+  "name": "IuParallaxFloatElement"
+ },
+ {
+  "file": "particle-image/src/ParticleImage.vue",
+  "name": "IuParticleImage"
+ },
+ {
+  "file": "particles-bg/src/ParticlesBg.vue",
+  "name": "IuParticlesBg"
+ },
+ {
+  "file": "photo-gallery/src/PhotoGallery.vue",
+  "name": "IuPhotoGallery"
+ },
+ {
+  "file": "progressive-blur/src/ProgressiveBlur.vue",
+  "name": "IuProgressiveBlur"
+ },
+ {
+  "file": "radiant-text/src/RadiantText.vue",
+  "name": "IuRadiantText"
+ },
+ {
+  "file": "ribbon-background/src/RibbonBackground.vue",
+  "name": "IuRibbonBackground"
+ },
+ {
+  "file": "ripple/src/Ripple.vue",
+  "name": "IuRipple"
+ },
+ {
+  "file": "safari-mockup/src/SafariMockup.vue",
+  "name": "IuSafariMockup"
+ },
+ {
+  "file": "scales/src/Scales.vue",
+  "name": "IuScales"
+ },
+ {
+  "file": "scratch-to-reveal/src/ScratchToReveal.vue",
+  "name": "IuScratchToReveal"
+ },
+ {
+  "file": "scroll-island/src/ScrollIsland.vue",
+  "name": "IuScrollIsland"
+ },
+ {
+  "file": "shader-toy/src/ShaderToy.vue",
+  "name": "IuShaderToy"
+ },
+ {
+  "file": "sleek-line-cursor/src/SleekLineCursor.vue",
+  "name": "IuSleekLineCursor"
+ },
+ {
+  "file": "smooth-cursor/src/SmoothCursor.vue",
+  "name": "IuSmoothCursor"
+ },
+ {
+  "file": "smooth-cursor/src/DefaultCursor.vue",
+  "name": "IuDefaultCursor"
+ },
+ {
+  "file": "snowfall-bg/src/SnowfallBg.vue",
+  "name": "IuSnowfallBg"
+ },
+ {
+  "file": "sparkles/src/Sparkles.vue",
+  "name": "IuSparkles"
+ },
+ {
+  "file": "sparkles-text/src/SparklesText.vue",
+  "name": "IuSparklesText"
+ },
+ {
+  "file": "spinning-text/src/SpinningText.vue",
+  "name": "IuSpinningText"
+ },
+ {
+  "file": "spline/src/Spline.vue",
+  "name": "IuSpline"
+ },
+ {
+  "file": "spline/src/ParentSize.vue",
+  "name": "IuSplineParentSize"
+ },
+ {
+  "file": "spring-calendar/src/SpringCalendar.vue",
+  "name": "IuSpringCalendar"
+ },
+ {
+  "file": "spring-calendar/src/TextMorph.vue",
+  "name": "IuTextMorph"
+ },
+ {
+  "file": "svg-mask/src/SVGMask.vue",
+  "name": "IuSVGMask"
+ },
+ {
+  "file": "tailed-cursor/src/TailedCursor.vue",
+  "name": "IuTailedCursor"
+ },
+ {
+  "file": "testimonial-slider/src/TestimonialSlider.vue",
+  "name": "IuTestimonialSlider"
+ },
+ {
+  "file": "tetris/src/Tetris.vue",
+  "name": "IuTetris"
+ },
+ {
+  "file": "text-3d/src/Text3d.vue",
+  "name": "IuText3d"
+ },
+ {
+  "file": "text-glitch/src/TextGlitch.vue",
+  "name": "IuTextGlitch"
+ },
+ {
+  "file": "text-highlight/src/TextHighlight.vue",
+  "name": "IuTextHighlight"
+ },
+ {
+  "file": "text-hover-effect/src/TextHoverEffect.vue",
+  "name": "IuTextHoverEffect"
+ },
+ {
+  "file": "text-reveal/src/TextReveal.vue",
+  "name": "IuTextReveal"
+ },
+ {
+  "file": "text-reveal-card/src/TextRevealCard.vue",
+  "name": "IuTextRevealCard"
+ },
+ {
+  "file": "text-reveal-card/src/TextRevealStars.vue",
+  "name": "IuTextRevealStars"
+ },
+ {
+  "file": "text-scroll-reveal/src/TextScrollReveal.vue",
+  "name": "IuTextScrollReveal"
+ },
+ {
+  "file": "text-scroll-reveal/src/ScrollWord.vue",
+  "name": "IuScrollWord"
+ },
+ {
+  "file": "timeline/src/Timeline.vue",
+  "name": "IuTimeline"
+ },
+ {
+  "file": "tracing-beam/src/TracingBeam.vue",
+  "name": "IuTracingBeam"
+ },
+ {
+  "file": "vanishing-input/src/VanishingInput.vue",
+  "name": "IuVanishingInput"
+ },
+ {
+  "file": "video-text/src/VideoText.vue",
+  "name": "IuVideoText"
+ },
+ {
+  "file": "vortex/src/Vortex.vue",
+  "name": "IuVortex"
+ },
+ {
+  "file": "warp-background/src/WarpBackground.vue",
+  "name": "IuWarpBackground"
+ },
+ {
+  "file": "warp-background/src/Beam.vue",
+  "name": "IuWarpBeam"
+ },
+ {
+  "file": "wavy-background/src/WavyBackground.vue",
+  "name": "IuWavyBackground"
+ },
+ {
+  "file": "world-map/src/WorldMap.vue",
+  "name": "IuWorldMap"
+ }
+]

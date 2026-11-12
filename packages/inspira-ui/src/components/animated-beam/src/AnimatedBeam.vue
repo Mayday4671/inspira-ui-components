@@ -26,6 +26,7 @@ export interface AnimatedBeamProps {
 import { computed } from 'vue'
 import { cn } from '../../../utils';
 import { onBeforeUnmount, ref, watchEffect } from "vue";
+defineOptions({ name: 'IuAnimatedBeam' })
 
 
 const props = withDefaults(defineProps<AnimatedBeamProps>(), {

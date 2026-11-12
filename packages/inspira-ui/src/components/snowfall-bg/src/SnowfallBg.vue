@@ -23,6 +23,7 @@ export interface Props {
 <script setup lang="ts">
 import { useDevicePixelRatio } from "@vueuse/core";
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
+defineOptions({ name: 'IuSnowfallBg' })
 
 
 

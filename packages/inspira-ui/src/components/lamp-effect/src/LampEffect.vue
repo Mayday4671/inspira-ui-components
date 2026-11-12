@@ -11,6 +11,7 @@ export interface LampEffectProps {
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuLampEffect' })
 
 const props = withDefaults(defineProps<LampEffectProps>(), {
   delay: 0.5,

@@ -17,6 +17,7 @@ import { cn } from '../../../utils';
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuTextReveal' })
 
 const props = withDefaults(defineProps<Props>(), {
   duration: 0.6,

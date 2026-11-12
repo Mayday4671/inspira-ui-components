@@ -16,6 +16,7 @@ export interface Props extends ProgressiveBlurProps {
 
 import { Motion } from "motion-v";
 import { computed, useAttrs } from "vue";
+defineOptions({ name: 'IuProgressiveBlur' })
 
 const props = withDefaults(defineProps<Props>(), {
   direction: "bottom",

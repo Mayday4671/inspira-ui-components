@@ -4,6 +4,7 @@ import { Application } from "@splinetool/runtime";
 import { useDebounceFn, useIntersectionObserver } from "@vueuse/core";
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from "vue";
 import ParentSize from "./ParentSize.vue";
+defineOptions({ name: 'IuSpline' })
 
 const props = defineProps({
   scene: {
@@ -86,6 +87,8 @@ async function initSpline() {
       splineApp.value = null;
     }
 
+    // P1: 按需动态加载 runtime（Babylon 依赖树不进主包）
+    const { Application } = await import("@splinetool/runtime")
     splineApp.value = new Application(canvasRef.value, {
       renderOnDemand: props.renderOnDemand,
     });

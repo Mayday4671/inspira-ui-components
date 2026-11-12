@@ -18,6 +18,7 @@ export interface Props {
 
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuSingularityBackground' })
 
 
 const props = withDefaults(defineProps<Props>(), {

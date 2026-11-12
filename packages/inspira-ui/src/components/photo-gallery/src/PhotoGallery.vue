@@ -12,6 +12,7 @@ export interface Props {
 
 <script setup lang="ts">
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuPhotoGallery' })
 const props = defineProps<Props>();
 </script>
 

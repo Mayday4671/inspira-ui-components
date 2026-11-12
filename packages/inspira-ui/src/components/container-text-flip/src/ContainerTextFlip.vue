@@ -3,6 +3,7 @@ import { computed, ref, useId, useTemplateRef } from 'vue'
 import { cn } from '../../../utils';
 import { useIntervalFn } from "@vueuse/core";
 import { Motion } from "motion-v";
+defineOptions({ name: 'IuContainerTextFlip' })
 
 const props = withDefaults(
   defineProps<{

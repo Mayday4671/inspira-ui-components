@@ -5,3 +5,7 @@ import Comp1 from './src/CardStackItem.vue'
 export const IuCardStack = withInstall(Comp0)
 export default IuCardStack
 export const IuCardStackItem = withInstall(Comp1)
+
+export type { Props as CardStackProps } from './src/CardStack.vue'
+export type { CardStackContext } from './src/CardStackContext.ts'
+export type { Props as CardStackItemProps } from './src/CardStackItem.vue'

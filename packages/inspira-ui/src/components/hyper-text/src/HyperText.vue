@@ -4,6 +4,7 @@ import { cn } from '../../../utils';
 import { useIntervalFn } from "@vueuse/core";
 import { Motion } from "motion-v";
 import { computed, ref, watch } from "vue";
+defineOptions({ name: 'IuHyperText' })
 
 const props = withDefaults(
   defineProps<{

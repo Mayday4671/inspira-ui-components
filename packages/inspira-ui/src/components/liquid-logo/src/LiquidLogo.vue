@@ -19,6 +19,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { cn } from '../../../utils';
 import { parseLogoImage } from "./parseLogoImage";
 import { liquidFragSource, vertexShaderSource } from "./shader";
+defineOptions({ name: 'IuLiquidLogo' })
 
 
 const props = withDefaults(defineProps<Props>(), {

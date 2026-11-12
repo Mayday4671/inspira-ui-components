@@ -3,6 +3,7 @@ import {  } from 'vue'
 import { cn } from '../../../utils';
 import { createNoise3D } from "simplex-noise";
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
+defineOptions({ name: 'IuWavyBackground' })
 
 interface WavyBackgroundProps {
   class?: string;

@@ -12,6 +12,7 @@ export interface BoxRevealProps {
 <script lang="ts" setup>
 import { cn } from '../../../utils';
 import { Motion } from "motion-v";
+defineOptions({ name: 'IuBoxReveal' })
 
 
 

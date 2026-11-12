@@ -21,6 +21,7 @@ import type { VNode } from "vue"
 import { useSlots } from 'vue'
 import { cn } from '../../../utils';
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+defineOptions({ name: 'IuVideoText' })
 
 
 const props = withDefaults(defineProps<Props>(), {

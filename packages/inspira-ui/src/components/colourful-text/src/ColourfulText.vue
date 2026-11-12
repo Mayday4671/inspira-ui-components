@@ -11,6 +11,7 @@ export interface Props {
 <script setup lang="ts">
 import { motion } from "motion-v";
 import { onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuColourfulText' })
 
 
 

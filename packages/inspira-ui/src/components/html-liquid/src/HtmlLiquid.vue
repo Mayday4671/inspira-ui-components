@@ -17,6 +17,7 @@ export interface Props {
 <script setup lang="ts">
 import { computed } from "vue";
 import { IuHtmlInCanvas as HtmlInCanvas } from '../..';
+defineOptions({ name: 'IuHtmlLiquid' })
 
 const props = withDefaults(defineProps<Props>(), {
   autoPause: true,

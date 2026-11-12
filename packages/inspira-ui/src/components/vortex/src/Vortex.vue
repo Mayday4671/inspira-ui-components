@@ -21,6 +21,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { cn } from '../../../utils';
 import { createNoise3D } from "simplex-noise";
 import { onMounted, onUnmounted } from "vue";
+defineOptions({ name: 'IuVortex' })
 
 const props = withDefaults(defineProps<VortexProps>(), {
   particleCount: 700,

@@ -36,7 +36,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue"
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuVariableText', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   as: "span",

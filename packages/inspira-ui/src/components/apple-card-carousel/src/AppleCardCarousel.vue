@@ -9,6 +9,7 @@ export interface Props {
 <script setup lang="ts">
 import { computed, onMounted, provide, ref, watch } from "vue";
 import { CarouselKey } from "./AppleCarouselContext";
+defineOptions({ name: 'IuAppleCardCarousel' })
 
 
 const props = withDefaults(defineProps<Props>(), {

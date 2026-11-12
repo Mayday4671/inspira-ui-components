@@ -19,6 +19,7 @@ export interface CalendarDay {
 import { cn } from '../../../utils';
 import { Motion, MotionConfig } from "motion-v";
 import { ref } from "vue";
+defineOptions({ name: 'IuSpringCalendar' })
 
 
 

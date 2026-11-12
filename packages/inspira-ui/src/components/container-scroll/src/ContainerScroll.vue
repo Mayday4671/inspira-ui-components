@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useElementBounding, useScroll, useWindowSize } from '@vueuse/core'
+defineOptions({ name: 'IuContainerScroll' })
 const containerRef = ref(null);
 const isMobile = ref(false);
 

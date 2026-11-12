@@ -8,19 +8,20 @@ export interface Step {
   duration?: number; // Duration in ms before proceeding (default: 2000)
   action?: () => void; // Function to execute when step is active
 }
-</script>
-
-
-<script setup lang="ts">
-import { cn } from '../../../utils';
-import { onUnmounted, ref, watch } from "vue";
-
 export interface Props {
   steps: Step[];
   loading?: boolean;
   defaultDuration?: number;
   preventClose?: boolean;
 }
+</script>
+
+
+<script setup lang="ts">
+import { cn } from '../../../utils';
+import { onUnmounted, ref, watch } from "vue";
+defineOptions({ name: 'IuMultiStepLoader' })
+
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
   defaultDuration: 1500,

@@ -62,6 +62,7 @@ export interface AppConfig {
 
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from "ogl";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+defineOptions({ name: 'IuBendingGallery' })
 
 
 // Props definition

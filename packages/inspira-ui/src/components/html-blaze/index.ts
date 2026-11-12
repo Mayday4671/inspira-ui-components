@@ -3,3 +3,5 @@ import Comp0 from './src/HtmlBlaze.vue'
 
 export const IuHtmlBlaze = withInstall(Comp0)
 export default IuHtmlBlaze
+
+export type { Props as HtmlBlazeProps } from './src/HtmlBlaze.vue'

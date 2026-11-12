@@ -11,6 +11,7 @@ export interface Props {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { computed, onMounted, ref } from "vue";
+defineOptions({ name: 'IuTextRevealCard' })
 
 const props = withDefaults(defineProps<Props>(), {
   starsCount: 130,

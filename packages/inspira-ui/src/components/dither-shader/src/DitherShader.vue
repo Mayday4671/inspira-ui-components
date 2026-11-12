@@ -2,6 +2,7 @@
 import { useTemplateRef } from 'vue'
 import { cn } from '../../../utils';
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+defineOptions({ name: 'IuDitherShader' })
 
 export type DitheringMode = "bayer" | "halftone" | "noise" | "crosshatch";
 export type ColorMode = "original" | "grayscale" | "duotone" | "custom";

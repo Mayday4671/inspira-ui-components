@@ -16,6 +16,7 @@ export interface LensProps {
 <script setup lang="ts">
 import { Motion } from "motion-v";
 import { computed, ref, watchEffect } from "vue";
+defineOptions({ name: 'IuLens' })
 
 
 

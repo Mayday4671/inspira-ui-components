@@ -8,6 +8,8 @@
     "node": ">=20.19.0"
   },
   "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "dev": "pnpm --filter playground dev",
     "dev:dist": "pnpm --filter playground dev:dist",
     "dev:docs": "pnpm --filter docs dev",

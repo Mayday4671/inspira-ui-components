@@ -12,6 +12,7 @@ export interface Props {
 
 <script lang="ts" setup>
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuMorphingTabs' })
 
 const props = withDefaults(defineProps<Props>(), {
   margin: 20,

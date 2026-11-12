@@ -91,7 +91,7 @@ import {
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuPathMarquee', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   preserveAspectRatio: "xMidYMid meet" as PreserveAspectRatio,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+defineOptions({ name: 'IuFallingStarsBg' })
 
 interface Star {
   x: number;

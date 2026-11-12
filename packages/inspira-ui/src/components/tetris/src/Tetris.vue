@@ -13,6 +13,7 @@ import { cn } from '../../../utils';
 import { useElementSize } from "@vueuse/core";
 import { getColors } from "theme-colors";
 import { onMounted, onUnmounted, ref, watch } from "vue";
+defineOptions({ name: 'IuTetris' })
 
 
 const props = withDefaults(defineProps<Props>(), {

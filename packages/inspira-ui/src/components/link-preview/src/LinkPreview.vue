@@ -2,6 +2,7 @@
 import { computed, reactive, ref } from 'vue'
 import type { CSSProperties } from "vue";
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuLinkPreview' })
 interface BaseProps {
   class?: string;
   linkClass?: string;

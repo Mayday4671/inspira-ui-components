@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AnimateLogoCloudProps } from './logo-cloud-types';
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuIconLogoCloud' })
 
 const props = defineProps<AnimateLogoCloudProps>();
 </script>

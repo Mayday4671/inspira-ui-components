@@ -21,6 +21,7 @@ import {
   MOUSE_Y_INJECTION_KEY,
   ORIENTATION_INJECTION_KEY,
 } from "./injectionKeys";
+defineOptions({ name: 'IuDock' })
 
 
 const props = withDefaults(defineProps<DockProps>(), {

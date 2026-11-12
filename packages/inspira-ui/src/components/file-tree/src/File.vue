@@ -3,6 +3,7 @@ import { computed, inject, toRefs } from 'vue'
 import type { FileProps, TreeContextProps } from './tree-context';
 import { cn } from '../../../utils';
 import { TREE_CONTEXT_SYMBOL } from './tree-context';
+defineOptions({ name: 'IuFile' })
 
 const props = withDefaults(defineProps<FileProps>(), {
   isSelectable: true,

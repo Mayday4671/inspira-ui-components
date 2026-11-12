@@ -14,6 +14,7 @@ export interface BorderBeamProps {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { computed } from "vue";
+defineOptions({ name: 'IuBorderBeam' })
 
 
 

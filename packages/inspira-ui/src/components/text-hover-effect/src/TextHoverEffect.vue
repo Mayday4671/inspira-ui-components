@@ -12,6 +12,7 @@ export interface Props {
 
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
+defineOptions({ name: 'IuTextHoverEffect' })
 
 const props = withDefaults(defineProps<Props>(), {
   strokeWidth: 0.75,

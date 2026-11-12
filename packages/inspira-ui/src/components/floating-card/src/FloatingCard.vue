@@ -3,6 +3,7 @@ import { useTemplateRef } from 'vue'
 import { cn } from '../../../utils';
 import { useMotionTemplate, useMotionValue, useSpring, useTransform } from "motion-v";
 import { onBeforeUnmount, onMounted } from "vue";
+defineOptions({ name: 'IuFloatingCard' })
 
 export interface Props {
   rotateDepth?: number;

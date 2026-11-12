@@ -14,6 +14,7 @@ export interface Props {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { ref } from "vue";
+defineOptions({ name: 'IuAppleBlurImage' })
 
 
 const props = withDefaults(defineProps<Props>(), {

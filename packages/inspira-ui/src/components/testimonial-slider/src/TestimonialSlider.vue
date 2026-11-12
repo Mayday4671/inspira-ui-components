@@ -11,6 +11,7 @@ export interface Testimonial {
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuTestimonialSlider' })
 
 
 const props = withDefaults(

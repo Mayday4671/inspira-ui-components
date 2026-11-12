@@ -10,6 +10,7 @@ export interface FileUploadProps {
 import { cn } from '../../../utils';
 import { Motion } from "motion-v";
 import { ref } from "vue";
+defineOptions({ name: 'IuFileUpload' })
 
 
 defineProps<FileUploadProps>();

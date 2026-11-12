@@ -1,9 +1,8 @@
 /*
  * Playground 自身的 Tailwind 入口（仅用于演示页布局的工具类）。
- * 注意 @source not 排除了 packages/ —— 保证「产物模式」下组件样式只能来自
- * dist/index.css，从而真实模拟一个自带 Tailwind 的 npm 使用方项目。
+ * 扫描范围由 iuTailwindPlugin 的 sourceDirs 显式指定（仅 playground/src），
+ * 「产物模式」下组件样式来自 dist/index.css，真实模拟自带 Tailwind 的 npm 使用方。
  */
 @import 'tailwindcss';
-@source not '../../packages';
 
 @custom-variant dark (&:is(.dark *));

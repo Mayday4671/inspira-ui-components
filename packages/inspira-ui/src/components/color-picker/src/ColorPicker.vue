@@ -12,6 +12,7 @@ import {
 import { computed, ref, watch } from "vue";
 import ContrastRatio from "./ContrastRatio.vue";
 import ObjectColorInput from "./ObjectColorInput.vue";
+defineOptions({ name: 'IuColorPicker' })
 
 export interface ColorPickerValue {
   hex: string;

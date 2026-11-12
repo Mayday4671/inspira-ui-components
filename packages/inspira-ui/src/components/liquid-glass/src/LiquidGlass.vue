@@ -25,6 +25,7 @@ export interface Props {
 import { reactive } from 'vue'
 import { cn } from '../../../utils';
 import { computed, onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuLiquidGlass' })
 
 
 // Props definition

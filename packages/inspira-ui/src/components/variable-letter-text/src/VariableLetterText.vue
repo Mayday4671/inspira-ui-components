@@ -22,7 +22,7 @@ import { stagger, useAnimate } from "motion-v";
 
 
 
-defineOptions({ inheritAttrs: false });
+defineOptions({ name: 'IuVariableLetterText', inheritAttrs: false });
 
 const props = withDefaults(defineProps<Props>(), {
   fromFontVariationSettings: "'wght' 400",

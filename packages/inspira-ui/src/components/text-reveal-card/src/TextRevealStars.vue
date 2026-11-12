@@ -9,6 +9,7 @@ export interface Props {
 
 <script setup lang="ts">
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuTextRevealStars' })
 
 
 const props = withDefaults(defineProps<Props>(), {

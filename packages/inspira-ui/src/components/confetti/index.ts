@@ -5,3 +5,6 @@ import Comp1 from './src/ConfettiButton.vue'
 export const IuConfetti = withInstall(Comp0)
 export default IuConfetti
 export const IuConfettiButton = withInstall(Comp1)
+
+export type { Api, ConfettiProps } from './src/Confetti.vue'
+export type { ConfettiButtonProps } from './src/ConfettiButton.vue'

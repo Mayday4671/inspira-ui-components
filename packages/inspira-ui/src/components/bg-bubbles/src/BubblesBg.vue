@@ -13,6 +13,7 @@ import {
   WebGLRenderer,
 } from "three";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+defineOptions({ name: 'IuBubblesBg' })
 
 defineProps({
   blur: {

@@ -17,6 +17,7 @@ export interface Props {
 import { cn } from '../../../utils';
 import { computed } from "vue";
 import Beam from "./Beam.vue";
+defineOptions({ name: 'IuWarpBackground' })
 
 
 const props = withDefaults(defineProps<Props>(), {

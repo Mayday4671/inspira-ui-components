@@ -19,6 +19,7 @@ export interface Props {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { onMounted, onUnmounted, ref, useTemplateRef, watch } from "vue";
+defineOptions({ name: 'IuCompare' })
 
 
 

@@ -2,6 +2,7 @@
 import { inject } from 'vue'
 import { cn } from '../../../utils';
 import { ORIENTATION_INJECTION_KEY } from "./injectionKeys";
+defineOptions({ name: 'IuDockSeparator' })
 
 const orientation = inject(ORIENTATION_INJECTION_KEY, "vertical");
 </script>

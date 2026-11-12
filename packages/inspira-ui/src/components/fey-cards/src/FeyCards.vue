@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { cn } from '../../../utils';
 import { motion } from "motion-v";
+defineOptions({ name: 'IuFeyCards' })
 
 export interface HeroCard {
   activeSrc: string;

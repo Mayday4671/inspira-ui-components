@@ -67,7 +67,8 @@ export function iuTailwindPlugin(opts) {
       )
 
       const compiled = await compile(code, {
-        base: (base ?? path.dirname(norm)) + '/',
+        // Windows 下 fileURLToPath/path.resolve 产生反斜杠，Tailwind base 需正斜杠
+        base: String(base ?? path.dirname(norm)).replace(/\\/g, '/') + '/',
         async loadStylesheet(id, ctxBase) {
           const resolved =
             id === 'tailwindcss' ? tailwindCssEntry : path.resolve(ctxBase, id)

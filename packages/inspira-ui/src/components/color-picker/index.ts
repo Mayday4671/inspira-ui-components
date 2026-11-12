@@ -7,3 +7,7 @@ export const IuColorPicker = withInstall(Comp0)
 export default IuColorPicker
 export const IuContrastRatio = withInstall(Comp1)
 export const IuObjectColorInput = withInstall(Comp2)
+
+export type { ColorPickerValue, ColorPickerProps } from './src/ColorPicker.vue'
+export type { ContrastRatioProps } from './src/ContrastRatio.vue'
+export type { ObjectColorInputProps } from './src/ObjectColorInput.vue'

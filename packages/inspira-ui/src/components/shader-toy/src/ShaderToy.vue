@@ -32,6 +32,7 @@ import { useTemplateRef } from 'vue'
 import { cn } from '../../../utils';
 import { computed, onMounted, onUnmounted, shallowRef, watch } from "vue";
 import { InspiraShaderToy } from "./InspiraShaderToy";
+defineOptions({ name: 'IuShaderToy' })
 
 
 

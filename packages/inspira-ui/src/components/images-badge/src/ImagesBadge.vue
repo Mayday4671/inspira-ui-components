@@ -28,6 +28,7 @@ export interface Props {
 import { computed, ref } from 'vue'
 import { motion } from 'motion-v'
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuImagesBadge' })
 
 const {
   text,

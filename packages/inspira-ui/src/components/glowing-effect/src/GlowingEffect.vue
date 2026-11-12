@@ -19,6 +19,7 @@ export interface Props {
 import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import { animate } from 'motion-v'
 import { cn } from '../../../utils';
+defineOptions({ name: 'IuGlowingEffect' })
 
 const props = withDefaults(defineProps<Props>(), {
   blur: 0,

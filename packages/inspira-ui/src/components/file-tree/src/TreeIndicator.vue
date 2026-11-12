@@ -2,6 +2,7 @@
 import { inject } from 'vue'
 import type { TreeContextProps } from './tree-context';
 import { TREE_CONTEXT_SYMBOL } from './tree-context';
+defineOptions({ name: 'IuTreeIndicator' })
 
 const treeContext = inject<TreeContextProps>(TREE_CONTEXT_SYMBOL);
 if (!treeContext) {

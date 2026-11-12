@@ -3,6 +3,7 @@ import { cn } from '../../../utils';
 import { Motion } from "motion-v";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useSpring } from "vue-use-spring";
+defineOptions({ name: 'IuTracingBeam' })
 
 defineProps({
   class: String,

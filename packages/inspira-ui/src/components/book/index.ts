@@ -9,3 +9,9 @@ export default IuBook
 export const IuBookDescription = withInstall(Comp1)
 export const IuBookHeader = withInstall(Comp2)
 export const IuBookTitle = withInstall(Comp3)
+
+export type { BookProps } from './src/Book.vue'
+export type { BookDescriptionProps } from './src/BookDescription.vue'
+export type { BookHeaderProps } from './src/BookHeader.vue'
+export type { BookTitleProps } from './src/BookTitle.vue'
+export type { BookColor, BookSize, BookRadius, BookShadowSize } from './src/book-maps.ts'

@@ -14,6 +14,7 @@ export interface Props {
 <script setup lang="ts">
 import { cn } from '../../../utils';
 import { Motion, useAnimationFrame, useMotionValue } from "motion-v";
+defineOptions({ name: 'IuFloat' })
 
 const props = withDefaults(defineProps<Props>(), {
   speed: 0.5,

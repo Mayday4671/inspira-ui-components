@@ -14,6 +14,7 @@ export interface Props {
 import { cn } from '../../../utils';
 import { Motion, useAnimate } from "motion-v";
 import { computed, onMounted, onUnmounted, ref } from "vue";
+defineOptions({ name: 'IuScratchToReveal' })
 
 const props = withDefaults(defineProps<Props>(), {
   gradientColors: () => ["#A97CF8", "#F38CB8", "#FDCC92"],

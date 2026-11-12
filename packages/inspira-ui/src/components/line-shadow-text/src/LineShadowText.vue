@@ -12,6 +12,7 @@ export interface LineShadowTextProps {
 import type { VNode } from "vue";
 import { cn } from '../../../utils';
 import { useSlots } from "vue";
+defineOptions({ name: 'IuLineShadowText' })
 
 
 

@@ -16,6 +16,7 @@ export interface FlickeringGridProps {
 <script lang="ts" setup>
 import { cn } from '../../../utils';
 import { computed, onBeforeUnmount, onMounted, ref, toRefs } from "vue";
+defineOptions({ name: 'IuFlickeringGrid' })
 
 
 
